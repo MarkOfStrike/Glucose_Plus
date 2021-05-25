@@ -84,62 +84,6 @@ const CreateRecord = (props: any) => {
     )
 }
 
-const Level = () => {
-    return (
-        <View style={{height:'100%', borderWidth: 1, borderColor: 'red'}}>
-            <Text>Введите значение</Text>
-            <View style={{ flexDirection: "row" }}>
-                <TextInput
-                    textAlign="right"
-                    maxLength={3}
-                    keyboardType="numeric"
-                    textAlignVertical="top"
-                    style={{ marginRight: 5 }}
-                    placeholder="---"
-                    onBlur={(e) => {
-                        console.log(e);
-                    }}
-                    onChangeText={text => console.log(text)} />
-
-                <Text>mg/dL</Text>
-            </View>
-        </View>
-    )
-}
-
-const Food = () => {
-    return (
-        <View style={{height:'100%', borderWidth: 1, borderColor: 'yellow'}}>
-
-            <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                <Text>Название</Text>
-                <TextInput placeholder={'Введите название...'} style={{borderBottomWidth: 1, width: 150}}/>
-            </View>
-
-            <View style={{flexDirection: 'row', justifyContent:'space-between', marginTop: 20}}>
-                <Text>Ингредиенты</Text>
-                <CustomButton style={{borderRadius: 10,
-                                        backgroundColor: '#0f8a7f',
-                                        paddingTop: 10,
-                                        paddingBottom: 10,
-                                        paddingLeft: 35,
-                                        paddingRight: 35,}} title='Добавить' onPress={() => {}}/>
-            </View>
-
-            <Hr/>
-
-            <ScrollView style={{borderWidth:1}}>
-                {[...Array(100)].map((v, i) => {
-                    return(
-                        <Text key={i}>AASDASDASD</Text>
-                    )
-                })}
-            </ScrollView>
-
-        </View>
-    )
-}
-
 const BtnRecord = (props: any) => {
     return (
         <View style={{ alignContent: 'center', alignItems: 'center' }}>
