@@ -100,8 +100,6 @@ const CreateRecord = (props: any) => {
     )
 }
 
-<<<<<<< HEAD
-=======
 const SaveBtn = (props: any) => {
 
     if (!props.isExist) {
@@ -127,7 +125,6 @@ const SaveBtn = (props: any) => {
 }
 
 
->>>>>>> 5e7640712033980d4981d218103c41ebcfa08c6b
 const BtnRecord = (props: any) => {
     return (
         <View style={{ alignContent: 'center', alignItems: 'center' }}>
