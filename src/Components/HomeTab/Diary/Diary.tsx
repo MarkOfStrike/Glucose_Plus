@@ -20,7 +20,8 @@ const Diary = (props: any) => {
 
 
     // console.log(props);
-    
+
+    console.log('DIARY')
 
     const appState = React.useRef(AppState.currentState);
 
@@ -120,10 +121,10 @@ const mapStateToProps = (state: IApplicationState) => ({
 //     mapStateToAction
 // )(Diary);
 
-export default compose(connect(
+export default connect(
     mapStateToProps,
     {
         GetRecords
     }
-))(Container);
+)(Container);
 

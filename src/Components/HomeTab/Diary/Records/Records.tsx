@@ -7,7 +7,18 @@ import {style} from './RecordsStyle'
 
 const Records = (props:any) => {
 
+    console.log('RECORDS_VIEW');
+    
 
+    const recordKeys:Array<string> = [];
+
+    React.useEffect(() => {
+
+        for(let k in props.Records){
+            recordKeys.push(k);
+        }
+
+    }, [props.Records])
 
     if(!props.Records){
         return(
@@ -17,11 +28,19 @@ const Records = (props:any) => {
     else{
         return(
             <View style={style.container}>
-                {props.Records.map((v: any, i: number) => {
+                {recordKeys.map((key, i) => {
+
+                    console.log(props.Records[key])
+
+                    return (
+                        <ItemDiary key={i}/>
+                    )
+                })}
+                {/* {props.Records.map((v: any, i: number) => {
                         return (
                             <ItemDiary key={i}/>
                         )
-                    })}
+                    })} */}
             </View>
         )
     }

@@ -6,35 +6,17 @@ import Hr from '../../../../../CustomElement/Hr';
 import AddProduct from './AddProduct/AddProduct';
 import { style } from './FoodRecordStyle';
 import Swipeout, { SwipeoutButtonProperties }  from 'react-native-swipeout'
+import { connect, MapStateToProps } from 'react-redux';
+import { IApplicationState } from '../../../../../../Store/StoreInterfaces';
+import { ICreateFood, IRecordProduct } from '../../../../../../Store/Reducers/CreateRecord/Reducer';
+import {SetFood} from '../../../../../../Store/Reducers/CreateRecord/Action'
 // import {} from 'react-native-swipeable-rowexpo'
 
-interface IRecordProduct {
-    product: IProduct
-    weight: string
-}
 
-const FoodRecord = () => {
 
-    const product: IProduct = {
-        Id: 1,
-        Name: 'Название',
-        Gi: 2,
-        Xe: 3,
-        Calories: 4,
-        Fats: 5,
-        Proteins: 6,
-        Carbohydrates: 7,
-        Group: {
-            Id: 2,
-            Name: 'Группа'
-        }
+const FoodRecord = (props:any) => {
 
-    }
-
-    const record:IRecordProduct ={
-        product,
-        weight:''
-    }
+    const [nameFood, setNameFood] = React.useState<string>('');
 
     const [isModal, setIsModal] = React.useState<boolean>(false)
 
@@ -59,6 +41,20 @@ const FoodRecord = () => {
 
     }
     
+    React.useEffect(() => {
+
+        const food:ICreateFood = {
+            name: nameFood,
+            products: products
+        }
+
+        console.log(food);
+        
+
+        props.SetFood(food)
+
+    }, [nameFood, products])
+
 
     return (
         <View style={style.container}>
@@ -67,7 +63,7 @@ const FoodRecord = () => {
 
             <View style={{flexDirection:'row', justifyContent:'space-between', padding: 5}}>
                 <Text>Название</Text>
-                <TextInput placeholder={'Введите название...'} style={{borderBottomWidth: 1, width: 150}}/>
+                <TextInput placeholder={'Введите название...'} style={{borderBottomWidth: 1, width: 150}}  onChangeText={setNameFood}/>
             </View>
 
             <View style={{flexDirection: 'row', justifyContent:'space-between', marginTop: 20, padding: 5}}>
@@ -152,4 +148,19 @@ const ProductView = (product: IProduct) => {
 }
 
 
-export default FoodRecord;
+const FoodRecordContainer = (props:any) => {
+    return (<FoodRecord {...props}/>)
+}
+
+
+const mapStateToProps = (state:IApplicationState) => ({
+
+})
+
+export default connect(
+    mapStateToProps, 
+    {
+
+        SetFood
+
+    })(FoodRecordContainer);
