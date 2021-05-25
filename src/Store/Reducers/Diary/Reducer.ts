@@ -1,6 +1,7 @@
 import { Reducer } from "react";
+import { Dictionary } from "../../../Classes/Dictionary";
 import { GET_ALL_RECORDS_PRODUCT, GET_STATISTIC } from "../../../constants/ActionsName";
-import { IDiaryState } from "../../../Interfaces/IDiary";
+import { IDiaryRecord, IDiaryState } from "../../../Interfaces/IDiary";
 import { DiaryPageType } from "./Action";
 
 
@@ -18,6 +19,7 @@ const initState: IDiaryState = {
             Fats: 0,
             Proteins: 0,
             Carbohydrates: 0,
+            Calories: 0
         }
     }
 }

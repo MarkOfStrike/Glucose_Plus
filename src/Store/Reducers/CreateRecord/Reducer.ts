@@ -1,24 +1,39 @@
 import { Reducer } from "react";
-import { CLEAR_CREATE_RECORD, SET_CREATE_RECORD_DATE, SET_CREATE_RECORD_FOOD, SET_CREATE_RECORD_GLUCOSE } from "../../../constants/ActionsName";
+import { CHECK_ADD_STATE, CLEAR_CREATE_RECORD, SET_CREATE_RECORD_DATE, SET_CREATE_RECORD_FOOD, SET_CREATE_RECORD_GLUCOSE } from "../../../constants/ActionsName";
 import { IProduct } from "../../../DataBase/Models/Product";
 import { CreateRecordActions } from "./Action";
 
 
 export interface ICreateRecordState {
-    Glucose: number | null
+    Glucose: string 
     Food: ICreateFood | null
-    DateCreate: Date | null
+    DateCreate: string
+    Record: ICreateRecord
 }
 
 export interface ICreateFood {
     name: string
-    products: Array<IProduct>
+    products: Array<IRecordProduct>
+}
+
+export interface IRecordProduct {
+    product: IProduct
+    weight: string
+}
+
+export interface ICreateRecord {
+    isExist: boolean
+    count: number
 }
 
 const initState:ICreateRecordState = {
-    DateCreate: null,
+    DateCreate: '',
     Food: null,
-    Glucose: null
+    Glucose: '',
+    Record: {
+        isExist: false,
+        count: 0
+    }
 }
 
 export const CreateRecordReducer: Reducer<ICreateRecordState, CreateRecordActions> = (state = initState, action):ICreateRecordState => {
@@ -31,6 +46,8 @@ export const CreateRecordReducer: Reducer<ICreateRecordState, CreateRecordAction
             }
         
         case SET_CREATE_RECORD_GLUCOSE:
+            console.log(SET_CREATE_RECORD_GLUCOSE);
+            
             return {
                 ...state,
                 Glucose: action.value
@@ -46,6 +63,17 @@ export const CreateRecordReducer: Reducer<ICreateRecordState, CreateRecordAction
             return {
                 ...state,
                 Food: action.food
+            }
+
+        case CHECK_ADD_STATE:
+            console.log(CHECK_ADD_STATE);
+            
+            return {
+                ...state,
+                Record: {
+                    isExist: action.isState,
+                    count: action.countRecord ?? 0
+                }
             }
     
         default:

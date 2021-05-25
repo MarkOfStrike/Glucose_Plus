@@ -4,13 +4,13 @@ import { IProduct } from "../DataBase/Models/Product";
 import { IDictionary } from "./IDictionary";
 
 export interface IDiaryState {
-    Records?: IDictionary<Array<IRecord>> | null
+    Records?: IDictionary<Array<IDiaryRecord>> | null
     Statistic?: IStatistic
 }
 
 export interface IStatistic {
     Glucose: ILevelGlucose
-    Product: IAverageIndicator
+    Product: IDataIndicator
 }
 
 export interface ILevelGlucose {
@@ -19,17 +19,35 @@ export interface ILevelGlucose {
     Max: number
 }
 
-export interface IAverageIndicator{
+export interface IDataIndicator{
     Gi: number
     Xe: number
     Fats: number
     Proteins: number
     Carbohydrates: number
+    Calories: number
 }
 
 export enum TypeRecord {
     Glucose,
     Product
+}
+
+export interface IDiaryRecord {
+    Date: string
+    Type: TypeRecord
+    ObjectRecord: {
+        Id:number
+        Level: number
+    } | {
+        Id: number
+        Name: string
+        data: IDataProduct
+    }
+}
+
+export interface IDataProduct extends IDataIndicator {
+    weight: number
 }
 
 export interface IRecord {

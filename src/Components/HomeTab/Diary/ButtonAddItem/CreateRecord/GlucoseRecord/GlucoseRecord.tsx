@@ -1,11 +1,20 @@
 import React from 'react'
 import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { connect } from 'react-redux';
 import { style } from './GlucoseRecordStyle'
+import {SetGlucose} from '../../../../../../Store/Reducers/CreateRecord/Action'
+import { IApplicationState } from '../../../../../../Store/StoreInterfaces';
 
+const GlucoseRecord = (props:any) => {
 
-const GlucoseRecord = () => {
+    // console.log(props);
+    
 
-    const [valueText, setValueText] = React.useState<string>('')
+    const [valueText, setValueText] = React.useState<string>(props.levelGlucose)
+
+    React.useEffect(() => {
+        props.SetGlucose(valueText)
+    },[valueText])
 
     const Change = (text: string) => {
         setValueText(text);
@@ -23,9 +32,10 @@ const GlucoseRecord = () => {
                     style={{ marginRight: 5 }}
                     placeholder="---"
                     onBlur={(e) => {
-                        console.log(valueText);
+                        // console.log(valueText);
                     }}
-                    onChangeText={Change} />
+                    onChangeText={Change}
+                    value={valueText} />
 
                 <Text>mg/dL</Text>
             </View>
@@ -33,4 +43,18 @@ const GlucoseRecord = () => {
     )
 }
 
-export default GlucoseRecord;
+const GlucoseRecordContainer = (props:any) => {
+    return(<GlucoseRecord {...props}/>)
+}
+
+// export default GlucoseRecord;
+
+export default connect(
+    (state:IApplicationState) => ({
+        levelGlucose: state.CreateRecord.Glucose
+     }),
+    {
+
+        SetGlucose
+
+    })(GlucoseRecordContainer)

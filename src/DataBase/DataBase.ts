@@ -11,6 +11,7 @@ const DbContext = () => {
     const d = SQLite.openDatabase('UserData.db');
 
     if(d){
+        // DeleteAllTable(d)
         CreateNotExistsTable(d)
         SampleData(d);
     }
@@ -56,9 +57,9 @@ const CreateNotExistsTable = (db:SQLite.WebSQLDatabase) => {
     db.transaction(tx => {
 
         tx.executeSql('CREATE TABLE IF NOT EXISTS ProductGroups (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255));', []);
-        tx.executeSql('CREATE TABLE IF NOT EXISTS UserInfo (Id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255), Surname VARCHAR(255), Weight DOUBLE, MaxLevelGlucose DOUBLE, MinLevelGlucose DOUBLE, Height DOUBLE, DateOfBirth DATE, UserIdServer INTEGER);', []);
-        tx.executeSql('CREATE TABLE IF NOT EXISTS GlucoseMeasurement (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, DateAdd DATE NOT NULL , Level DOUBLE NOT NULL);', []);
-        tx.executeSql('CREATE TABLE IF NOT EXISTS Foods (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255), DateAdd DATE);', []);
+        tx.executeSql('CREATE TABLE IF NOT EXISTS UserInfo (Id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255), Surname VARCHAR(255), Weight DOUBLE, MaxLevelGlucose DOUBLE, MinLevelGlucose DOUBLE, Height DOUBLE, DateOfBirth VARCHAR(255), UserIdServer INTEGER);', []);
+        tx.executeSql('CREATE TABLE IF NOT EXISTS GlucoseMeasurement (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, DateAdd VARCHAR(255) NOT NULL , Level DOUBLE NOT NULL);', []);
+        tx.executeSql('CREATE TABLE IF NOT EXISTS Foods (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255), DateAdd VARCHAR(255));', []);
         tx.executeSql('CREATE TABLE IF NOT EXISTS Products (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255), GI DOUBLE, XE DOUBLE, Fats DOUBLE, Proteins DOUBLE, Carbohydrates DOUBLE, Calories INTEGER, ProductGroup_Id INTEGER NOT NULL, FOREIGN KEY(ProductGroup_Id) REFERENCES ProductGroups(Id) ON DELETE NO ACTION ON UPDATE NO ACTION);', []);
         tx.executeSql('CREATE INDEX IF NOT EXISTS Products_FKIndex1 ON Products (ProductGroup_Id);', []);
         tx.executeSql('CREATE TABLE IF NOT EXISTS FoodRecords (Product_Id INTEGER  NOT NULL, Food_Id INTEGER NOT NULL, NumbersOfGrams INTEGER NOT NULL, FOREIGN KEY(Food_Id) REFERENCES Foods(Id) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(Product_Id) REFERENCES Products(Id) ON DELETE CASCADE ON UPDATE CASCADE);', []);
