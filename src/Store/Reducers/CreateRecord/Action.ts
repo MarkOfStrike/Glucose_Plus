@@ -101,6 +101,8 @@ export const SaveRecord = ():IApplicationAction<ClearAction> => (dispatch, getSt
 
                 const foodId = r.insertId;
     
+                console.log(state.Food?.products)
+
                 state.Food?.products.map((product, i) => {
                     nt.executeSql(`insert into ${FOOD_RECORD_TABLE} (${FOOD_RECORD_TABLE_FOOD_ID}, ${FOOD_RECORD_TABLE_PRODUCT_ID}, ${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS}) values (${foodId}, ${product.product.Id}, ${parseInt(product.weight)})`,[])
                 })

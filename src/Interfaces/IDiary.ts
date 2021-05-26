@@ -4,7 +4,7 @@ import { IProduct } from "../DataBase/Models/Product";
 import { IDictionary } from "./IDictionary";
 
 export interface IDiaryState {
-    Records?: IDictionary<Array<IDiaryRecord>> | null
+    Records?: IDictionary<Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiray>>> | null
     Statistic?: IStatistic
 }
 
@@ -33,17 +33,21 @@ export enum TypeRecord {
     Product
 }
 
-export interface IDiaryRecord {
+export interface IDiaryRecord<T> {
     Date: string
     Type: TypeRecord
-    ObjectRecord: {
-        Id:number
-        Level: number
-    } | {
-        Id: number
-        Name: string
-        data: IDataProduct
-    }
+    ObjectRecord: T
+}
+
+export interface IRecordGlucoseDiray {
+    Id:number
+    Level: number
+}
+
+export interface IRecordFoodDiary {
+    Id: number
+    Name: string
+    data: IDataProduct
 }
 
 export interface IDataProduct extends IDataIndicator {

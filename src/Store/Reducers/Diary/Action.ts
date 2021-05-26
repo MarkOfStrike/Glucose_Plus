@@ -3,7 +3,7 @@ import { FOOD_TABLE, FOOD_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE, GLUCOSE_MEA
 import { FOOD_RECORD_TABLE } from '../../../DataBase/DataBaseConst';
 import { IApplicationAction } from '../../StoreInterfaces';
 import { GET_ALL_RECORDS_PRODUCT, GET_STATISTIC } from "../../../constants/ActionsName";
-import { IDataProduct, IDiaryRecord, IRecord, IStatistic, TypeRecord } from "../../../Interfaces/IDiary";
+import { IDataProduct, IDiaryRecord, IRecord, IRecordFoodDiary, IRecordGlucoseDiray, IStatistic, TypeRecord } from "../../../Interfaces/IDiary";
 import DbContext from '../../../DataBase/DataBase';
 import { IDictionary } from '../../../Interfaces/IDictionary';
 import { Dictionary } from '../../../Classes/Dictionary';
@@ -13,7 +13,7 @@ import { IFoodRecord } from '../../../DataBase/Models/FoodRecord';
 
 export interface GetAllRecord {
     type: typeof GET_ALL_RECORDS_PRODUCT
-    records: IDictionary<Array<IDiaryRecord>>
+    records: IDictionary<Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiray>>>
     countRecord: number
 }
 
@@ -32,11 +32,48 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
 
         const db = DbContext();
 
-        let records: IDictionary<Array<IDiaryRecord>> = {}
+        let records: IDictionary<Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiray>>> = {};
+
+        const times:Array<string> = [];
 
         db.transaction(tr => {
 
-            tr.executeSql(`select * from ${FOOD_TABLE} order by ${FOOD_TABLE_ID} desc`, [], (x,r) => {
+            tr.executeSql(`select ${FOOD_TABLE_DATE_ADD} from ${FOOD_TABLE}`, [], (x,r) => {
+
+                for (let index = 0; index < r.rows.length; index++) {
+                    const element = r.rows.item(index);
+                    times.push(element.DateAdd);
+                    
+                }
+
+            })
+
+            tr.executeSql(`select ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} from ${GLUCOSE_MEASUREMENT_TABLE}`, [], (x,r) => {
+
+                for (let index = 0; index < r.rows.length; index++) {
+                    const element = r.rows.item(index);
+                    times.push(element.DateAdd as string);
+                    
+                }
+
+            })
+
+        }, error => {
+
+            console.log('READ_DATE_RECORDS', error);
+
+        }, () => {
+            
+            times.sort().reverse().map((v, i) => {
+                const date = new Date(parseInt(v)).toDateString();
+                records[date] = []
+            });
+            
+        })
+
+        db.transaction(tr => {
+
+            tr.executeSql(`select * from ${FOOD_TABLE} order by ${FOOD_TABLE_DATE_ADD} desc`, [], (x,r) => {
 
                 for (let index = 0; index < r.rows.length; index++) {
                     const element = r.rows.item(index);
@@ -100,11 +137,10 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
                         }
                     })
 
-                    const date = new Date(food.DateAdd as string)
-
+                    const date = new Date(parseInt(food.DateAdd as string));
                     const dateString = date.toDateString();
 
-                    const foodItem: IDiaryRecord = {
+                    const foodItem: IDiaryRecord<IRecordFoodDiary> = {
                         Date: date.toString(),
                         Type: TypeRecord.Product,
                         ObjectRecord: {
@@ -116,10 +152,7 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
 
                     if (!records[dateString]) {
 
-                        records = {
-                            ...records, 
-                            dateString: [] as Array<IDiaryRecord>
-                        }
+                        records[dateString] = [] as Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiray>>;
                     } 
 
                     records[dateString].push(foodItem);
@@ -127,7 +160,7 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
                 }
             })
 
-            tr.executeSql(`select * from ${GLUCOSE_MEASUREMENT_TABLE}`,[],(x, r) => {
+            tr.executeSql(`select * from ${GLUCOSE_MEASUREMENT_TABLE} order by ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} desc`,[],(x, r) => {
 
                 for (let index = 0; index < r.rows.length; index++) {
                     const element = r.rows.item(index);
@@ -138,11 +171,10 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
                         Level: parseInt(element.Level)
                     }
 
-                    const dbDate = parseInt(glucose.DateAdd as string);
+                    const date = new Date(parseInt(glucose.DateAdd as string));
+                    const dateString = date.toDateString();
 
-                    const date = new Date(dbDate).toDateString()
-
-                    const glucoseRecord: IDiaryRecord = {
+                    const glucoseRecord: IDiaryRecord<IRecordGlucoseDiray> = {
                         Date: date.toString(),
                         Type: TypeRecord.Glucose,
                         ObjectRecord: {
@@ -151,30 +183,26 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
                         }
                     }
 
+                    if (!records[dateString]) {
 
-                    if (!records[date]) {
-
-                        records[date] = [] as Array<IDiaryRecord>;
+                        records[dateString] = [] as Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiray>>;
 
                     } 
 
-                    
-                    records[date].push(glucoseRecord);
+                    records[dateString].push(glucoseRecord);
                 }
             })
         }, error => {
 
             console.log('ERROR_GET_DIARY_RECORD', error);
             
-
         }, () => {
 
-            console.log('OK');
-            
+            let count:number = 0;
 
-            let count = 0;
-
-            for (const key in records) { count++; }
+            for (const key in records) { 
+                count++; 
+            }
 
             dispatch({type: GET_ALL_RECORDS_PRODUCT, records: records, countRecord: count});
         })

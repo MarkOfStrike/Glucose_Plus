@@ -40,6 +40,19 @@ const FoodRecord = (props:any) => {
         setIdProducts([...newMas.map((v,i) => v.product.Id as number)])
 
     }
+
+    const SetWeigth = (weight: string, index:number) => {
+
+        const mas = products.map((product, i) => {
+            if(i === index){
+                product.weight = weight
+            }
+
+            return product
+        })
+
+        setProducts(mas);
+    }
     
     React.useEffect(() => {
 
@@ -76,7 +89,7 @@ const FoodRecord = (props:any) => {
             <ScrollView style={{marginRight: 2, marginLeft: 2}}>
                 {products.map((record, i) => {
                     return(
-                        <ListProduct key={i} productInfo={record} index={i} Delete={DeleteProductToList}/>
+                        <ListProduct key={i} productInfo={record} setWeight={SetWeigth} index={i} Delete={DeleteProductToList}/>
                     )
                 })}
             </ScrollView>
@@ -89,6 +102,7 @@ interface IListProductProps {
     productInfo: IRecordProduct
     index: number
     Delete: (index:number) => void
+    setWeight:(weight:string, index:number) => void
 }
 
 const ListProduct:FC<IListProductProps> = (props) => {
@@ -106,6 +120,10 @@ const ListProduct:FC<IListProductProps> = (props) => {
             
         },
     }
+
+    React.useEffect(() => {
+        props.setWeight(textValue, props.index);
+    }, [textValue]);
 
     return(
         <Swipeout right={[deleteBtn]} autoClose={true} close={true} onOpen={() => {}} onClose={() => {}}>

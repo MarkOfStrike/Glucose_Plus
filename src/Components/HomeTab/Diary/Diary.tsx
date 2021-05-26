@@ -18,11 +18,6 @@ const Container = (props:any) => {
 
 const Diary = (props: any) => {
 
-
-    // console.log(props);
-
-    console.log('DIARY')
-
     const appState = React.useRef(AppState.currentState);
 
     const [appStateVisible, setAppStateVisible] = React.useState(
@@ -37,15 +32,11 @@ const Diary = (props: any) => {
         };
     }, []);
 
-    // if(props.GetRecords){
-    //     props.GetRecords()
-    // }
-
     React.useEffect(() => {
 
         props.GetRecords()
         
-    }, [props.Records])
+    }, [props.GetRecords])
 
     const _handleAppStateChange = (nextAppState: AppStateStatus) => {
         if (
@@ -62,7 +53,6 @@ const Diary = (props: any) => {
 
     return (
         <View style={style.container}>
-            {/* <Text>Current state is: {appStateVisible}</Text> */}
 
             <TotalStats {...props.Statistic}/>
 
@@ -76,11 +66,7 @@ const Diary = (props: any) => {
 
             <Hr />
 
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                // style={{alignContent:'center'}}
-            >
+            <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} >
                 
                 <Records Records={props.Records}/>
                 
