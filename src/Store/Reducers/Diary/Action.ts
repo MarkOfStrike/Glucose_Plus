@@ -112,9 +112,11 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
 
                             nt.executeSql(`select * from ${PRODUCTS_TABLE} where ${PRODUCTS_TABLE_ID} = ${foodRecord.Product?.Id as number}`, [], (tra, result) => {
 
-                                const elementProduct = r.rows.item(0);
+                                const elementProduct = result.rows.item(0);
 
                                 const int = (value:any) => parseInt(value);
+
+                                // console.log('AAAAA',elementProduct)
 
                                 const product:IProduct = {
                                     Calories: int(elementProduct.Calories),
@@ -125,12 +127,12 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
                                     Proteins: elementProduct.Proteins
                                 }
 
-                                dataProduct.Calories += product.Calories as number * weight;
-                                dataProduct.Carbohydrates += product.Carbohydrates as number * weight;
-                                dataProduct.Fats += product.Fats as number * weight;
-                                dataProduct.Gi += product.Gi as number * weight;
-                                dataProduct.Xe += product.Xe as number * weight;
-                                dataProduct.Proteins += product.Proteins as number * weight;
+                                dataProduct.Calories = parseFloat((dataProduct.Calories + (product.Calories as number * weight)).toFixed(2));
+                                dataProduct.Carbohydrates = parseFloat((dataProduct.Carbohydrates + (product.Carbohydrates as number * weight)).toFixed(2));
+                                dataProduct.Fats = parseFloat((dataProduct.Fats + (product.Fats as number * weight)).toFixed(2));
+                                dataProduct.Gi = parseFloat((dataProduct.Gi + (product.Gi as number * weight)).toFixed(2));
+                                dataProduct.Xe = parseFloat((dataProduct.Xe + (product.Xe as number * weight)).toFixed(2));
+                                dataProduct.Proteins = parseFloat((dataProduct.Proteins + (product.Proteins as number * weight)).toFixed(2));
 
 
                             })

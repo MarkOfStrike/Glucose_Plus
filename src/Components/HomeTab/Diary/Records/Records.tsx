@@ -69,7 +69,21 @@ const ItemFood = (props:IDiaryRecord<IRecordFoodDiary>) => {
     
     return(
         <View>
-            <Text>Еда</Text>
+            <Text>{props.ObjectRecord.Name}</Text>
+            <View>
+                <View style={{justifyContent:'space-between', alignContent:'space-between', borderWidth:1, flexDirection:'row'}}>
+                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Calories}</Text>
+                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Carbohydrates}</Text>
+                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Fats}</Text>
+                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Gi}</Text>
+                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Proteins}</Text>
+                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Xe}</Text>
+                </View>
+                <View>
+                    <Text>{new Date(props.Date).toLocaleTimeString()}</Text>
+                    <Text>{props.ObjectRecord.data.weight}</Text>
+                </View>
+            </View>
         </View>
     )
 }
