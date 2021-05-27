@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { IDiaryRecord, IRecordFoodDiary, IRecordGlucoseDiray, TypeRecord } from '../../../../Interfaces/IDiary';
 import { IDictionary } from '../../../../Interfaces/IDictionary';
-import ItemDiary from './ItemDiary/ItemDiary';
 import {style} from './RecordsStyle'
 
 
 
 const Records = (props:any) => {
+
+    
 
     const [recordKeys, setRecordsKeys] = React.useState<Array<string>>([]);
 
@@ -46,8 +47,8 @@ const Records = (props:any) => {
 
 const RecordBlock = (props:any) => {
     return(
-        <View>
-            <Text>{props.date}</Text>
+        <View style={{marginBottom:10, marginLeft:2}}>
+            <Text style={{fontSize:13, color:'grey'}}>{props.date}</Text>
             <View>
                 {props.records.map((v:any, i:number) => {
 
@@ -65,26 +66,37 @@ const RecordBlock = (props:any) => {
 }
 
 const ItemFood = (props:IDiaryRecord<IRecordFoodDiary>) => {
-    // console.log(props);
-    
     return(
-        <View>
-            <Text>{props.ObjectRecord.Name}</Text>
-            <View>
-                <View style={{justifyContent:'space-between', alignContent:'space-between', borderWidth:1, flexDirection:'row'}}>
-                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Calories}</Text>
-                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Carbohydrates}</Text>
-                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Fats}</Text>
-                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Gi}</Text>
-                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Proteins}</Text>
-                    <Text style={{borderWidth:1, alignItems:'center', alignSelf:'flex-start'}}>{props.ObjectRecord.data.Xe}</Text>
-                </View>
-                <View>
-                    <Text>{new Date(props.Date).toLocaleTimeString()}</Text>
-                    <Text>{props.ObjectRecord.data.weight}</Text>
+        <View style={{ flexDirection: 'row', borderWidth: 1, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0}}>
+            <View style={{flex:1, alignItems:'center', justifyContent:'center',}}>
+                <Image source={require('../../../../../assets/images/eat.png')} style={{width:40, height:40,}}/>
+            </View>
+            <View style={{flex:5}}>
+                <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
+                    <View style={{flex:3, justifyContent:'center', marginLeft:5}}>
+                        <Text style={{fontSize:20, flexWrap:'wrap', color:'green'}}>{props.ObjectRecord.Name}</Text>
+                        <View style={{ justifyContent: 'space-between', alignContent: 'space-between', flexDirection: 'row', flexWrap:'wrap' }}>
+                            <InfoText title={'Кал:'+props.ObjectRecord.data.Calories} />
+                            <InfoText title={'У:'+props.ObjectRecord.data.Carbohydrates} />
+                            <InfoText title={'Ж:'+props.ObjectRecord.data.Fats} />
+                            <InfoText title={'ГИ'+props.ObjectRecord.data.Gi} />
+                            <InfoText title={'Б:'+props.ObjectRecord.data.Proteins} />
+                            <InfoText title={'ХЕ'+props.ObjectRecord.data.Xe} />
+                        </View>
+                    </View>
+                    <View style={{flex:1, justifyContent:'center', alignItems:'flex-end', marginRight:5}}>
+                        <Text>{props.ObjectRecord.data.weight} г.</Text>
+                        <InfoText title={new Date(props.Date).toLocaleTimeString()}/>
+                    </View>
                 </View>
             </View>
         </View>
+    )
+}
+
+const InfoText = (props:any) => {
+    return (
+        <Text style={{alignItems:'center', fontSize:9, color:'grey'}}>{props.title}</Text>
     )
 }
 
@@ -92,8 +104,19 @@ const ItemGlucose = (props:IDiaryRecord<IRecordGlucoseDiray>) => {
     // console.log(props);
     
     return (
-        <View>
-            <Text>Глюкоза</Text>
+        <View style={{ flexDirection: 'row', borderWidth: 1, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0}}>
+            <View style={{flex:1, alignItems:'center', justifyContent:'center',}}>
+                <Image source={require('../../../../../assets/images/blood.png')} style={{width:40, height:40,}}/>
+            </View>
+            <View style={{flex:5, flexDirection:'row',}}>
+                <View style={{marginLeft:5}}>
+                    <Text style={{fontSize:16, color:'red'}}>Сахар в крови</Text>
+                </View>
+                <View style={{flex:1, justifyContent:'flex-start', alignItems:'flex-end', marginRight:5}}>
+                        <Text>{props.ObjectRecord.Level} mg/ml</Text>
+                        <InfoText title={new Date(props.Date).toLocaleTimeString()}/>
+                </View>
+            </View>
         </View>
     )
 }
