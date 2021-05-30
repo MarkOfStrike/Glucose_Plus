@@ -1,18 +1,23 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react'
+import { connect } from 'react-redux';
 import HomeTab from './Components/HomeTab/HomeTab';
 import SettingTab from './Components/SettingTab/SettingTab';
 import StatisticTab from './Components/StatisticTab/StatisticTab';
+import { Group } from './Store/Reducers/AddProduct/Reducer';
+import { IApplicationState } from './Store/StoreInterfaces';
 import TabBarIcon from './TabBarIcon';
 import { RootNavigationParamList } from './TabBarTypes';
+import {LoadSampleData} from './Store/Reducers/HomeScreen/Action'
+import { View, Text } from 'react-native';
+import { compose } from 'redux';
 
 
 
 const RootNavigation = createBottomTabNavigator<RootNavigationParamList>();
 
-
-const NavigationApp = () => {
+const NavigationApp = (props:any) => {
 
     return (
         <NavigationContainer >
@@ -22,15 +27,17 @@ const NavigationApp = () => {
                     component={HomeTab}
                     options={{
                         tabBarLabel: "Дневник",
-                        tabBarIcon: ({ color }) => <TabBarIcon name="book-outline" color={color} />
-                    }}/>
+                        tabBarIcon: ({ color }) => <TabBarIcon name="book-outline" color={color} />,
+                        unmountOnBlur: true
+                    }} />
 
                 <RootNavigation.Screen
                     name="Statistic"
                     component={StatisticTab}
                     options={{
                         tabBarLabel: "Статистика",
-                        tabBarIcon: ({ color }) => <TabBarIcon name="stats-chart-outline" color={color} />
+                        tabBarIcon: ({ color }) => <TabBarIcon name="stats-chart-outline" color={color} />,
+                        unmountOnBlur: true
                     }} />
 
                 <RootNavigation.Screen
@@ -46,8 +53,40 @@ const NavigationApp = () => {
 
 }
 
+const NavigationAppContainer = (props:any) => {
 
-export default NavigationApp;
+    React.useEffect(() => {
+        props.LoadSampleData();
+    }, [props.LoadSampleData])
+
+
+    if (props.isLoading) {
+
+        return (
+            <View>
+                <Text>ЗАГРУЗКА</Text>
+            </View>
+        )
+
+    } else {
+
+        return (
+            <NavigationApp {...props} />
+        )
+    }
+}
+
+const mapStateToProps = (state:IApplicationState) => ({
+    isLoading: state.HomeScreen.isLoading
+})
+
+export default compose(connect(
+    mapStateToProps, 
+    {
+        LoadSampleData
+    }
+))(NavigationAppContainer)
+
 
 
 

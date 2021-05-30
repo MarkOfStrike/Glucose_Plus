@@ -7,9 +7,10 @@ import { Picker } from '@react-native-picker/picker'
 import Hr from '../../../../../../CustomElement/Hr';
 import { connect } from 'react-redux';
 import { IApplicationState } from '../../../../../../../Store/StoreInterfaces';
-import {GetSearchProduct, ClearState} from '../../../../../../../Store/Reducers/AddProduct/Action'
+import {GetSearchProduct, ClearState,SetGroupProductSearch,ClearSkip, IncrementSkip} from '../../../../../../../Store/Reducers/AddProduct/Action'
 // import ReactDOM from 'react-dom'
 import { compose } from 'redux';
+import { Group } from '../../../../../../../Store/Reducers/AddProduct/Reducer';
 
 interface IAddProduct {
     isOpen: boolean
@@ -17,9 +18,7 @@ interface IAddProduct {
     SelectedItem?: (product: IProduct) => void
 }
 
-enum Group {
-    All, Fruits, Vegetables
-}
+
 
 const AddContainer = (props:any) => {
     return <AddProduct {...props}/>
@@ -28,10 +27,8 @@ const AddContainer = (props:any) => {
 // const AddProduct: FC<IAddProduct> = ({ isOpen, Close, SelectedItem }) => {
 const AddProduct = (props:any) => {
 
-    // console.log(props);
     
-
-    const [selectedItem, setSelectedItem] = React.useState<Group>(Group.All);
+    const [searchText, setSearchText] = React.useState<string>('');
 
     React.useEffect(() => {
         return(() => {
@@ -42,6 +39,18 @@ const AddProduct = (props:any) => {
     React.useEffect(() => {
         props.GetSearchProduct(props.Ids)
     }, [props.GetSearchProduct])
+
+    React.useEffect(()=> {
+
+        const timer = setTimeout(() => {
+            props.ClearSkip();
+            props.GetSearchProduct(props.Ids, searchText)
+        }, 1500)
+
+        return(() => {
+            clearTimeout(timer);
+        })
+    },[searchText])
 
     const addFunc = (product:IProduct) => {
         props.Add(product);
@@ -75,20 +84,40 @@ const AddProduct = (props:any) => {
 
                     <View style={{ flexDirection: 'row', marginTop: 20, borderRadius: 10, borderWidth: 1, paddingRight: 5, paddingLeft: 5, justifyContent: 'space-between' }}>
                         <TextInput style={{ width: '90%', flexDirection: 'row', justifyContent: 'space-between' }} placeholder={"Начните вводить..."} onChangeText={text => {
-                            props.GetSearchProduct(props.Ids, text);
+                            setSearchText(text);
                         }} />
                         <Image source={require('../../../../../../../../assets/images/otherIcon/searchIcon.png')} style={{ width: 20, height: 20, alignSelf: 'center', borderWidth: 1 }} />
                     </View>
                     <View style={{ borderWidth: 1, marginTop: 10, borderRadius: 15, flexDirection: 'row', justifyContent: 'space-between', paddingLeft: 5 }}>
                         <Text style={{ alignSelf: 'center' }}>Группа:</Text>
-                        <Picker selectedValue={selectedItem} onValueChange={v => setSelectedItem(v)} style={{ color: 'red', width: '80%' }}>
-                            <Picker.Item label={"Все"} value={Group.All} />
-                            <Picker.Item label={"Фрукты"} value={Group.Fruits} />
-                            <Picker.Item label={"Овощи"} value={Group.Vegetables} /> 
+                        <Picker selectedValue={props.GroupProduct as Group} onValueChange={v => {
+                            props.SetGroupProductSearch(v);
+                            props.ClearSkip();
+                            props.GetSearchProduct(props.Ids, searchText)
+
+                        }} style={{ color: 'red', width: '80%' }}>
+                            {Object.values(Group).map((v, i) => { return v.toString() }).map((str, i) => {
+                                
+                                return (
+                                    <Picker.Item key={i} label={str} value={str as Group} />
+                                )
+
+                            })}
+                            {/* <Picker.Item label={Group.All.toString()} value={Group.All} />
+                            <Picker.Item label={Group.Fruits_and_berries.toString()} value={Group.Fruits_and_berries} />
+                            <Picker.Item label={"Овощи"} value={Group.Vegetables} />  */}
                         </Picker>
                     </View>
                     <View style={{ height: '75%', marginTop: 10 }}>
-                        <ScrollView>
+                        <ScrollView onScroll={(event) => {
+
+                            const current = event.nativeEvent;
+
+                            if(current.contentOffset.y + current.layoutMeasurement.height >= current.contentSize.height - 2){
+                                props.IncrementSkip();
+                                props.GetSearchProduct(props.Ids, searchText)
+                            }
+                        }}>
                             {props.Products.map((v: any, i: number) => {
 
                                 const product = v as IProduct;
@@ -117,7 +146,6 @@ const AddProduct = (props:any) => {
 const ProductView = (props:any) => {
     return (
         <TouchableOpacity activeOpacity={0.5} onPress={() => {
-            console.log(props.product.Id);
             props.addFunc(props.product)
         }}>
             <View style={{ borderWidth: 1, padding: 5, marginBottom: 10 }}>
@@ -136,13 +164,17 @@ const ProductView = (props:any) => {
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
-    Products: state.AddProduct.ProductsList
+    Products: state.AddProduct.ProductsList,
+    GroupProduct: state.AddProduct.Category
 })
 
 export default compose(connect(
     mapStateToProps,
     {
         GetSearchProduct,
-        ClearState
+        ClearState,
+        SetGroupProductSearch,
+        ClearSkip, 
+        IncrementSkip
 
     }))(AddContainer)

@@ -9,6 +9,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { IDictionary } from '../../../../../Interfaces/IDictionary';
 import { IApplicationState } from '../../../../../Store/StoreInterfaces';
 import { SetDate, SetFood, SetGlucose, ClearRecord, SaveRecord } from '../../../../../Store/Reducers/CreateRecord/Action'
+import {GetRecords, GetStatistic} from '../../../../../Store/Reducers/Diary/Action'
 import { connect } from 'react-redux';
 
 const CreateRecord = (props: any) => {
@@ -57,7 +58,6 @@ const CreateRecord = (props: any) => {
     };
 
     const handleConfirm = (date: Date) => {
-        console.log("A date has been picked: ", date);
         if (props.SetDate) {
             props.SetDate(date)
         }
@@ -66,6 +66,9 @@ const CreateRecord = (props: any) => {
 
     const SaveRecordFunc = () => {
         props.SaveRecord();
+        props.GetStatistic();
+        props.GetRecords();
+        props.navigation.goBack();
 
     }
 
@@ -167,7 +170,9 @@ export default connect(
         SetFood,
         SetGlucose,
         ClearRecord,
-        SaveRecord
+        SaveRecord,
+        GetRecords,
+        GetStatistic
     }
 )(CreateRecordContainer)
 

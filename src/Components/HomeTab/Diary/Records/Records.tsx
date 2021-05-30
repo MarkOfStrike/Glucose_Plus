@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Image } from 'react-native';
-import { IDiaryRecord, IRecordFoodDiary, IRecordGlucoseDiray, TypeRecord } from '../../../../Interfaces/IDiary';
+import { IDiaryRecord, IRecordFoodDiary, IRecordGlucoseDiary, TypeRecord } from '../../../../Interfaces/IDiary';
 import { IDictionary } from '../../../../Interfaces/IDictionary';
 import {style} from './RecordsStyle'
 
@@ -18,7 +18,7 @@ const Records = (props:any) => {
 
         const mas:Array<string> = []
 
-        for(const k in props.Records as IDictionary<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiray>>){
+        for(const k in props.Records as IDictionary<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiary>>){
             mas.push(k);
         }
 
@@ -100,7 +100,7 @@ const InfoText = (props:any) => {
     )
 }
 
-const ItemGlucose = (props:IDiaryRecord<IRecordGlucoseDiray>) => {
+const ItemGlucose = (props:IDiaryRecord<IRecordGlucoseDiary>) => {
     // console.log(props);
     
     return (

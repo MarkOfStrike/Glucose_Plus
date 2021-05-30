@@ -1,20 +1,51 @@
-import { PRODUCTS_TABLE_NAME, PRODUCT_GROUP_TABLE, PRODUCT_GROUP_TABLE_NAME, PRODUCT_GROUP_TABLE_ID, PRODUCTS_TABLE_ID } from './../../../DataBase/DataBaseConst';
+import { PRODUCTS_TABLE_NAME, PRODUCT_GROUP_TABLE, PRODUCT_GROUP_TABLE_NAME, PRODUCT_GROUP_TABLE_ID, PRODUCTS_TABLE_ID, PRODUCTS_TABLE_GROUP } from './../../../DataBase/DataBaseConst';
 import { IApplicationAction } from './../../StoreInterfaces';
 import { IProduct } from "../../../DataBase/Models/Product";
 import DbContext from '../../../DataBase/DataBase';
-import { CLEAR_PRODUCT_LIST, GET_SEARCH_PRODUCTS } from '../../../constants/ActionsName';
+import { CLEAR_PRODUCT_LIST, CLEAR_SKIP, GET_SEARCH_PRODUCTS, SET_GROUP_SEARCH_PRODUCT, SET_SKIP_RECORD } from '../../../constants/ActionsName';
+import { Group } from './Reducer';
 
+
+export interface SetSkipRecord {
+    type: typeof SET_SKIP_RECORD,
+    skip: number
+}
 
 export interface GetSearchProductsAction {
     type: typeof GET_SEARCH_PRODUCTS
     products: Array<IProduct>
 }
 
+export interface SetGroupSearch {
+    type: typeof SET_GROUP_SEARCH_PRODUCT
+    group: Group
+}
+
 export interface ClearStateAction {
     type: typeof CLEAR_PRODUCT_LIST
     payload: null
 }
-export type AddProductAction = GetSearchProductsAction | ClearStateAction
+export type AddProductAction = GetSearchProductsAction | ClearStateAction | SetGroupSearch | SetSkipRecord;
+
+export const SetGroupProductSearch = (group: Group):IApplicationAction<SetGroupSearch> => (dispatch, getState) => {
+
+    const state = getState();
+
+    if(state.AddProduct.Category !== group){
+        dispatch({type: SET_GROUP_SEARCH_PRODUCT, group});
+    }
+}
+
+export const IncrementSkip = ():IApplicationAction<SetSkipRecord> => (dispatch, getState) => {
+
+    const state = getState().AddProduct.SkipProduct;
+
+    dispatch({type:SET_SKIP_RECORD, skip: state+10})
+
+}
+
+export const ClearSkip = ():IApplicationAction<SetSkipRecord> => (dispatch, getState) => dispatch({type: SET_SKIP_RECORD, skip: 0})
+
 
 export const ClearState = ():IApplicationAction<ClearStateAction> => (dispatch, getState) => {
     
@@ -33,11 +64,17 @@ export const GetSearchProduct = (idProducts:Array<number>,value: string = ''): I
     if (state) {
         const db = DbContext();
 
-        const products: Array<IProduct> = new Array<IProduct>();
+        const products: Array<IProduct> = [];
+
+        let group:string = '';
+
+            if (state.Category !== Group.All) {
+
+                group = `and ${PRODUCTS_TABLE_GROUP} = (select ${PRODUCT_GROUP_TABLE_ID} from ${PRODUCT_GROUP_TABLE} where ${PRODUCT_GROUP_TABLE_NAME} = \'${state.Category.toString()}\')`
+            }
 
         db.transaction(tr => {
-
-            tr.executeSql(`select * from Products where ${PRODUCTS_TABLE_NAME} like ${"\'"}%${value}%${"\'"} and ${PRODUCTS_TABLE_ID} not in (${idProducts.join(',')})`, [], ((ntr, r) => {
+            tr.executeSql(`select * from Products where ${PRODUCTS_TABLE_NAME} like ${"\'"}%${value}%${"\'"} and ${PRODUCTS_TABLE_ID} not in (${idProducts.join(',')}) ${group} order by ${PRODUCTS_TABLE_NAME} asc limit 10 offset ${state.SkipProduct}`, [], ((ntr, r) => {
 
                 for (let index = 0; index < r.rows.length; index++) {
                     const element = r.rows.item(index);

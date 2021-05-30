@@ -12,15 +12,13 @@ const HomePageStack = createStackNavigator();
 
 const HomeTab = (props:any) => {
 
-    // console.log(props.newRecord);
-    
 
     return(
         <HomePageStack.Navigator initialRouteName={'Diary'}>
             <HomePageStack.Screen
                 name="Diary"
                 component={Diary}
-                options={{ headerTitle: "Дневник", headerShown: false }} />
+                options={{ headerTitle: "Дневник", headerShown: false, }} />
                 <HomePageStack.Screen
                 name='AddRecord'
                 component={CreateRecord}
@@ -43,20 +41,6 @@ const HomeTab = (props:any) => {
                 options={{headerTitle:'Подробнее', headerShown:true}}/>
         </HomePageStack.Navigator>
     )
-}
-
-const SaveBtn = (props:any) => {
-
-    if(!props.isExist){
-        return null
-    } else {
-        return (
-            <View>
-                <Text>Сохранить ({props.count})</Text>
-            </View>
-        )
-    }
-    
 }
 
 const EmptyComponent = () => {

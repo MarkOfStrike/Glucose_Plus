@@ -4,7 +4,7 @@ import { IProduct } from "../DataBase/Models/Product";
 import { IDictionary } from "./IDictionary";
 
 export interface IDiaryState {
-    Records?: IDictionary<Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiray>>> | null
+    Records?: IDictionary<Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiary>>> | null
     Statistic?: IStatistic
 }
 
@@ -39,7 +39,7 @@ export interface IDiaryRecord<T> {
     ObjectRecord: T
 }
 
-export interface IRecordGlucoseDiray {
+export interface IRecordGlucoseDiary {
     Id:number
     Level: number
 }

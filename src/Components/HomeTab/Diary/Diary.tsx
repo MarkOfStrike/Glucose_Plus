@@ -2,7 +2,7 @@ import React from 'react';
 import { AppState, AppStateStatus, ScrollView, Text, View } from 'react-native';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { compose } from 'redux';
-import { GetAllRecord, GetRecords } from '../../../Store/Reducers/Diary/Action';
+import { GetAllRecord, GetRecords, GetStatistic } from '../../../Store/Reducers/Diary/Action';
 import { IApplicationAction, IApplicationState } from '../../../Store/StoreInterfaces';
 import Hr from '../../CustomElement/Hr';
 import ButtonAddItem from './ButtonAddItem/ButtonAddItem';
@@ -34,9 +34,10 @@ const Diary = (props: any) => {
 
     React.useEffect(() => {
 
+        props.GetStatistic()
         props.GetRecords()
         
-    }, [props.GetRecords])
+    }, [props.GetRecords, props.GetStatistic])
 
     const _handleAppStateChange = (nextAppState: AppStateStatus) => {
         if (
@@ -110,7 +111,8 @@ const mapStateToProps = (state: IApplicationState) => ({
 export default connect(
     mapStateToProps,
     {
-        GetRecords
+        GetRecords,
+        GetStatistic
     }
 )(Container);
 

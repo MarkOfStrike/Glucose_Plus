@@ -46,8 +46,6 @@ export const CreateRecordReducer: Reducer<ICreateRecordState, CreateRecordAction
             }
         
         case SET_CREATE_RECORD_GLUCOSE:
-            console.log(SET_CREATE_RECORD_GLUCOSE);
-            
             return {
                 ...state,
                 Glucose: action.value
@@ -66,8 +64,6 @@ export const CreateRecordReducer: Reducer<ICreateRecordState, CreateRecordAction
             }
 
         case CHECK_ADD_STATE:
-            console.log(CHECK_ADD_STATE);
-            
             return {
                 ...state,
                 Record: {
