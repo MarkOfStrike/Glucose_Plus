@@ -13,6 +13,7 @@ export interface ICreateRecordState {
 
 export interface ICreateFood {
     name: string
+    insulinLevel:string
     products: Array<IRecordProduct>
 }
 

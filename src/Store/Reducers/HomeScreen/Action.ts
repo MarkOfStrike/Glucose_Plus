@@ -1,4 +1,4 @@
-import { USER_INFO_TABLE, GLUCOSE_MEASUREMENT_TABLE, FOOD_TABLE, PRODUCTS_TABLE, PRODUCT_GROUP_TABLE, FOOD_RECORD_TABLE, PRODUCT_GROUP_TABLE_NAME, PRODUCT_GROUP_TABLE_ID, PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_XE, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_GROUP } from '../../../DataBase/DataBaseConst';
+import { USER_INFO_TABLE, GLUCOSE_MEASUREMENT_TABLE, FOOD_TABLE, PRODUCTS_TABLE, PRODUCT_GROUP_TABLE, FOOD_RECORD_TABLE, PRODUCT_GROUP_TABLE_NAME, PRODUCT_GROUP_TABLE_ID, PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_XE, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_GROUP, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD } from '../../../DataBase/DataBaseConst';
 import React from 'react';
 import { IApplicationAction } from './../../StoreInterfaces';
 import { HOME_SCREEN_LOADING_DATA } from "../../../constants/ActionsName";
@@ -31,6 +31,20 @@ export const LoadSampleData = ():IApplicationAction<HomeScreenLoadingAction> => 
 
     const db = DbContext();
 
+
+    // db.transaction(tr => {
+
+    //     tr.executeSql(`select ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} from ${GLUCOSE_MEASUREMENT_TABLE}`,[],(x,r) => {
+    //         console.log(r);
+            
+    //     })
+
+    // }, error => {
+
+    // }, () => {
+
+    // })
+
     // const tables:Array<string> = [
     //     USER_INFO_TABLE,
     //     GLUCOSE_MEASUREMENT_TABLE,
@@ -57,12 +71,51 @@ export const LoadSampleData = ():IApplicationAction<HomeScreenLoadingAction> => 
         
     // })
 
+    // const date = new Date();
+    // const m = new Date();
+    // if(date.getDay()){
+    //     m.setDate(date.getDate() + 8 - date.getDay())
+    // } else {
+    //     m.setDate(date.getDate() + 1)
+    // }
+
+    // console.log($.format.date(new Date(),''));
+    
+    
+    // const b = new Date(1622840399000);
+
+    // for (let index = -10; index < 10; index++) {
+        
+    //     console.log(new Date(new Date(1622840399000).setDate(new Date(1622840399000).getDate() + index)));
+        
+        
+    // }
+
+    // console.log(b.getDate());
+    
+
+    // console.log(b);
+
+    // const start = new Date(b.getFullYear(), b.getMonth(), b.getDay(), 0,0,0);
+    // const finish = new Date(b.getFullYear(), b.getMonth(), b.getDay(), 23,59,59);
+
+    // console.log(Date.parse(start.toString()), Date.parse(finish.toString()));
+    // console.log(start.toTimeString());
+    
+
+
+
+    
+
+
+    //VARCHAR(255)
+
     db.transaction(tx => {
 
         tx.executeSql('CREATE TABLE IF NOT EXISTS ProductGroups (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255));', []);
         tx.executeSql('CREATE TABLE IF NOT EXISTS UserInfo (Id INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255), Surname VARCHAR(255), Weight DOUBLE, MaxLevelGlucose DOUBLE, MinLevelGlucose DOUBLE, Height DOUBLE, DateOfBirth VARCHAR(255), UserIdServer INTEGER);', []);
-        tx.executeSql('CREATE TABLE IF NOT EXISTS GlucoseMeasurement (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, DateAdd VARCHAR(255) NOT NULL , Level DOUBLE NOT NULL);', []);
-        tx.executeSql('CREATE TABLE IF NOT EXISTS Foods (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255), DateAdd VARCHAR(255));', []);
+        tx.executeSql('CREATE TABLE IF NOT EXISTS GlucoseMeasurement (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, DateAdd INTEGER NOT NULL , Level DOUBLE NOT NULL);', []);
+        tx.executeSql('CREATE TABLE IF NOT EXISTS Foods (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255), DateAdd VARCHAR(255), InsulineDose DOUBLE, CarbohydrateRatio DOUBLE);', []);
         tx.executeSql('CREATE TABLE IF NOT EXISTS Products (Id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, Name VARCHAR(255), GI DOUBLE, XE DOUBLE, Fats DOUBLE, Proteins DOUBLE, Carbohydrates DOUBLE, Calories INTEGER, ProductGroup_Id INTEGER NOT NULL, FOREIGN KEY(ProductGroup_Id) REFERENCES ProductGroups(Id) ON DELETE NO ACTION ON UPDATE NO ACTION);', []);
         tx.executeSql('CREATE INDEX IF NOT EXISTS Products_FKIndex1 ON Products (ProductGroup_Id);', []);
         tx.executeSql('CREATE TABLE IF NOT EXISTS FoodRecords (Product_Id INTEGER  NOT NULL, Food_Id INTEGER NOT NULL, NumbersOfGrams INTEGER NOT NULL, FOREIGN KEY(Food_Id) REFERENCES Foods(Id) ON DELETE CASCADE ON UPDATE CASCADE, FOREIGN KEY(Product_Id) REFERENCES Products(Id) ON DELETE CASCADE ON UPDATE CASCADE);', []);

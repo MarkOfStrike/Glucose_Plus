@@ -122,11 +122,10 @@ const OtherStats = (props:any) => {
     return (
         <View style={statsStyle}>
             <Text>Средние показатели:</Text>
-            <Text>ГИ: {ConvertString(props.Gi)}</Text>
+            <Text>Инс: {ConvertString(props.InsLevel)}</Text>
             <Text>ХЕ: {ConvertString(props.Xe)}</Text>
-            <Text>Белки: {ConvertString(props.Proteins)}</Text>
-            <Text>Жиры: {ConvertString(props.Fats)}</Text>
-            <Text>Углеводы: {ConvertString(props.Carbohydrates)}</Text>
+            <Text>Угл: {ConvertString(props.Carbohydrates)}</Text>
+            <Text>УК: {ConvertString(props.CarbohydrateRatio)}</Text>
         </View>
     )
 }

@@ -10,6 +10,7 @@ import { connect, MapStateToProps } from 'react-redux';
 import { IApplicationState } from '../../../../../../Store/StoreInterfaces';
 import { ICreateFood, IRecordProduct } from '../../../../../../Store/Reducers/CreateRecord/Reducer';
 import {SetFood} from '../../../../../../Store/Reducers/CreateRecord/Action'
+import TextInputMask from 'react-native-text-input-mask';
 // import {} from 'react-native-swipeable-rowexpo'
 
 
@@ -17,6 +18,7 @@ import {SetFood} from '../../../../../../Store/Reducers/CreateRecord/Action'
 const FoodRecord = (props:any) => {
 
     const [nameFood, setNameFood] = React.useState<string>('');
+    const [insulinLevel, setInsulinLevel] = React.useState<string>('');
 
     const [isModal, setIsModal] = React.useState<boolean>(false)
 
@@ -41,7 +43,7 @@ const FoodRecord = (props:any) => {
 
     }
 
-    const SetWeigth = (weight: string, index:number) => {
+    const SetWeight = (weight: string, index:number) => {
 
         const mas = products.map((product, i) => {
             if(i === index){
@@ -56,23 +58,36 @@ const FoodRecord = (props:any) => {
     
     React.useEffect(() => {
 
-        const food:ICreateFood = {
-            name: nameFood,
-            products: products
+        if (nameFood !== '' && insulinLevel !== '' && products.length > 0) {
+            
+            const food:ICreateFood = {
+                name: nameFood,
+                insulinLevel,
+                products: products
+            }
+    
+            props.SetFood(food)
+
         }
-
-        console.log(food);
-        
-
-        props.SetFood(food)
-
-    }, [nameFood, products])
+    }, [nameFood, products, insulinLevel])
 
 
     return (
         <View style={style.container}>
 
             {isModal && <AddProduct isOpen={isModal} Close={CloseModal} Add={AddProductToList} Ids={idProducts}/>}
+
+            <View style={{flexDirection:'row', justifyContent:'space-between', padding: 5}}>
+                <Text>Доза инсулина</Text>
+                <TextInput placeholder={'---'} keyboardType={'numeric'} style={{borderBottomWidth: 1, width: 100}} onChangeText={setInsulinLevel}/>
+                {/* <TextInputMask
+                    onChangeText={(formatted, extracted) => {
+                        console.log(formatted) // +1 (123) 456-78-90
+                        console.log(extracted) // 1234567890
+                    }}
+                    mask={"+1 ([000]) [000] [00] [00]"}
+                /> */}
+            </View>
 
             <View style={{flexDirection:'row', justifyContent:'space-between', padding: 5}}>
                 <Text>Название</Text>
@@ -89,7 +104,7 @@ const FoodRecord = (props:any) => {
             <ScrollView style={{marginRight: 2, marginLeft: 2}}>
                 {products.map((record, i) => {
                     return(
-                        <ListProduct key={i} productInfo={record} setWeight={SetWeigth} index={i} Delete={DeleteProductToList}/>
+                        <ListProduct key={i} productInfo={record} setWeight={SetWeight} index={i} Delete={DeleteProductToList}/>
                     )
                 })}
             </ScrollView>

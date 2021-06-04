@@ -27,6 +27,8 @@ export const FOOD_TABLE = 'Foods';
 export const FOOD_TABLE_ID = 'Id';
 export const FOOD_TABLE_NAME = 'Name';
 export const FOOD_TABLE_DATE_ADD = 'DateAdd';
+export const FOOD_TABLE_INSULIN = 'InsulineDose';
+export const FOOD_TABLE_CARBOHYDRATE_RATIO = 'CarbohydrateRatio';
 
 //#endregion
 

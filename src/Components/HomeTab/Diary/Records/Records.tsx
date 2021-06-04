@@ -66,6 +66,7 @@ const RecordBlock = (props:any) => {
 }
 
 const ItemFood = (props:IDiaryRecord<IRecordFoodDiary>) => {
+
     return(
         <View style={{ flexDirection: 'row', borderWidth: 1, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0}}>
             <View style={{flex:1, alignItems:'center', justifyContent:'center',}}>
@@ -76,12 +77,10 @@ const ItemFood = (props:IDiaryRecord<IRecordFoodDiary>) => {
                     <View style={{flex:3, justifyContent:'center', marginLeft:5}}>
                         <Text style={{fontSize:20, flexWrap:'wrap', color:'green'}}>{props.ObjectRecord.Name}</Text>
                         <View style={{ justifyContent: 'space-between', alignContent: 'space-between', flexDirection: 'row', flexWrap:'wrap' }}>
-                            <InfoText title={'Кал:'+props.ObjectRecord.data.Calories} />
-                            <InfoText title={'У:'+props.ObjectRecord.data.Carbohydrates} />
-                            <InfoText title={'Ж:'+props.ObjectRecord.data.Fats} />
-                            <InfoText title={'ГИ'+props.ObjectRecord.data.Gi} />
-                            <InfoText title={'Б:'+props.ObjectRecord.data.Proteins} />
-                            <InfoText title={'ХЕ'+props.ObjectRecord.data.Xe} />
+                            <InfoText title={'Инс:'+props.ObjectRecord.data.InsLevel} />
+                            <InfoText title={'Хе:'+props.ObjectRecord.data.Xe} />
+                            <InfoText title={'Угл:'+props.ObjectRecord.data.Carbohydrates} />
+                            <InfoText title={'УК:'+props.ObjectRecord.data.CarbohydrateRatio} />
                         </View>
                     </View>
                     <View style={{flex:1, justifyContent:'center', alignItems:'flex-end', marginRight:5}}>

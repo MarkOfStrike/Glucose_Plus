@@ -1,5 +1,5 @@
 import { IGlucoseMeasurement } from './../../../DataBase/Models/GlucoseMeasurement';
-import { FOOD_TABLE, FOOD_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, FOOD_TABLE_ID, FOOD_RECORD_TABLE_PRODUCT_ID, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS, FOOD_RECORD_TABLE_FOOD_ID, PRODUCTS_TABLE, PRODUCTS_TABLE_ID, GLUCOSE_MEASUREMENT_TABLE_LEVEL, PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_XE } from './../../../DataBase/DataBaseConst';
+import { FOOD_TABLE, FOOD_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, FOOD_TABLE_ID, FOOD_RECORD_TABLE_PRODUCT_ID, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS, FOOD_RECORD_TABLE_FOOD_ID, PRODUCTS_TABLE, PRODUCTS_TABLE_ID, GLUCOSE_MEASUREMENT_TABLE_LEVEL, PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_XE, FOOD_TABLE_INSULIN, FOOD_TABLE_CARBOHYDRATE_RATIO } from './../../../DataBase/DataBaseConst';
 import { FOOD_RECORD_TABLE } from '../../../DataBase/DataBaseConst';
 import { IApplicationAction } from '../../StoreInterfaces';
 import { GET_ALL_RECORDS_PRODUCT, GET_STATISTIC } from "../../../constants/ActionsName";
@@ -12,7 +12,7 @@ import { IFoodRecord } from '../../../DataBase/Models/FoodRecord';
 
 export interface GetAllRecord {
     type: typeof GET_ALL_RECORDS_PRODUCT
-    records: IDictionary<Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiary>>>
+    records: IDictionary<Array<IDiaryRecord<IRecordFoodDiary | IRecordGlucoseDiary>>>
     countRecord: number
 }
 
@@ -25,34 +25,34 @@ export type DiaryPageType = GetAllRecord | GetStatistic
 
 
 
-export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getState) => {
+export const GetRecords = (): IApplicationAction<GetAllRecord> => (dispatch, getState) => {
 
-    if(getState().Diary){
+    if (getState().Diary) {
 
         const db = DbContext();
 
-        let records: IDictionary<Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiary>>> = {};
+        let records: IDictionary<Array<IDiaryRecord<IRecordFoodDiary | IRecordGlucoseDiary>>> = {};
 
-        const times:Array<string> = [];
+        const times: Array<string> = [];
 
         db.transaction(tr => {
 
-            tr.executeSql(`select ${FOOD_TABLE_DATE_ADD} from ${FOOD_TABLE}`, [], (x,r) => {
+            tr.executeSql(`select ${FOOD_TABLE_DATE_ADD} from ${FOOD_TABLE}`, [], (x, r) => {
 
                 for (let index = 0; index < r.rows.length; index++) {
                     const element = r.rows.item(index);
                     times.push(element.DateAdd);
-                    
+
                 }
 
             })
 
-            tr.executeSql(`select ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} from ${GLUCOSE_MEASUREMENT_TABLE}`, [], (x,r) => {
+            tr.executeSql(`select ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} from ${GLUCOSE_MEASUREMENT_TABLE}`, [], (x, r) => {
 
                 for (let index = 0; index < r.rows.length; index++) {
                     const element = r.rows.item(index);
                     times.push(element.DateAdd as string);
-                    
+
                 }
 
             })
@@ -62,33 +62,33 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
             console.log('READ_DATE_RECORDS', error);
 
         }, () => {
-            
+
             times.sort().reverse().map((v, i) => {
                 const date = new Date(parseInt(v)).toDateString();
                 records[date] = []
             });
-            
+
         })
+
+        
 
         db.transaction(tr => {
 
-            tr.executeSql(`select * from ${FOOD_TABLE} order by ${FOOD_TABLE_DATE_ADD} desc`, [], (x,r) => {
+            tr.executeSql(`select * from ${FOOD_TABLE} order by ${FOOD_TABLE_DATE_ADD} desc`, [], (x, r) => {
 
                 for (let index = 0; index < r.rows.length; index++) {
                     const element = r.rows.item(index);
 
-                    const food:IFood = {
+                    const food: IFood = {
                         Id: element.Id,
                         DateAdd: element.DateAdd,
                         Name: element.Name
                     }
 
                     let dataProduct: IDataProduct = {
-                        Calories: 0,
                         Carbohydrates: 0,
-                        Fats: 0,
-                        Gi: 0,
-                        Proteins: 0,
+                        CarbohydrateRatio: element.CarbohydrateRatio as number,
+                        InsLevel: element.InsulineDose as number,
                         Xe: 0,
                         weight: 0
                     }
@@ -98,8 +98,8 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
                         for (let index = 0; index < rfp.rows.length; index++) {
                             const elementFood = rfp.rows.item(index);
 
-                            const foodRecord:IFoodRecord = {
-                                NumbersOfGrams: parseInt(elementFood.NumbersOfGrams),
+                            const foodRecord: IFoodRecord = {
+                                NumbersOfGrams: parseFloat(parseFloat(elementFood.NumbersOfGrams).toFixed(2)),
                                 Product: {
                                     Id: parseInt(elementFood.Product_Id)
                                 }
@@ -111,13 +111,16 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
 
                             nt.executeSql(`select * from ${PRODUCTS_TABLE} where ${PRODUCTS_TABLE_ID} = ${foodRecord.Product?.Id as number}`, [], (tra, result) => {
 
+                                // console.log(result);
+                                
+
                                 const elementProduct = result.rows.item(0);
 
-                                const int = (value:any) => parseInt(value);
+                                const int = (value: any) => parseInt(value);
 
                                 // console.log('AAAAA',elementProduct)
 
-                                const product:IProduct = {
+                                const product: IProduct = {
                                     Calories: int(elementProduct.Calories),
                                     Carbohydrates: int(elementProduct.Carbohydrates),
                                     Fats: int(elementProduct.Fats),
@@ -126,12 +129,8 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
                                     Proteins: elementProduct.Proteins
                                 }
 
-                                dataProduct.Calories = parseFloat((dataProduct.Calories + (product.Calories as number * weight)).toFixed(2));
-                                dataProduct.Carbohydrates = parseFloat((dataProduct.Carbohydrates + (product.Carbohydrates as number * weight)).toFixed(2));
-                                dataProduct.Fats = parseFloat((dataProduct.Fats + (product.Fats as number * weight)).toFixed(2));
-                                dataProduct.Gi = parseFloat((dataProduct.Gi + (product.Gi as number * weight)).toFixed(2));
-                                dataProduct.Xe = parseFloat((dataProduct.Xe + (product.Xe as number * weight)).toFixed(2));
-                                dataProduct.Proteins = parseFloat((dataProduct.Proteins + (product.Proteins as number * weight)).toFixed(2));
+                                dataProduct.Carbohydrates += parseFloat((product.Carbohydrates as number * weight).toFixed(2));
+                                dataProduct.Xe += parseFloat((product.Xe as number * weight).toFixed(2));
 
 
                             })
@@ -153,20 +152,20 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
 
                     if (!records[dateString]) {
 
-                        records[dateString] = [] as Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiary>>;
-                    } 
+                        records[dateString] = [] as Array<IDiaryRecord<IRecordFoodDiary | IRecordGlucoseDiary>>;
+                    }
 
                     records[dateString].push(foodItem);
 
                 }
             })
 
-            tr.executeSql(`select * from ${GLUCOSE_MEASUREMENT_TABLE} order by ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} desc`,[],(x, r) => {
+            tr.executeSql(`select * from ${GLUCOSE_MEASUREMENT_TABLE} order by ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} desc`, [], (x, r) => {
 
                 for (let index = 0; index < r.rows.length; index++) {
                     const element = r.rows.item(index);
 
-                    const glucose:IGlucoseMeasurement = {
+                    const glucose: IGlucoseMeasurement = {
                         Id: parseInt(element.Id),
                         DateAdd: element.DateAdd as string,
                         Level: parseInt(element.Level)
@@ -186,9 +185,9 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
 
                     if (!records[dateString]) {
 
-                        records[dateString] = [] as Array<IDiaryRecord<IRecordFoodDiary|IRecordGlucoseDiary>>;
+                        records[dateString] = [] as Array<IDiaryRecord<IRecordFoodDiary | IRecordGlucoseDiary>>;
 
-                    } 
+                    }
 
                     records[dateString].push(glucoseRecord);
                 }
@@ -196,75 +195,96 @@ export const GetRecords = ():IApplicationAction<GetAllRecord> => (dispatch, getS
         }, error => {
 
             console.log('ERROR_GET_DIARY_RECORD', error);
-            
+
         }, () => {
 
-            let count:number = 0;
+            let count: number = 0;
 
-            for (const key in records) { 
-                count++; 
+            for (const key in records) {
+                count++;
             }
 
-            dispatch({type: GET_ALL_RECORDS_PRODUCT, records: records, countRecord: count});
+            dispatch({ type: GET_ALL_RECORDS_PRODUCT, records: records, countRecord: count });
         })
-        
-        
 
-        
+
+
+
     }
 
 }
 
-export const GetStatistic = ():IApplicationAction<GetStatistic> => (dispatch, getState) => {
+export const GetStatistic = (): IApplicationAction<GetStatistic> => (dispatch, getState) => {
 
     const db = DbContext();
 
-    let statistic:IStatistic = {
-        Glucose:{
-            Avg:0,
+    let statistic: IStatistic = {
+        Glucose: {
+            Avg: 0,
             Max: 0,
             Min: 0
         },
         Product: {
-            Calories: 0,
+            CarbohydrateRatio: 0,
+            InsLevel: 0,
             Carbohydrates: 0,
-            Fats: 0,
-            Gi: 0,
-            Proteins: 0,
             Xe: 0
         }
     }
 
+    let carb = 0
+    let xe = 0
+    let count = 0
+
     db.transaction(tr => {
 
-        tr.executeSql(`select avg(${GLUCOSE_MEASUREMENT_TABLE_LEVEL}) as AVG_G, min(${GLUCOSE_MEASUREMENT_TABLE_LEVEL}) as MIN_G, max(${GLUCOSE_MEASUREMENT_TABLE_LEVEL}) as MAX_G from ${GLUCOSE_MEASUREMENT_TABLE}`, [], (x,r) => {
+        tr.executeSql(`select avg(${GLUCOSE_MEASUREMENT_TABLE_LEVEL}) as AVG_G, min(${GLUCOSE_MEASUREMENT_TABLE_LEVEL}) as MIN_G, max(${GLUCOSE_MEASUREMENT_TABLE_LEVEL}) as MAX_G from ${GLUCOSE_MEASUREMENT_TABLE}`, [], (x, r) => {
 
             const values = r.rows.item(0);
 
             statistic.Glucose.Avg = parseFloat(((values.AVG_G ?? 0) as number).toFixed(2));
             statistic.Glucose.Min = parseFloat(((values.MIN_G ?? 0) as number).toFixed(2));
             statistic.Glucose.Max = parseFloat(((values.MAX_G ?? 0) as number).toFixed(2));
-
         })
 
-        tr.executeSql(`select avg(pr.${PRODUCTS_TABLE_CALORIES}) as Calories, avg(pr.${PRODUCTS_TABLE_CARBOHYDRATES}) as Carbohydrates, avg(pr.${PRODUCTS_TABLE_FATS}) as Fats, avg(pr.${PRODUCTS_TABLE_GI}) as Gi, avg(pr.${PRODUCTS_TABLE_PROTEINS}) as Proteins,avg(pr.${PRODUCTS_TABLE_XE}) as Xe from ${FOOD_RECORD_TABLE} fr join ${PRODUCTS_TABLE} pr on fr.${FOOD_RECORD_TABLE_PRODUCT_ID} = pr.${PRODUCTS_TABLE_ID}`, [], (x,r) => {
+        tr.executeSql(`select avg(${FOOD_TABLE_INSULIN}) as Ins, avg(${FOOD_TABLE_CARBOHYDRATE_RATIO}) as CarbRat from ${FOOD_TABLE} `, [], (nt, r) => {
+            const avgValue = r.rows.item(0);
 
-            const values = r.rows.item(0);
+            statistic.Product.InsLevel = avgValue.Ins as number
+            statistic.Product.CarbohydrateRatio = avgValue.CarbRat as number
+        })
 
-            statistic.Product.Calories = values.Calories ?? 0;
-            statistic.Product.Carbohydrates = values.Carbohydrates ?? 0;
-            statistic.Product.Fats = values.Fats ?? 0;
-            statistic.Product.Gi = values.Gi ?? 0;
-            statistic.Product.Proteins = values.Proteins ?? 0;
-            statistic.Product.Xe = values.Xe ?? 0;
 
+        tr.executeSql(`select ${FOOD_TABLE_ID} from ${FOOD_TABLE}`, [], (nt, r) => {
+
+            count += r.rows.length
+
+            for (let index = 0; index < r.rows.length; index++) {
+                const element = r.rows.item(index);
+                
+                nt.executeSql(`select pr.${PRODUCTS_TABLE_XE} as Xe, pr.${PRODUCTS_TABLE_CARBOHYDRATES} as Carb, fr.${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS} as Weight from ${FOOD_RECORD_TABLE} fr join ${PRODUCTS_TABLE} pr on pr.${PRODUCTS_TABLE_ID} = fr.${FOOD_RECORD_TABLE_PRODUCT_ID} where ${FOOD_RECORD_TABLE_FOOD_ID} = ${element.Id}`, [], (t,res) => {
+
+                    for (let index = 0; index < res.rows.length; index++) {
+                        const prod = res.rows.item(index);
+                        
+                        xe += (prod['Xe'] as number) * (prod['Weight'] as number) / 100;
+                        carb += (prod['Carb'] as number) * (prod['Weight'] as number) / 100;
+
+                    }
+
+                })
+            }
         })
 
 
     }, error => {
         console.log(error);
     }, () => {
-        dispatch({type: GET_STATISTIC, statistic})
+
+        statistic.Product.Carbohydrates = carb / count;
+        statistic.Product.Xe = xe / count
+
+        dispatch({ type: GET_STATISTIC, statistic })
     })
 
 }

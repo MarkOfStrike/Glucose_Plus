@@ -1,4 +1,4 @@
-import { FOOD_RECORD_TABLE, FOOD_TABLE, FOOD_TABLE_DATE_ADD, FOOD_TABLE_NAME, FOOD_RECORD_TABLE_FOOD_ID, FOOD_RECORD_TABLE_PRODUCT_ID, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS, GLUCOSE_MEASUREMENT_TABLE, GLUCOSE_MEASUREMENT_TABLE_LEVEL, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD } from './../../../DataBase/DataBaseConst';
+import { FOOD_RECORD_TABLE, FOOD_TABLE, FOOD_TABLE_DATE_ADD, FOOD_TABLE_NAME, FOOD_RECORD_TABLE_FOOD_ID, FOOD_RECORD_TABLE_PRODUCT_ID, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS, GLUCOSE_MEASUREMENT_TABLE, GLUCOSE_MEASUREMENT_TABLE_LEVEL, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, FOOD_TABLE_INSULIN, FOOD_TABLE_CARBOHYDRATE_RATIO } from './../../../DataBase/DataBaseConst';
 import { IApplicationAction } from './../../StoreInterfaces';
 import { CHECK_ADD_STATE, CLEAR_CREATE_RECORD, SET_CREATE_RECORD_DATE, SET_CREATE_RECORD_FOOD, SET_CREATE_RECORD_GLUCOSE } from "../../../constants/ActionsName";
 import { ICreateFood } from "./Reducer";
@@ -96,13 +96,16 @@ export const SaveRecord = ():IApplicationAction<ClearAction> => (dispatch, getSt
 
         const date = state.DateCreate === '' ? new Date(Date.now()).toString() : state.DateCreate;
 
+        let sumXe:number = 0;
+
+        state.Food?.products.map((pr, i) => { sumXe += pr.product.Xe as number / 100 * (parseFloat(parseFloat(pr.weight).toFixed(2))); })
+
+        const yk = parseFloat(state.Food?.insulinLevel as string) / sumXe;
+
         if (state.Food && state.Food.name !== '' && state.Food.products.length > 0) {
-            tr.executeSql(`insert into ${FOOD_TABLE} (${FOOD_TABLE_NAME}, ${FOOD_TABLE_DATE_ADD}) values (\'${state.Food?.name}\',\'${Date.parse(date)}\')`, [], (nt, r) => {
+            tr.executeSql(`insert into ${FOOD_TABLE} (${FOOD_TABLE_NAME}, ${FOOD_TABLE_DATE_ADD}, ${FOOD_TABLE_INSULIN}, ${FOOD_TABLE_CARBOHYDRATE_RATIO}) values (\'${state.Food?.name}\',\'${Date.parse(date)}\', ${state.Food.insulinLevel}, ${yk.toFixed(2)})`, [], (nt, r) => {
 
                 const foodId = r.insertId;
-    
-                // console.log(state.Food?.products)
-
                 state.Food?.products.map((product, i) => {
                     nt.executeSql(`insert into ${FOOD_RECORD_TABLE} (${FOOD_RECORD_TABLE_FOOD_ID}, ${FOOD_RECORD_TABLE_PRODUCT_ID}, ${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS}) values (${foodId}, ${product.product.Id}, ${parseInt(product.weight)})`,[])
                 })
@@ -110,7 +113,7 @@ export const SaveRecord = ():IApplicationAction<ClearAction> => (dispatch, getSt
         }
 
         if (state.Glucose !== '') {
-            tr.executeSql(`insert into ${GLUCOSE_MEASUREMENT_TABLE} (${GLUCOSE_MEASUREMENT_TABLE_LEVEL}, ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD}) values (${parseFloat(state.Glucose)}, \'${Date.parse(date)}\') `, [])
+            tr.executeSql(`insert into ${GLUCOSE_MEASUREMENT_TABLE} (${GLUCOSE_MEASUREMENT_TABLE_LEVEL}, ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD}) values (${parseFloat(state.Glucose)}, ${Date.parse(date)}) `, [])
         }
         
     }, error => {

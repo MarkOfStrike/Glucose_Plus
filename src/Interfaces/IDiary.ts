@@ -20,12 +20,10 @@ export interface ILevelGlucose {
 }
 
 export interface IDataIndicator{
-    Gi: number
-    Xe: number
-    Fats: number
-    Proteins: number
-    Carbohydrates: number
-    Calories: number
+    InsLevel: number
+    Xe:number
+    Carbohydrates:number
+    CarbohydrateRatio:number
 }
 
 export enum TypeRecord {
