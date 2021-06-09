@@ -28,6 +28,7 @@ export interface SetCurrentDateAction {
 export interface SetFormatDateAction {
     type: typeof SET_FORMAT_DATE
     format: FormatDate
+    labels: Array<string>
 }
 
 
@@ -44,6 +45,97 @@ interface ITime {
     start: number
     end: number
 }
+
+// export const SetFormat = (format: FormatDate): IApplicationAction<StatisticTabActions> => (dispatch, getState) => {
+
+//     const current = getState().StatisticTab.currentDate;
+
+//     let labels:Array<string> = [] 
+
+//     switch (format) {
+//         case FormatDate.day:
+//             labels = LabelsHours();
+//             break;
+//             case FormatDate.week:
+//             labels = Week;
+//             break;
+//         case FormatDate.month:
+//             labels = LabelsDays(current.daysInMonth());
+//             break;
+//         case FormatDate.year:
+//             labels = Months;
+//             break;
+
+//         default:
+//             break;
+//     }
+
+//     return TAllRequest([{ type: SET_FORMAT_DATE, format, labels }]);
+// }
+
+// export const SetDate = (val: number): IApplicationAction<StatisticTabActions> => (dispatch, getState) => {
+
+//     const state = getState();
+//     const mom = state.StatisticTab.currentDate;
+
+//     let newDate = mom;
+//     let outDate = '';
+
+//     switch (state.StatisticTab.formatDate) {
+//         case FormatDate.day:
+//             newDate = mom.day(mom.get('day') + val)
+//             outDate = newDate.format(formatDay);
+//             break;
+//         case FormatDate.week:
+//             newDate = mom.day(mom.get('day') + (7 * val))
+//             const momDate = newDate.clone().locale('ru').startOf('isoWeek');
+
+//             const start = momDate;
+//             const end = start.clone().add(7, 'days');
+
+//             outDate = `${start.format(formatDay)} - ${end.format(formatDay)}`;
+//             break;
+//         case FormatDate.month:
+//             newDate = mom.month(mom.get('month') + val)
+//             outDate = newDate.format(formatMonth);
+//             break;
+//         case FormatDate.year:
+//             newDate = mom.year(mom.get('year') + val)
+//             outDate = `${newDate.format(formatYear)}г.`;
+//             break;
+
+//         default:
+//             break;
+//     }
+
+//     const arr:Array<StatisticTabActions> = [
+//          { type: SET_CURRENT_DATE, date: newDate, outDate } 
+//     ]
+
+//     if (state.StatisticTab.formatDate === FormatDate.month) {
+//         arr.push(
+//             { type: LABELS_STATISTIC, label: LabelsDays(newDate.daysInMonth()) }
+//         )
+//     }
+
+//     return TAllRequest(arr);
+// }
+
+
+// const TAllRequest = (disp: Array<StatisticTabActions>): IApplicationAction<any> => (dispatch, getState) => {
+
+//     const state = getState().StatisticTab;
+
+//     if (state) {
+
+//         const ar = disp.map((v,i) => dispatch(v));
+
+//         const request = dispatch(GetData());
+//         Promise.all([ar, request]);
+//     }
+// }
+
+
 
 export const GetData = (): IApplicationAction<GetDataStatisticAction> => (dispatch, getState) => {
 
@@ -62,11 +154,17 @@ export const GetData = (): IApplicationAction<GetDataStatisticAction> => (dispat
 
     const time: Array<ITime> = [];
 
+    
+
     switch (state.StatisticTab.formatDate) {
         case FormatDate.day:
+            // time.push({
+            //     start: Date.parse(new Date(currentTime.get('year'), currentTime.get('month'), currentTime.get('day'), 0, 0, 0).toString()),
+            //     end: Date.parse(new Date(currentTime.get('year'), currentTime.get('month'), currentTime.get('day'), 23, 59, 59).toString())
+            // });
             time.push({
-                start: Date.parse(new Date(currentTime.get('year'), currentTime.get('month'), currentTime.get('day'), 0, 0, 0).toString()),
-                end: Date.parse(new Date(currentTime.get('year'), currentTime.get('month'), currentTime.get('day'), 23, 59, 59).toString())
+                start: currentTime.toDate().setHours(0, 0, 0, 0),
+                end: currentTime.toDate().setHours(23, 59, 59, 0)
             });
             break;
 
@@ -74,16 +172,16 @@ export const GetData = (): IApplicationAction<GetDataStatisticAction> => (dispat
 
             const startWeek = currentTime.clone().startOf('isoWeek');
             time.push({
-                start: Date.parse(new Date(startWeek.get('year'), startWeek.get('month'), startWeek.get('day'), 0, 0, 0).toString()),
-                end: Date.parse(new Date(startWeek.get('year'), startWeek.get('month'), startWeek.get('day'), 23, 59, 59).toString())
+                start: startWeek.toDate().setHours(0, 0, 0, 0),
+                end: startWeek.toDate().setHours(23, 59, 59, 0)
             })
             for (let index = 0; index < 6; index++) {
 
                 const newDate = startWeek.add(1, 'days');
 
                 time.push({
-                    start: Date.parse(new Date(newDate.get('year'), newDate.get('month'), newDate.get('day'), 0, 0, 0).toString()),
-                    end: Date.parse(new Date(newDate.get('year'), newDate.get('month'), newDate.get('day'), 23, 59, 59).toString())
+                    start: newDate.toDate().setHours(0, 0, 0, 0),
+                    end: newDate.toDate().setHours(23, 59, 59, 0)
                 })
 
             }
@@ -114,6 +212,8 @@ export const GetData = (): IApplicationAction<GetDataStatisticAction> => (dispat
         default:
             break;
     }
+
+
 
     const queryArr: Array<{ queryGlucose: string, queryAvgFood: string, queryAvgProduct: string }> = []
 
@@ -256,7 +356,7 @@ export const SetFormat = (format: FormatDate): IApplicationAction<StatisticTabAc
             break;
     }
 
-    dispatch({ type: SET_FORMAT_DATE, format })
+    dispatch({ type: SET_FORMAT_DATE, format, labels:[] })
 
 }
 
@@ -290,6 +390,22 @@ const LabelsWeeks = (startDays: number, endDays: number) => {
     return arr;
 
 }
+
+const Week:Array<string> = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const Months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'];
+
 
 const LabelsMonths = () => [
     'January',

@@ -2,6 +2,7 @@ import { IDiaryState } from "../Interfaces/IDiary";
 import { IAddProductState } from "./Reducers/AddProduct/Reducer";
 import { ICreateRecordState } from "./Reducers/CreateRecord/Reducer";
 import { IHomeScreenState } from "./Reducers/HomeScreen/Reducer";
+import { ISettingState } from "./Reducers/SettingTab/Reducer";
 import { IStatisticTabState } from "./Reducers/StatisticTab/Reducer";
 
 export interface IApplicationState {
@@ -10,6 +11,7 @@ export interface IApplicationState {
     CreateRecord: ICreateRecordState
     HomeScreen: IHomeScreenState
     StatisticTab: IStatisticTabState
+    SettingTab: ISettingState
 }
 
 export interface IApplicationAction<TAction> {

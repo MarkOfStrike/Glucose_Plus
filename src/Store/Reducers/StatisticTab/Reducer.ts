@@ -6,11 +6,11 @@ import { StatisticTabActions } from "./Action";
 
 
 export enum FormatDate {
-    day,week,month,year
+    day, week, month, year
 }
 
 export interface IStatisticTabState {
-    
+
     formatDate: FormatDate
     currentOutDate: string
     currentDate: moment.Moment
@@ -27,18 +27,18 @@ export interface IStatisticData {
     inc: Array<number>
 }
 
-const initState:IStatisticTabState = {
+const initState: IStatisticTabState = {
     formatDate: FormatDate.day,
-    currentOutDate:moment(new Date()).format('DD MMMM YYYY'),
+    currentOutDate: moment(new Date()).format('DD MMMM YYYY'),
     currentDate: moment(new Date()),
     statistic: {
-        glucose:[],
-        inc:[],
-        xe:[],
-        ygl:[],
-        yk:[]
+        glucose: [],
+        inc: [],
+        xe: [],
+        ygl: [],
+        yk: []
     },
-    labels:[]
+    labels: []
 }
 
 export const StatisticTabReducer: Reducer<IStatisticTabState, StatisticTabActions> = (state = initState, action) => {
@@ -62,11 +62,11 @@ export const StatisticTabReducer: Reducer<IStatisticTabState, StatisticTabAction
                 currentDate: action.date,
                 currentOutDate: action.outDate
             }
-            case LABELS_STATISTIC:
-                return {
-                    ...state,
-                    labels: action.label
-                }
+        case LABELS_STATISTIC:
+            return {
+                ...state,
+                labels: action.label
+            }
 
         default:
             return state;

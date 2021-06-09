@@ -40,6 +40,14 @@ export const LABELS_STATISTIC = 'LABELS_STATISTIC';
 
 //#endregion
 
+//#region SettingTab 
+
+export const SET_NEW_MEASUREMENT = 'SET_NEW_MEASUREMENT';
+export const IMPORT_LOADING = 'IMPORT_LOADING';
+export const EXPORT_LOADING = 'EXPORT_LOADING';
+
+//#endregion
+
 
 
 

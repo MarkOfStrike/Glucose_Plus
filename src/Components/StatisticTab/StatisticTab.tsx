@@ -79,238 +79,27 @@ const StatisticTab = (props:any) => {
                 ...dataSets,
                 {
                     data:[0],
-                    color: (c = 0) => `rgba(0,0,0,${0})`
+                    color: (c = 0) => `rgba(0,0,0,${0})`,strokeWidth:0,withDots:false
                 }
-                // {
-                //     data: [1],
-                //     // data: [...(props.data.glucose as Array<number>)],  
-                //     color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-                // },
-                // {
-                //     data: [2], 
-                //     // data: [...(props.data.inc as Array<number>)], 
-                //     color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-                // },
-                // {
-                //     data: [3], 
-                //     // data: [...(props.data.xe as Array<number>)], 
-                //     color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-                // },
-                // {
-                //     data: [4], 
-                //     // data: [...(props.data.ygl as Array<number>)], 
-                //     color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-                // },
-                // {
-                //     data: [5], 
-                //     // data: [...(props.data.yk as Array<number>)], 
-                //     color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-                // },
             ]
         }
 
-        // setEl(<LineChart
-        //     onDataPointClick={(dot) => {
-        //     }}
-        //     data={newData}
-        //     width={Dimensions.get("window").width - 10} // from react-native
-        //     // width={1000} // from react-native
-        //     height={520}
-        //     // yAxisLabel="$"
-        //     // yAxisSuffix="kk"
-        //     yAxisInterval={1} // optional, defaults to 1
-        //     verticalLabelRotation={30}//Поворот названий по оси x
-        //     chartConfig={{
-        //         // scrollableDotRadius:6,
-        //         // scrollableInfoSize:{
-        //         //     height: 520,
-        //         //     width: Dimensions.get("window").width
-        //         // },
-        //         // width: 2000,
-        //         backgroundColor: "#e26a00",
-        //         backgroundGradientFrom: "#fb8c00",
-        //         backgroundGradientTo: "#ffa726",
-        //         decimalPlaces: 2, // optional, defaults to 2dp
-        //         color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        //         labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        //         style: {
-        //             borderRadius: 16,
-        //             // width:2000
-        //         },
-        //         propsForDots: {
-        //             r: "6",
-        //             strokeWidth: "2",
-        //             stroke: "#ffa726"
-        //         }
-        //     }}
-        //     bezier
-        //     // withScrollableDot
-            
-
-        //     style={{
-        //         // width:2000,
-        //         alignSelf:'center',
-        //         marginVertical: 8,
-        //         borderRadius: 16
-        //     }}
-        // />)
-
         setChartData(newData);
 
-    },[props.data])
+    },[props.data,props.label])
 
     const EditDate = (val:number) => {
+        // console.log(val);
+        
         props.SetDate(val)
         props.GetData();
     }
 
-    // React.useEffect(() => {
+    const EditFormatDate = (format: FormatDate) => {
 
-    //     setOutDate(setDateFromOut(currentDate, currentFormatDate));
-        
-    // },[currentDate])
-
-    // React.useEffect(() => {
-
-    //     setCurrentDate(new Date());
-
-    // }, [currentFormatDate])
-
-
-    // React.useEffect(() => {
-    //     editDate(countDays)
-    // },[countDays])
-
-    // const newData:LineChartData = {
-    //     labels: props.label,
-    //     datasets: [
-    //         {
-    //             data: [
-    //                 ...props.data.glucose
-    //             ], color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-    //         },
-    //         {
-    //             data: [
-    //                 ...props.data.inc
-    //             ], color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-    //         },
-    //         {
-    //             data: [
-    //                 ...props.data.xe
-    //             ], color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-    //         },
-    //         {
-    //             data: [
-    //                 ...props.data.ygl
-    //             ], color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-    //         },
-    //         {
-    //             data: [
-    //                 ...props.data.yk
-    //             ], color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-    //         },
-    //     ]
-    // }
-
-    // const data = {
-        
-    //     labels: props.label,
-    //     datasets: [
-    //         {
-    //             data: [
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //             ], color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-    //         },
-    //         {
-    //             data: [
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //             ], color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-    //         },
-    //         {
-    //             data: [
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //                 Math.random() * 100,
-    //             ], color: (c = 1) => `rgba(${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${Math.round(Math.random() * 100)},${c})`
-    //         }
-    //     ]
-    // }
-
-    // const data = {
-    //     labels: ["January", "February", "March", "April", "May", "June"],
-    //     datasets: [
-    //       {
-    //         data: [20, 45, 28, 80, 99, 43],
-    //         color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
-    //         strokeWidth: 2 // optional
-    //       },
-    //       {
-    //         data: [20, 53, 15, 95, 35, 85],
-    //         color: (opacity = 1) => `rgba(34, 146, 21, ${opacity})`, // optional
-    //         strokeWidth: 2 // optional
-    //       },
-    //       {
-    //         data: [34, 23, 13, 76, 95, 46],
-    //         color: (opacity = 1) => `rgba(246, 42, 153, ${opacity})`, // optional
-    //         strokeWidth: 2 // optional
-    //       },
-    //       {
-    //         data: [65, 89, 23, 14, 37, 85],
-    //         color: (opacity = 1) => `rgba(3, 64, 184, ${opacity})`, // optional
-    //         strokeWidth: 2 // optional
-    //       }
-    //     ],
-    //     legend: ["Rainy Days", "Rainy Days", "Rainy Days", "Rainy Days"] // optional
-    //   };
+        props.SetFormat(format);
+        props.GetData();
+    }
 
     return(
         <View>
@@ -318,16 +107,16 @@ const StatisticTab = (props:any) => {
             <View>
                 <View style={{flexDirection:'row', justifyContent:'space-between', padding: 15}}>
                 <Button title={'Day'} onPress={()=>{
-                        props.SetFormat(FormatDate.day);
+                        EditFormatDate(FormatDate.day);
                     }}/>
                     <Button title={'Week'} onPress={()=>{
-                        props.SetFormat(FormatDate.week);
+                        EditFormatDate(FormatDate.week);
                     }}/>
                     <Button title={'Month'} onPress={()=>{
-                        props.SetFormat(FormatDate.month);
+                        EditFormatDate(FormatDate.month);
                     }}/>
                     <Button title={'Year'} onPress={()=>{
-                        props.SetFormat(FormatDate.year);
+                        EditFormatDate(FormatDate.year);
                     }}/>
                 </View>
                 <View style={{flexDirection:'row', justifyContent:'center', padding: 15}}>
@@ -347,7 +136,7 @@ const StatisticTab = (props:any) => {
                     </TouchableOpacity>
                 </View>
                 <Text>Bezier Line Chart</Text>
-                <ScrollView horizontal>
+                <ScrollView>
                     {/* {el} */}
                 <LineChart
                     onDataPointClick={(dot) => {
@@ -355,11 +144,11 @@ const StatisticTab = (props:any) => {
                     data={chartData}
                     width={Dimensions.get("window").width - 10} // from react-native
                     // width={1000} // from react-native
-                    height={520}
+                    height={400}
                     // yAxisLabel="$"
                     // yAxisSuffix="kk"
                     yAxisInterval={1} // optional, defaults to 1
-                    verticalLabelRotation={30}//Поворот названий по оси x
+                    verticalLabelRotation={45}//Поворот названий по оси x
                     chartConfig={{
                         // scrollableDotRadius:6,
                         // scrollableInfoSize:{
