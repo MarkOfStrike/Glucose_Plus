@@ -21,7 +21,7 @@ import { Dataset } from 'react-native-chart-kit/dist/HelperTypes';
 
 const StatisticTab = (props:any) => {
 
-    console.log(props);
+    // console.log(props);
     
 
     const [currentFormatDate, setCurrentFormatDate] = React.useState(FormatDate.day);
@@ -88,6 +88,15 @@ const StatisticTab = (props:any) => {
 
     },[props.data,props.label])
 
+
+    const EditFormatDate = (format: FormatDate) => {
+
+        props.SetFormat(format);
+        EditDate(0);
+        console.log(props.dateTime);
+        
+    }
+
     const EditDate = (val:number) => {
         // console.log(val);
         
@@ -95,11 +104,7 @@ const StatisticTab = (props:any) => {
         props.GetData();
     }
 
-    const EditFormatDate = (format: FormatDate) => {
-
-        props.SetFormat(format);
-        props.GetData();
-    }
+    
 
     return(
         <View>

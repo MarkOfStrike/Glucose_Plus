@@ -320,7 +320,7 @@ export const SetDate = (val: number): IApplicationAction<StatisticTabActions> =>
             const end = start.clone().add(7, 'days');
 
             outDate = `${start.format(formatDay)} - ${end.format(formatDay)}`;
-            dispatch({ type: LABELS_STATISTIC, label: LabelsWeeks(start.get('day'), end.get('day')) })
+            dispatch({ type: LABELS_STATISTIC, label: LabelsWeek(start.clone()) })
             break;
         case FormatDate.month:
             newDate = mom.month(mom.get('month') + val)
@@ -344,6 +344,7 @@ export const SetDate = (val: number): IApplicationAction<StatisticTabActions> =>
 export const SetFormat = (format: FormatDate): IApplicationAction<StatisticTabActions> => (dispatch, getState) => {
 
 
+
     switch (format) {
         case FormatDate.day:
             dispatch({ type: LABELS_STATISTIC, label: LabelsHours() })
@@ -356,12 +357,44 @@ export const SetFormat = (format: FormatDate): IApplicationAction<StatisticTabAc
             break;
     }
 
-    dispatch({ type: SET_FORMAT_DATE, format, labels:[] })
+    const mom = moment(new Date());
+
+
+    let newDate = mom;
+    let outDate = '';
+
+    switch (format) {
+        case FormatDate.day:
+            outDate = newDate.format(formatDay);
+            break;
+        case FormatDate.week:
+            const momDate = newDate.clone().locale('ru').startOf('isoWeek');
+
+            const start = momDate;
+            const end = start.clone().add(7, 'days');
+
+            outDate = `${start.format(formatDay)} - ${end.format(formatDay)}`;
+            dispatch({ type: LABELS_STATISTIC, label: LabelsWeek(start.clone()) })
+            break;
+        case FormatDate.month:
+            outDate = newDate.format(formatMonth);
+            dispatch({ type: LABELS_STATISTIC, label: LabelsDays(newDate.daysInMonth()) })
+            break;
+        case FormatDate.year:
+            outDate = `${newDate.format(formatYear)}г.`;
+            break;
+
+        default:
+            break;
+    }
+
+    dispatch({type:SET_CURRENT_DATE,date:newDate, outDate});
+    dispatch({ type: SET_FORMAT_DATE, format, labels:[] });
 
 }
 
 
-const LabelsHours = () => {
+export const LabelsHours = () => {
 
     const arr: Array<string> = [];
     for (let index = 0; index < 24; index++) {
@@ -387,6 +420,18 @@ const LabelsWeeks = (startDays: number, endDays: number) => {
     for (let index = startDays; index <= endDays + 1; index++) {
         arr.push(`${index}`);
     }
+    return arr;
+
+}
+
+const LabelsWeek = (start:moment.Moment) => {
+
+    const arr: Array<string> = [start.date().toString()];
+    for (let index = 0; index < 6; index++) {
+        arr.push(`${start.add(1,'days').date()}`);
+    }
+    console.log(arr);
+    
     return arr;
 
 }

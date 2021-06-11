@@ -1,5 +1,5 @@
 import { FOOD_TABLE, GLUCOSE_MEASUREMENT_TABLE, FOOD_TABLE_NAME, FOOD_TABLE_DATE_ADD, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_INSULIN, FOOD_TABLE_ID } from './../../../DataBase/DataBaseConst';
-import RNFS, { writeFile } from 'react-native-fs';
+// import RNFS, { writeFile } from 'react-native-fs';
 import { IApplicationAction } from './../../StoreInterfaces';
 import { EXPORT_LOADING, IMPORT_LOADING, SET_NEW_MEASUREMENT } from "../../../constants/ActionsName";
 import moment from 'moment';
