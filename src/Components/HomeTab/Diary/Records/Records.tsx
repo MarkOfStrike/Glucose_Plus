@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
-import { IDiaryRecord, IRecordFoodDiary, IRecordGlucoseDiary, TypeRecord } from '../../../../Interfaces/IDiary';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { IDiaryRecord, IDiaryRecordNav, IRecordFoodDiary, IRecordGlucoseDiary, TypeRecord } from '../../../../Interfaces/IDiary';
 import { IDictionary } from '../../../../Interfaces/IDictionary';
+import { GetValueStorage } from '../../../../StorageWork';
 import {style} from './RecordsStyle'
 
 
@@ -26,6 +27,11 @@ const Records = (props:any) => {
 
     }, [props.Records])
 
+    const Nav = (id:number, type:TypeRecord) => {
+        props.Navigate('MoreDetailsOfRecord',{id, type});
+    }
+
+
     if(!props.Records){
         return(
             <NonRecord/>
@@ -37,7 +43,7 @@ const Records = (props:any) => {
                 {recordKeys.map((key, i) => {
 
                     return (
-                        <RecordBlock key={i} date={key} records={props.Records[key]}/>
+                        <RecordBlock key={i} date={key} records={props.Records[key]} Nav={Nav}/>
                     )
                 })}
             </View>
@@ -53,9 +59,9 @@ const RecordBlock = (props:any) => {
                 {props.records.map((v:any, i:number) => {
 
                     if(v.Type as TypeRecord === TypeRecord.Glucose){
-                        return ( <ItemGlucose key={i} {...v}/> )
+                        return ( <ItemGlucose key={i} {...v} nav={props.Nav} /> )
                     } else if(v.Type as TypeRecord.Product) {
-                        return ( <ItemFood key={i} {...v}/> )
+                        return ( <ItemFood key={i} {...v} nav={props.Nav}/> )
                     }
 
 
@@ -65,9 +71,12 @@ const RecordBlock = (props:any) => {
     )
 }
 
-const ItemFood = (props:IDiaryRecord<IRecordFoodDiary>) => {
+const ItemFood = (props:IDiaryRecordNav<IRecordFoodDiary>) => {
 
     return(
+        <TouchableOpacity activeOpacity={0.7} onPress={() => {
+            props.nav(props.ObjectRecord.Id, props.Type);
+        }}>
         <View style={{ flexDirection: 'row', borderWidth: 1, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0}}>
             <View style={{flex:1, alignItems:'center', justifyContent:'center',}}>
                 <Image source={require('../../../../../assets/images/eat.png')} style={{width:40, height:40,}}/>
@@ -90,6 +99,7 @@ const ItemFood = (props:IDiaryRecord<IRecordFoodDiary>) => {
                 </View>
             </View>
         </View>
+        </TouchableOpacity>
     )
 }
 
@@ -99,10 +109,23 @@ const InfoText = (props:any) => {
     )
 }
 
-const ItemGlucose = (props:IDiaryRecord<IRecordGlucoseDiary>) => {
-    // console.log(props);
-    
+const ItemGlucose = (props:IDiaryRecordNav<IRecordGlucoseDiary>) => {
+
+    const [measuring, setMeasuring] = React.useState<string>('');
+
+    React.useEffect(() => {
+
+        GetValueStorage('value_measuring').then(v => {
+            setMeasuring(v);
+            
+        });
+
+    },[])
+
     return (
+        <TouchableOpacity activeOpacity={0.7} onPress={() => {
+            props.nav(props.ObjectRecord.Id, props.Type);
+        }}>
         <View style={{ flexDirection: 'row', borderWidth: 1, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0}}>
             <View style={{flex:1, alignItems:'center', justifyContent:'center',}}>
                 <Image source={require('../../../../../assets/images/blood.png')} style={{width:40, height:40,}}/>
@@ -112,11 +135,12 @@ const ItemGlucose = (props:IDiaryRecord<IRecordGlucoseDiary>) => {
                     <Text style={{fontSize:16, color:'red'}}>Сахар в крови</Text>
                 </View>
                 <View style={{flex:1, justifyContent:'flex-start', alignItems:'flex-end', marginRight:5}}>
-                        <Text>{props.ObjectRecord.Level} mg/ml</Text>
+                        <Text>{measuring == 'mmol/l' ? (props.ObjectRecord.Level / 18).toFixed(2) : props.ObjectRecord.Level} {measuring}</Text>
                         <InfoText title={new Date(props.Date).toLocaleTimeString()}/>
                 </View>
             </View>
         </View>
+        </TouchableOpacity>
     )
 }
 

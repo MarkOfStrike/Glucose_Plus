@@ -25,7 +25,9 @@
     "@ui-kitten/components": "^5.1.0",
     "expo": "~41.0.1",
     "expo-asset": "^8.3.2",
+    "expo-document-picker": "^9.1.2",
     "expo-file-system": "^11.0.2",
+    "expo-media-library": "^12.0.2",
     "expo-permissions": "^12.0.1",
     "expo-splash-screen": "^0.10.2",
     "expo-sqlite": "~9.1.0",
@@ -57,7 +59,8 @@
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "unimodules-permissions-interface": "^6.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",

@@ -10,9 +10,9 @@ import { style } from './DiaryStyle';
 import Records from './Records/Records';
 import TotalStats from './TotalStats/TotalStats';
 
-const Container = (props:any) => {
+const Container = (props: any) => {
 
-    return <Diary {...props}/>
+    return <Diary {...props} />
 
 }
 
@@ -32,11 +32,13 @@ const Diary = (props: any) => {
         };
     }, []);
 
+    
+
     React.useEffect(() => {
 
         props.GetStatistic()
         props.GetRecords()
-        
+
     }, [props.GetRecords, props.GetStatistic])
 
     const _handleAppStateChange = (nextAppState: AppStateStatus) => {
@@ -55,7 +57,7 @@ const Diary = (props: any) => {
     return (
         <View style={style.container}>
 
-            <TotalStats {...props.Statistic}/>
+            <TotalStats {...props.Statistic} />
 
             <Hr />
 
@@ -68,9 +70,9 @@ const Diary = (props: any) => {
             <Hr />
 
             <ScrollView showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false} >
-                
-                <Records Records={props.Records}/>
-                
+
+                <Records Records={props.Records} Navigate={props.navigation.navigate} />
+
             </ScrollView>
         </View>
     );

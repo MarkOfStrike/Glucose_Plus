@@ -1,14 +1,16 @@
 import React from 'react'
 import { Button, Dimensions, ScrollView, StatusBar, StyleProp, Text, TextStyle, TouchableOpacity, View } from 'react-native'
-import { LineChart,
+import {
+    LineChart,
     BarChart,
     PieChart,
     ProgressChart,
-    ContributionGraph } from 'react-native-chart-kit';
+    ContributionGraph
+} from 'react-native-chart-kit';
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { connect } from 'react-redux';
 import { IApplicationState } from '../../Store/StoreInterfaces';
-import {GetData, SetDate, SetFormat} from '../../Store/Reducers/StatisticTab/Action';
+import { GetDataTest, SetDate, SetFormat } from '../../Store/Reducers/StatisticTab/Action';
 import moment from 'moment'
 import { FormatDate } from '../../Store/Reducers/StatisticTab/Reducer';
 import { LineChartData } from 'react-native-chart-kit/dist/line-chart/LineChart';
@@ -19,10 +21,10 @@ import { Dataset } from 'react-native-chart-kit/dist/HelperTypes';
 // }
 
 
-const StatisticTab = (props:any) => {
+const StatisticTab = (props: any) => {
 
     // console.log(props);
-    
+
 
     const [currentFormatDate, setCurrentFormatDate] = React.useState(FormatDate.day);
 
@@ -31,101 +33,140 @@ const StatisticTab = (props:any) => {
 
     const [countDays, setCountDays] = React.useState(0);
 
-    const [chartData, setChartData] = React.useState<LineChartData>({labels:[''], datasets:[{data:[0]}]})
+    const [chartData, setChartData] = React.useState<LineChartData>({ labels: [''], datasets: [{ data: [0] }] })
     const [el, setEl] = React.useState<JSX.Element>(<View></View>)
 
-    React.useEffect(() => {
-        props.GetData()
-    }, [props.GetData])
 
     React.useEffect(() => {
+        props.GetDataTest()
+    }, [props.GetDataTest])
 
+    /** Цвета
+     * 
+     * #470736
+     * #ffd800
+     * #71bc78
+     * #2f6334
+     * #f24666
+     * #ff2e2e
+     * #273a8c
+     * #2271b3
+     * #9e2373
+     * 
+     */
 
+    React.useEffect(() => {
+
+        // console.log(props.data);
+
+        const DATA: Dataset = {
+            data: [0],
+            color: (c = 0) => `rgba(0,0,0,${0})`, strokeWidth: 0, withDots: false
+        }
         const dataSets: Array<Dataset> = [];
 
-        if (props.data.glucose.length > 0) {
+        if (props.data.glucose.length > 0 && !props.data.glucose.every((v: number, i: number) => v === 0)) {
             dataSets.push({
-                data: [...props.data.glucose]
+                data: [...props.data.glucose],
+                color: (opacity = 1) => `#470736`
             })
         }
-
-        if (props.data.inc.length > 0) {
-            dataSets.push({
-                data: [...props.data.inc]
-            })
+        else {
+            dataSets.push(DATA)
         }
 
-        if (props.data.xe.length > 0) {
+        if (props.data.inc.length > 0 && !props.data.inc.every((v: number, i: number) => v === 0)) {
             dataSets.push({
-                data: [...props.data.xe]
+                data: [...props.data.inc],
+                color: (opacity = 1) => `#ffd800`
             })
+        } else {
+            dataSets.push(DATA)
         }
 
-        if (props.data.ygl.length > 0) {
+        if (props.data.xe.length > 0 && !props.data.xe.every((v: number, i: number) => v === 0)) {
             dataSets.push({
-                data: [...props.data.ygl]
+                data: [...props.data.xe],
+                color: (opacity = 1) => `#71bc78`
             })
+        } else {
+            dataSets.push(DATA)
         }
 
-        if (props.data.yk.length > 0) {
+        if (props.data.ygl.length > 0 && !props.data.ygl.every((v: number, i: number) => v === 0)) {
             dataSets.push({
-                data: [...props.data.yk]
+                data: [...props.data.ygl],
+                color: (opacity = 1) => `#2f6334`
             })
+        } else {
+            dataSets.push(DATA)
         }
 
-        const newData:LineChartData = {
+        if (props.data.yk.length > 0 && !props.data.yk.every((v: number, i: number) => v === 0)) {
+            dataSets.push({
+                data: [...props.data.yk],
+                color: (opacity = 1) => `#f24666`
+            })
+        } else {
+            dataSets.push(DATA)
+        }
+
+        const newData: LineChartData = {
             labels: props.label,
             datasets: [
-                ...dataSets,
-                {
-                    data:[0],
-                    color: (c = 0) => `rgba(0,0,0,${0})`,strokeWidth:0,withDots:false
-                }
-            ]
+                ...dataSets
+            ],
+            legend: ['Г', 'Инс.', 'Хе', 'Угл.', 'Угл.К.']
+
+
         }
 
         setChartData(newData);
 
-    },[props.data,props.label])
+
+
+
+    }, [props.data, props.label])
 
 
     const EditFormatDate = (format: FormatDate) => {
 
         props.SetFormat(format);
         EditDate(0);
-        console.log(props.dateTime);
-        
+        // console.log(props.dateTime);
+
     }
 
-    const EditDate = (val:number) => {
+    const EditDate = (val: number) => {
         // console.log(val);
-        
+
         props.SetDate(val)
-        props.GetData();
+        props.GetDataTest();
     }
 
-    
+    // console.log(chartData);
 
-    return(
+
+    return (
         <View>
 
             <View>
-                <View style={{flexDirection:'row', justifyContent:'space-between', padding: 15}}>
-                <Button title={'Day'} onPress={()=>{
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 15 }}>
+                    <Button title={'Day'} onPress={() => {
                         EditFormatDate(FormatDate.day);
-                    }}/>
-                    <Button title={'Week'} onPress={()=>{
+                    }} />
+                    <Button title={'Week'} onPress={() => {
                         EditFormatDate(FormatDate.week);
-                    }}/>
-                    <Button title={'Month'} onPress={()=>{
+                    }} />
+                    <Button title={'Month'} onPress={() => {
                         EditFormatDate(FormatDate.month);
-                    }}/>
-                    <Button title={'Year'} onPress={()=>{
+                    }} />
+                    <Button title={'Year'} onPress={() => {
                         EditFormatDate(FormatDate.year);
-                    }}/>
+                    }} />
                 </View>
-                <View style={{flexDirection:'row', justifyContent:'center', padding: 15}}>
-                    <TouchableOpacity style={{width:50, height:50, borderWidth:1,  alignItems:'center', alignContent:'center', justifyContent:'center'}} onPress={(e) => {
+                <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 15 }}>
+                    <TouchableOpacity style={{ width: 50, height: 50, borderWidth: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
                         // setCountDays(countDays - 1);
                         EditDate(-1);
                     }}>
@@ -133,7 +174,7 @@ const StatisticTab = (props:any) => {
                     </TouchableOpacity>
                     {/* <Text>{moment(currentDate).locale('ru').format('DD.MM.YYYY')}</Text> */}
                     <Text>{props.dateTime}</Text>
-                    <TouchableOpacity style={{width:50, height:50, borderWidth:1, alignItems:'center', alignContent:'center', justifyContent:'center'}} onPress={(e) => {
+                    <TouchableOpacity style={{ width: 50, height: 50, borderWidth: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
                         // setCountDays(countDays + 1);
                         EditDate(1);
                     }}>
@@ -142,52 +183,54 @@ const StatisticTab = (props:any) => {
                 </View>
                 <Text>Bezier Line Chart</Text>
                 <ScrollView>
-                    {/* {el} */}
-                <LineChart
-                    onDataPointClick={(dot) => {
-                    }}
-                    data={chartData}
-                    width={Dimensions.get("window").width - 10} // from react-native
-                    // width={1000} // from react-native
-                    height={400}
-                    // yAxisLabel="$"
-                    // yAxisSuffix="kk"
-                    yAxisInterval={1} // optional, defaults to 1
-                    verticalLabelRotation={45}//Поворот названий по оси x
-                    chartConfig={{
-                        // scrollableDotRadius:6,
-                        // scrollableInfoSize:{
-                        //     height: 520,
-                        //     width: Dimensions.get("window").width
-                        // },
-                        // width: 2000,
-                        backgroundColor: "#e26a00",
-                        backgroundGradientFrom: "#fb8c00",
-                        backgroundGradientTo: "#ffa726",
-                        decimalPlaces: 2, // optional, defaults to 2dp
-                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                        style: {
-                            borderRadius: 16,
-                            // width:2000
-                        },
-                        propsForDots: {
-                            r: "6",
-                            strokeWidth: "2",
-                            stroke: "#ffa726"
-                        }
-                    }}
-                    bezier
-                    // withScrollableDot
-                    
+                    <ScrollView horizontal>
+                        {/* {el} */}
+                        <LineChart
+                            onDataPointClick={(dot) => {
+                            }}
+                            data={chartData}
+                            width={1000} // from react-native
+                            // width={1000} // from react-native
+                            height={400}
+                            // yAxisLabel="$"
+                            // yAxisSuffix="kk"
+                            yAxisInterval={1} // optional, defaults to 1
+                            verticalLabelRotation={90}//Поворот названий по оси x
+                            chartConfig={{
+                                // scrollableDotRadius:6,
+                                // scrollableInfoSize:{
+                                //     height: 520,
+                                //     width: Dimensions.get("window").width
+                                // },
+                                // width: 2000,
+                                backgroundColor: "#e26a00",
+                                backgroundGradientFrom: "#fb8c00",
+                                backgroundGradientTo: "#ffa726",
+                                decimalPlaces: 2, // optional, defaults to 2dp
+                                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                                style: {
+                                    borderRadius: 16,
+                                    // width:2000
+                                },
+                                propsForDots: {
+                                    r: "6",
+                                    strokeWidth: "2",
+                                    stroke: "#ffa726"
+                                }
+                            }}
+                            bezier
+                            // withScrollableDot
 
-                    style={{
-                        // width:2000,
-                        alignSelf:'center',
-                        marginVertical: 8,
-                        borderRadius: 16
-                    }}
-                />
+
+                            style={{
+                                // width:2000,
+                                alignSelf: 'center',
+                                marginVertical: 8,
+                                borderRadius: 16
+                            }}
+                        />
+                    </ScrollView>
                 </ScrollView>
             </View>
 
@@ -195,13 +238,13 @@ const StatisticTab = (props:any) => {
     )
 }
 
-const StatisticTabContainer = (props:any) => {
-    return(
-        <StatisticTab {...props}/>
+const StatisticTabContainer = (props: any) => {
+    return (
+        <StatisticTab {...props} />
     )
 }
 
-const mapStateToProps = (state:IApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
 
     dateTime: state.StatisticTab.currentOutDate,
     data: state.StatisticTab.statistic,
@@ -213,7 +256,7 @@ const mapStateToProps = (state:IApplicationState) => ({
 export default connect(
     mapStateToProps,
     {
-        GetData,
+        GetDataTest,
         SetDate,
         SetFormat
     }

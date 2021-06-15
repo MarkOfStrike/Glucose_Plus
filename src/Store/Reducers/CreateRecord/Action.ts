@@ -33,53 +33,53 @@ export interface CheckStateAction {
 
 
 type ClearAction = ClearCreateStateAction;
-type SetStateAction = SetDateAction|SetFoodAction|SetGlucoseAction;
+type SetStateAction = SetDateAction | SetFoodAction | SetGlucoseAction;
 type CheckAction = CheckStateAction
 
 export type CreateRecordActions = ClearAction | SetStateAction | CheckAction
 
 
-export const ClearRecord = ():IApplicationAction<ClearAction> => (dispatch, getState) => { dispatch({type:CLEAR_CREATE_RECORD, action: null}); }
+export const ClearRecord = (): IApplicationAction<ClearAction> => (dispatch, getState) => { dispatch({ type: CLEAR_CREATE_RECORD, action: null }); }
 
-export const CheckState = ():IApplicationAction<CheckAction> => (dispatch, getState) => {
+export const CheckState = (): IApplicationAction<CheckAction> => (dispatch, getState) => {
 
     const state = getState();
 
-    if(state.CreateRecord) {
+    if (state.CreateRecord) {
 
         const createRecordState = state.CreateRecord
 
-        let countRecord:number = 0;
-        let isState:boolean = false
+        let countRecord: number = 0;
+        let isState: boolean = false
 
-        if (createRecordState.Food && createRecordState.Food.name !== '' && createRecordState.Food.products.length > 0) {
+        if (createRecordState.Food && createRecordState.Food.insulinLevel !== '' && createRecordState.Food.name !== '' && createRecordState.Food.products.length > 0 && createRecordState.Food.products.every(v => v.weight !== '')) {
             countRecord++
         }
 
-        if(createRecordState.Glucose && createRecordState.Glucose !== ''){
+        if (createRecordState.Glucose && createRecordState.Glucose !== '') {
             countRecord++
         }
 
-        if(countRecord !== 0) {
+        if (countRecord !== 0) {
             isState = true;
         }
 
-        dispatch({type: CHECK_ADD_STATE, countRecord: isState ? countRecord : null, isState});
+        dispatch({ type: CHECK_ADD_STATE, countRecord: isState ? countRecord : null, isState });
 
     }
 
 
 }
 
-export const SetDate = (date: Date):IApplicationAction<SetStateAction> => SetAndCheck({type: SET_CREATE_RECORD_DATE, date: date.toString()});
-export const SetGlucose = (level:string):IApplicationAction<SetStateAction> => SetAndCheck({type: SET_CREATE_RECORD_GLUCOSE, value: level});
-export const SetFood = (food: ICreateFood):IApplicationAction<SetStateAction> => SetAndCheck({type:SET_CREATE_RECORD_FOOD, food});
+export const SetDate = (date: Date): IApplicationAction<SetStateAction> => SetAndCheck({ type: SET_CREATE_RECORD_DATE, date: date.toString() });
+export const SetGlucose = (level: string): IApplicationAction<SetStateAction> => SetAndCheck({ type: SET_CREATE_RECORD_GLUCOSE, value: level });
+export const SetFood = (food: ICreateFood): IApplicationAction<SetStateAction> => SetAndCheck({ type: SET_CREATE_RECORD_FOOD, food });
 
-const SetAndCheck = (state: SetStateAction):IApplicationAction<any> => (dispatch, getState) => {
+const SetAndCheck = (state: SetStateAction): IApplicationAction<any> => (dispatch, getState) => {
 
     const stateApp = getState();
 
-    if(stateApp.CreateRecord){
+    if (stateApp.CreateRecord) {
 
         Promise.all([dispatch(state), dispatch(CheckState())])
 
@@ -87,7 +87,7 @@ const SetAndCheck = (state: SetStateAction):IApplicationAction<any> => (dispatch
 
 }
 
-export const SaveRecord = ():IApplicationAction<ClearAction> => (dispatch, getState) => {
+export const SaveRecord = (): IApplicationAction<ClearAction> => (dispatch, getState) => {
 
     const state = getState().CreateRecord;
     const db = DbContext();
@@ -96,7 +96,7 @@ export const SaveRecord = ():IApplicationAction<ClearAction> => (dispatch, getSt
 
         const date = state.DateCreate === '' ? new Date(Date.now()).toString() : state.DateCreate;
 
-        let sumXe:number = 0;
+        let sumXe: number = 0;
 
         state.Food?.products.map((pr, i) => { sumXe += pr.product.Xe as number / 100 * (parseFloat(parseFloat(pr.weight).toFixed(2))); })
 
@@ -107,7 +107,7 @@ export const SaveRecord = ():IApplicationAction<ClearAction> => (dispatch, getSt
 
                 const foodId = r.insertId;
                 state.Food?.products.map((product, i) => {
-                    nt.executeSql(`insert into ${FOOD_RECORD_TABLE} (${FOOD_RECORD_TABLE_FOOD_ID}, ${FOOD_RECORD_TABLE_PRODUCT_ID}, ${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS}) values (${foodId}, ${product.product.Id}, ${parseInt(product.weight)})`,[])
+                    nt.executeSql(`insert into ${FOOD_RECORD_TABLE} (${FOOD_RECORD_TABLE_FOOD_ID}, ${FOOD_RECORD_TABLE_PRODUCT_ID}, ${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS}) values (${foodId}, ${product.product.Id}, ${parseInt(product.weight)})`, [])
                 })
             })
         }
@@ -115,10 +115,10 @@ export const SaveRecord = ():IApplicationAction<ClearAction> => (dispatch, getSt
         if (state.Glucose !== '') {
             tr.executeSql(`insert into ${GLUCOSE_MEASUREMENT_TABLE} (${GLUCOSE_MEASUREMENT_TABLE_LEVEL}, ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD}) values (${parseFloat(state.Glucose)}, ${Date.parse(date)}) `, [])
         }
-        
+
     }, error => {
         console.log(error)
     }, () => {
-        dispatch({type:CLEAR_CREATE_RECORD, action: null});
+        dispatch({ type: CLEAR_CREATE_RECORD, action: null });
     })
 }

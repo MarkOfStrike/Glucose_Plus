@@ -9,14 +9,14 @@ interface IData {
     component: Array<JSX.Element>
 }
 
-const TotalStats = (props:any) => {
+const TotalStats = (props: any) => {
 
     const width = Dimensions.get('window').width;
 
     const [horizontal, setHorizontal] = useState<boolean>(false)
 
-    const renderItem = (item:any) =>{
-        return(
+    const renderItem = (item: any) => {
+        return (
             <View style={{
                 backgroundColor: 'floralwhite',
                 borderRadius: 15,
@@ -29,8 +29,8 @@ const TotalStats = (props:any) => {
     }
 
     const components = [
-        <LevelGlucose key={0} {...props.Glucose}/>, 
-        <OtherStats key={1} {...props.Product}/>
+        <LevelGlucose key={0} {...props.Glucose} />,
+        <OtherStats key={1} {...props.Product} />
     ]
 
     return (
@@ -62,7 +62,7 @@ const TotalStats = (props:any) => {
 }
 
 //  const TestCarousel = () => {
-    
+
 //     const width = Dimensions.get('window').width;
 
 //      return(
@@ -103,9 +103,9 @@ const statsStyle: StyleProp<ViewStyle> = {
 
 }
 
-const ConvertString = (value:number):string => value > 0 ? value.toString() : '---';
+const ConvertString = (value: number): string => value > 0 ? value.toFixed(2) : '---';
 
-const LevelGlucose = (props:any) => {
+const LevelGlucose = (props: any) => {
 
     return (
         <View style={statsStyle}>
@@ -117,7 +117,7 @@ const LevelGlucose = (props:any) => {
     )
 }
 
-const OtherStats = (props:any) => {
+const OtherStats = (props: any) => {
 
     return (
         <View style={statsStyle}>

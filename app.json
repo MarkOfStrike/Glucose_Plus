@@ -1,5 +1,6 @@
 {
   "expo": {
+    
     "name": "Glucose_Plus_V2",
     "slug": "Glucose_Plus_V2",
     "version": "1.0.0",
@@ -20,6 +21,13 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "WRITE_CALENDAR",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "com.sec.android.provider.badge.permission.READ",
+        "com.sec.android.provider.badge.permission.WRITE"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"

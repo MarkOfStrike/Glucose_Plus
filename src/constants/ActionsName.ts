@@ -45,6 +45,15 @@ export const LABELS_STATISTIC = 'LABELS_STATISTIC';
 export const SET_NEW_MEASUREMENT = 'SET_NEW_MEASUREMENT';
 export const IMPORT_LOADING = 'IMPORT_LOADING';
 export const EXPORT_LOADING = 'EXPORT_LOADING';
+export const SHOW_IMPORT_MESSAGE = 'SHOW_IMPORT_MESSAGE'
+export const SHOW_EXPORT_MESSAGE = 'SHOW_EXPORT_MESSAGE'
+
+//#endregion
+
+//#region MoreDetailsOfRecord 
+
+export const GET_INFO_RECORD = 'GET_INFO_RECORD'
+export const DELETE_RECORD = 'DELETE_RECORD'
 
 //#endregion
 

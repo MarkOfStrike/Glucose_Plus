@@ -5,7 +5,7 @@ import { CreateRecordActions } from "./Action";
 
 
 export interface ICreateRecordState {
-    Glucose: string 
+    Glucose: string
     Food: ICreateFood | null
     DateCreate: string
     Record: ICreateRecord
@@ -13,7 +13,7 @@ export interface ICreateRecordState {
 
 export interface ICreateFood {
     name: string
-    insulinLevel:string
+    insulinLevel: string
     products: Array<IRecordProduct>
 }
 
@@ -27,7 +27,7 @@ export interface ICreateRecord {
     count: number
 }
 
-const initState:ICreateRecordState = {
+const initState: ICreateRecordState = {
     DateCreate: '',
     Food: null,
     Glucose: '',
@@ -37,7 +37,7 @@ const initState:ICreateRecordState = {
     }
 }
 
-export const CreateRecordReducer: Reducer<ICreateRecordState, CreateRecordActions> = (state = initState, action):ICreateRecordState => {
+export const CreateRecordReducer: Reducer<ICreateRecordState, CreateRecordActions> = (state = initState, action): ICreateRecordState => {
 
     switch (action.type) {
 
@@ -45,13 +45,13 @@ export const CreateRecordReducer: Reducer<ICreateRecordState, CreateRecordAction
             return {
                 ...initState
             }
-        
+
         case SET_CREATE_RECORD_GLUCOSE:
             return {
                 ...state,
                 Glucose: action.value
             }
-        
+
         case SET_CREATE_RECORD_DATE:
             return {
                 ...state,
@@ -72,7 +72,7 @@ export const CreateRecordReducer: Reducer<ICreateRecordState, CreateRecordAction
                     count: action.countRecord ?? 0
                 }
             }
-    
+
         default:
             return state
     }

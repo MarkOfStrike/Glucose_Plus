@@ -36,21 +36,21 @@ const initState: IAddProductState = {
     SkipProduct: 0
 }
 
-export const AddProductReducer: Reducer<IAddProductState, AddProductAction> = (state = initState, action):IAddProductState => {
+export const AddProductReducer: Reducer<IAddProductState, AddProductAction> = (state = initState, action): IAddProductState => {
 
     switch (action.type) {
-        
+
         case GET_SEARCH_PRODUCTS:
             const newList = state.SkipProduct === 0 ? action.products : [...state.ProductsList, ...action.products] as Array<IProduct>;
 
             return {
                 ...state,
-                ProductsList: newList 
+                ProductsList: newList
             }
         case CLEAR_PRODUCT_LIST:
-                return{
-                    ...initState
-                }
+            return {
+                ...initState
+            }
         case SET_GROUP_SEARCH_PRODUCT:
             return {
                 ...state,

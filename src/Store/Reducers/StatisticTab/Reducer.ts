@@ -25,6 +25,10 @@ export interface IStatisticData {
     xe: Array<number>
     ygl: Array<number>
     inc: Array<number>
+    gi: Array<number>
+    fats: Array<number>
+    proteins: Array<number>
+    calories: Array<number>
 }
 
 //const hours = LabelsHours;
@@ -35,10 +39,14 @@ const initState: IStatisticTabState = {
     currentDate: moment(new Date()),
     statistic: {
         glucose: [],
-        inc: [],
+        yk: [],
         xe: [],
         ygl: [],
-        yk: []
+        inc: [],
+        gi: [],
+        fats: [],
+        proteins: [],
+        calories: [],
     },
     labels: [
         '0:00',

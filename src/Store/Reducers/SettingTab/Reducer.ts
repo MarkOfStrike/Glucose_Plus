@@ -1,14 +1,24 @@
 import { Reducer } from "react";
-import { SET_NEW_MEASUREMENT } from "../../../constants/ActionsName";
+import { SET_NEW_MEASUREMENT, SHOW_EXPORT_MESSAGE, SHOW_IMPORT_MESSAGE } from "../../../constants/ActionsName";
 import { GetValueStorage, SetValueStorage } from "../../../StorageWork";
 import { SettingsAction } from "./Action";
+
 
 export interface ISettingState {
     measurement: string,
     loading: {
-        import:boolean,
-        export:boolean
+        import: boolean,
+        export: boolean
     }
+    importToast: IShowMessage
+    exportToast: IShowMessage
+
+}
+
+export interface IShowMessage {
+
+    show: boolean
+    message: string
 
 }
 
@@ -19,7 +29,7 @@ const GetMeasurement = () => {
         if (!data) {
             SetValueStorage('value_measuring', 'mg/ml')
             res = 'mg/ml'
-        } else { 
+        } else {
             res = data as string
         }
 
@@ -28,17 +38,25 @@ const GetMeasurement = () => {
     })
 
     return res;
-} 
+}
 
-const initState:ISettingState = {
+const initState: ISettingState = {
     measurement: 'mg/ml',
-    loading:{
-        export:false,
-        import:false
+    loading: {
+        export: false,
+        import: false
+    },
+    importToast: {
+        show: false,
+        message: ''
+    },
+    exportToast: {
+        show: false,
+        message: ''
     }
 }
 
-export const SettingTabReducer:Reducer<ISettingState, SettingsAction> = (state = initState, action) => {
+export const SettingTabReducer: Reducer<ISettingState, SettingsAction> = (state = initState, action) => {
 
     switch (action.type) {
         case SET_NEW_MEASUREMENT:
@@ -47,7 +65,23 @@ export const SettingTabReducer:Reducer<ISettingState, SettingsAction> = (state =
                 ...state,
                 measurement: action.text
             }
-    
+        case SHOW_IMPORT_MESSAGE:
+            return {
+                ...state,
+                importToast: {
+                    show: action.show,
+                    message: action.message
+                }
+            }
+        case SHOW_EXPORT_MESSAGE:
+            return {
+                ...state,
+                exportToast: {
+                    show: action.show,
+                    message: action.message
+                }
+            }
+
         default:
             return state
     }

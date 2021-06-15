@@ -5,57 +5,62 @@ import { connect } from 'react-redux';
 import { IApplicationState } from '../../Store/StoreInterfaces';
 import CreateRecord from './Diary/ButtonAddItem/CreateRecord/CreateRecord';
 import Diary from './Diary/Diary';
-import {SaveRecord} from '../../Store/Reducers/CreateRecord/Action'
+import { SaveRecord } from '../../Store/Reducers/CreateRecord/Action'
 import CustomButton from '../CustomElement/CustomButton';
+import { HomeNavigationParamsList } from '../../TabBarTypes';
+import { TypeRecord } from '../../Interfaces/IDiary';
+import MoreDetailsOfRecord from './MoreDetailsOfRecord/MoreDetailsOfRecord';
 
-const HomePageStack = createStackNavigator();
+const HomePageStack = createStackNavigator<HomeNavigationParamsList>();
 
-const HomeTab = (props:any) => {
+const HomeTab = (props: any) => {
 
 
-    return(
+    return (
         <HomePageStack.Navigator initialRouteName={'Diary'}>
             <HomePageStack.Screen
                 name="Diary"
                 component={Diary}
                 options={{ headerTitle: "Дневник", headerShown: false, }} />
-                <HomePageStack.Screen
+            <HomePageStack.Screen
                 name='AddRecord'
                 component={CreateRecord}
                 options={{
                     headerTitle: 'Добавление записи...',
-                    headerShown: true, 
-                    headerTitleContainerStyle:{
-                        width:'65%', 
-                        height:'100%',
-                        justifyContent:'center',
-                        alignItems:'flex-start',
-                        alignContent:'center'
+                    headerShown: true,
+                    headerTitleContainerStyle: {
+                        width: '65%',
+                        height: '100%',
+                        justifyContent: 'center',
+                        alignItems: 'flex-start',
+                        alignContent: 'center'
                     },
                     headerRightContainerStyle: {
-                        width:"15%"
-                    }}}/>
-                <HomePageStack.Screen
+                        width: "15%"
+                    }
+                }} />
+            <HomePageStack.Screen
                 name='MoreDetailsOfRecord'
-                component={EmptyComponent}
-                options={{headerTitle:'Подробнее', headerShown:true}}/>
+                component={MoreDetailsOfRecord}
+                options={{ headerTitle: 'Подробнее', headerShown: true }}
+                initialParams={{ id: 0, type: TypeRecord.Glucose }} />
         </HomePageStack.Navigator>
     )
 }
 
 const EmptyComponent = () => {
-    return(<View></View>)
+    return (<View></View>)
 }
 
 //Для того чтобы пробрасывать конект с пропсами
-const HomeTabContainer = (props:any) => {
+const HomeTabContainer = (props: any) => {
 
-    return (<HomeTab {...props}/>)
+    return (<HomeTab {...props} />)
 }
 
 //export default HomeTabContainer;
 
-const mapStateToProps = (state:IApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     newRecord: state.CreateRecord.Record
 })
 

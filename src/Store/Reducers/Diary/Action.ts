@@ -70,7 +70,7 @@ export const GetRecords = (): IApplicationAction<GetAllRecord> => (dispatch, get
 
         })
 
-        
+
 
         db.transaction(tr => {
 
@@ -112,7 +112,7 @@ export const GetRecords = (): IApplicationAction<GetAllRecord> => (dispatch, get
                             nt.executeSql(`select * from ${PRODUCTS_TABLE} where ${PRODUCTS_TABLE_ID} = ${foodRecord.Product?.Id as number}`, [], (tra, result) => {
 
                                 // console.log(result);
-                                
+
 
                                 const elementProduct = result.rows.item(0);
 
@@ -261,12 +261,12 @@ export const GetStatistic = (): IApplicationAction<GetStatistic> => (dispatch, g
 
             for (let index = 0; index < r.rows.length; index++) {
                 const element = r.rows.item(index);
-                
-                nt.executeSql(`select pr.${PRODUCTS_TABLE_XE} as Xe, pr.${PRODUCTS_TABLE_CARBOHYDRATES} as Carb, fr.${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS} as Weight from ${FOOD_RECORD_TABLE} fr join ${PRODUCTS_TABLE} pr on pr.${PRODUCTS_TABLE_ID} = fr.${FOOD_RECORD_TABLE_PRODUCT_ID} where ${FOOD_RECORD_TABLE_FOOD_ID} = ${element.Id}`, [], (t,res) => {
+
+                nt.executeSql(`select pr.${PRODUCTS_TABLE_XE} as Xe, pr.${PRODUCTS_TABLE_CARBOHYDRATES} as Carb, fr.${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS} as Weight from ${FOOD_RECORD_TABLE} fr join ${PRODUCTS_TABLE} pr on pr.${PRODUCTS_TABLE_ID} = fr.${FOOD_RECORD_TABLE_PRODUCT_ID} where ${FOOD_RECORD_TABLE_FOOD_ID} = ${element.Id}`, [], (t, res) => {
 
                     for (let index = 0; index < res.rows.length; index++) {
                         const prod = res.rows.item(index);
-                        
+
                         xe += (prod['Xe'] as number) * (prod['Weight'] as number) / 100;
                         carb += (prod['Carb'] as number) * (prod['Weight'] as number) / 100;
 

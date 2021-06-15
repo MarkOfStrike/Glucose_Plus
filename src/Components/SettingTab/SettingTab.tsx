@@ -1,21 +1,21 @@
 import React from 'react'
 import { StyleSheet, Text, TouchableOpacity, View, ToastAndroid, BackHandler } from 'react-native'
-import {GetValueStorage, SetValueStorage} from '../../StorageWork'
+import { GetValueStorage, SetValueStorage } from '../../StorageWork'
 import Modal from 'react-native-modal'
 // import RNFS from 'react-native-fs'
 import { IApplicationState } from '../../Store/StoreInterfaces'
-import {SetMeasurement, ImportData, ExportData} from '../../Store/Reducers/SettingTab/Action'
+import { SetMeasurement, ImportData, ExportData } from '../../Store/Reducers/SettingTab/Action'
 import { connect } from 'react-redux'
 import { Input } from '@ui-kitten/components'
 import { useBackButton } from '@react-navigation/native'
 
 
 
-const SettingTab = (props:any) => {
+const SettingTab = (props: any) => {
 
     // console.log(props.importLoad, props.exportLoad);
     // console.log(props);
-    
+
 
     const [measuring, setMeasuring] = React.useState<string>(props.measurement)
     const [isOpen, setIsOpen] = React.useState<boolean>(false);
@@ -25,10 +25,24 @@ const SettingTab = (props:any) => {
 
     React.useEffect(() => setVisibleToast(false), [visibleToast]);
 
-    const handleButtonPress = (text:string) => {
-        setMessageToast(text);
-        setVisibleToast(true);
-    };
+    React.useEffect(() => {
+
+        setMessageToast(props.importToast.message)
+        setVisibleToast(props.importToast.show)
+
+    }, [props.importToast.show])
+
+    React.useEffect(() => {
+
+        setMessageToast(props.exportToast.message)
+        setVisibleToast(props.exportToast.show)
+
+    }, [props.exportToast.show])
+
+    // const handleButtonPress = (text:string) => {
+    //     setMessageToast(text);
+    //     setVisibleToast(true);
+    // };
 
 
     React.useEffect(() => {
@@ -38,10 +52,10 @@ const SettingTab = (props:any) => {
 
     }, [measuring])
 
-    return(
+    return (
         <View style={style.container}>
-            {isOpen && <SelectMeasuring Set={setMeasuring} isOpen={isOpen}/>}
-            <PushToast visible={visibleToast} message={messageToast}/>
+            {isOpen && <SelectMeasuring Set={setMeasuring} isOpen={isOpen} />}
+            <PushToast visible={visibleToast} message={messageToast} />
             <TouchableOpacity style={style.sysSet} onPress={() => {
                 setIsOpen(true);
             }}>
@@ -49,14 +63,18 @@ const SettingTab = (props:any) => {
                 <Text>{measuring}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={style.import_export} onPress={() => {
-                Promise.all([props.ImportData(), handleButtonPress('Импорт данных выполнен успешно')]);
+                props.ImportData()
+                // Promise.all([props.ImportData(), ]).then(() => {
+                //     handleButtonPress('Импорт данных выполнен успешно')
+                // });
                 // props.ImportData();
                 // handleButtonPress('Импорт данных выполнен успешно');
             }}>
                 <Text>{props.importLoad ? 'Загрузка...' : 'Импорт данных'}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={style.import_export} onPress={() => {
-                handleButtonPress('Экспорт данных выполнен успешно');
+                props.ExportData();
+                // handleButtonPress('Экспорт данных выполнен успешно');
             }}>
                 <Text>Экспорт данных</Text>
             </TouchableOpacity>
@@ -64,25 +82,25 @@ const SettingTab = (props:any) => {
     )
 }
 
-const SelectMeasuring = (props:any) => {
+const SelectMeasuring = (props: any) => {
 
     const mg = 'mg/dl';
     const mmol = 'mmol/l';
 
 
-    return(
-        <Modal isVisible={true} style={{alignSelf:'center'}}>
-            <View style={{backgroundColor:'white', width:200, height:100}}>
-                <TouchableOpacity style={{padding:10}} onPress={() => {
+    return (
+        <Modal isVisible={true} style={{ alignSelf: 'center' }}>
+            <View style={{ backgroundColor: 'white', width: 200, height: 100 }}>
+                <TouchableOpacity style={{ padding: 10 }} onPress={() => {
                     props.Set(mg)
                 }}>
-                    <Text style={{fontSize:25}}>{mg}</Text>
+                    <Text style={{ fontSize: 25 }}>{mg}</Text>
                 </TouchableOpacity>
-                <View style={{borderWidth:1, marginTop:1, marginBottom:1}}></View>
-                <TouchableOpacity style={{padding:10, paddingTop:0}} onPress={() => {
+                <View style={{ borderWidth: 1, marginTop: 1, marginBottom: 1 }}></View>
+                <TouchableOpacity style={{ padding: 10, paddingTop: 0 }} onPress={() => {
                     props.Set(mmol)
                 }}>
-                    <Text style={{fontSize:25}}>{mmol}</Text>
+                    <Text style={{ fontSize: 25 }}>{mmol}</Text>
                 </TouchableOpacity>
             </View>
         </Modal>
@@ -92,59 +110,59 @@ const SelectMeasuring = (props:any) => {
 
 interface IToastProps {
     visible: boolean
-    message:string
+    message: string
 }
 
-const PushToast = ({ visible, message }:IToastProps) => {
+const PushToast = ({ visible, message }: IToastProps) => {
     if (visible) {
-      ToastAndroid.showWithGravityAndOffset(
-        message,
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50
-      );
-      return null;
+        ToastAndroid.showWithGravityAndOffset(
+            message,
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            25,
+            50
+        );
+        return null;
     }
     return null;
-  };
+};
 
 const style = StyleSheet.create({
-    container:{
-        marginTop: 5, 
-        borderWidth: 1, 
+    container: {
+        marginTop: 5,
+        borderWidth: 1,
         height: '100%',
     },
     sysSet: {
-        borderWidth: 1, 
+        borderWidth: 1,
         // marginTop: 5,
-        margin:5, 
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        height: '10%', 
-        alignItems:'center'
+        margin: 5,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        height: '10%',
+        alignItems: 'center'
     },
     import_export: {
-        borderWidth: 1, 
+        borderWidth: 1,
         // marginTop: 5,
-        margin:5, 
-        height: '10%', 
-        flexDirection: 'row', 
-        alignItems:'center', 
-        justifyContent:'flex-start'
+        margin: 5,
+        height: '10%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start'
     }
 })
 
-const SettingTabContainer = (props:any) => {
-    return(
-        <SettingTab {...props}/>
+const SettingTabContainer = (props: any) => {
+    return (
+        <SettingTab {...props} />
     )
 }
 
-const mapStateToProps = (state:IApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     measurement: state.SettingTab.measurement,
-    importLoad: state.SettingTab.loading.import,
-    exportLoad: state.SettingTab.loading.export
+    importToast: state.SettingTab.importToast,
+    exportToast: state.SettingTab.exportToast
 })
 
 export default connect(

@@ -31,7 +31,7 @@ const CreateRecord = (props: any) => {
     }
 
     React.useEffect(() => {
-        props.navigation.dangerouslyGetParent()?.setOptions({ tabBarVisible: true })
+        props.navigation.dangerouslyGetParent()?.setOptions({ tabBarVisible: false })
         return (() => {
             props.navigation.dangerouslyGetParent()?.setOptions({ tabBarVisible: true });
             props.ClearRecord();

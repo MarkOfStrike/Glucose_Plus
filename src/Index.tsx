@@ -9,15 +9,29 @@ import { Group } from './Store/Reducers/AddProduct/Reducer';
 import { IApplicationState } from './Store/StoreInterfaces';
 import TabBarIcon from './TabBarIcon';
 import { RootNavigationParamList } from './TabBarTypes';
-import {LoadSampleData} from './Store/Reducers/HomeScreen/Action'
+import { LoadSampleData } from './Store/Reducers/HomeScreen/Action'
 import { View, Text } from 'react-native';
 import { compose } from 'redux';
+import MediaLibrary from 'expo-media-library';
+import Permissions, { usePermissions } from 'expo-permissions';
+// import FileSystem from 'expo-file-system'
 
 
 
 const RootNavigation = createBottomTabNavigator<RootNavigationParamList>();
 
-const NavigationApp = (props:any) => {
+const NavigationApp = (props: any) => {
+
+    // console.log(FileSystem);
+
+
+    // try {
+
+    //     console.log(Permissions,MediaLibrary);
+
+    // } catch (error) {
+
+    // }
 
     return (
         <NavigationContainer >
@@ -53,7 +67,7 @@ const NavigationApp = (props:any) => {
 
 }
 
-const NavigationAppContainer = (props:any) => {
+const NavigationAppContainer = (props: any) => {
 
     React.useEffect(() => {
         props.LoadSampleData();
@@ -76,12 +90,12 @@ const NavigationAppContainer = (props:any) => {
     }
 }
 
-const mapStateToProps = (state:IApplicationState) => ({
+const mapStateToProps = (state: IApplicationState) => ({
     isLoading: state.HomeScreen.isLoading
 })
 
 export default compose(connect(
-    mapStateToProps, 
+    mapStateToProps,
     {
         LoadSampleData
     }

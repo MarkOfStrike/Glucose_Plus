@@ -1,4 +1,4 @@
-import { FOOD_TABLE, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_DATE_ADD, FOOD_TABLE_INSULIN, FOOD_TABLE_ID, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_XE, PRODUCTS_TABLE, FOOD_RECORD_TABLE } from './../../../DataBase/DataBaseConst';
+import { FOOD_TABLE, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_DATE_ADD, FOOD_TABLE_INSULIN, FOOD_TABLE_ID, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_XE, PRODUCTS_TABLE, FOOD_RECORD_TABLE, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_PROTEINS } from './../../../DataBase/DataBaseConst';
 import { GET_ALL_STATISTIC_AVG, LABELS_STATISTIC } from './../../../constants/ActionsName';
 import { IApplicationAction } from './../../StoreInterfaces';
 import { SET_CURRENT_DATE, SET_FORMAT_DATE } from "../../../constants/ActionsName";
@@ -135,7 +135,18 @@ interface ITime {
 //     }
 // }
 
+interface ITestArr {
+    start: number,
+    end: number
+}
 
+const TEST = () => {
+
+
+    const arr: Array<ITestArr> = []
+
+
+}
 
 export const GetData = (): IApplicationAction<GetDataStatisticAction> => (dispatch, getState) => {
 
@@ -144,17 +155,22 @@ export const GetData = (): IApplicationAction<GetDataStatisticAction> => (dispat
 
     const data: IStatisticData = {
         glucose: [],
-        inc: [],
+        yk: [],
         xe: [],
         ygl: [],
-        yk: []
+        inc: [],
+        gi: [],
+        fats: [],
+        proteins: [],
+        calories: [],
     }
 
     const currentTime = state.StatisticTab.currentDate.locale('ru');
 
     const time: Array<ITime> = [];
 
-    
+
+
 
     switch (state.StatisticTab.formatDate) {
         case FormatDate.day:
@@ -298,6 +314,459 @@ export const GetData = (): IApplicationAction<GetDataStatisticAction> => (dispat
 
 }
 
+interface IStatisticDataTest {
+    glucose: Array<number>
+    yk: Array<number>
+    xe: Array<number>
+    ygl: Array<number>
+    inc: Array<number>
+    gi: Array<number>
+    fats: Array<number>
+    proteins: Array<number>
+    calories: Array<number>
+}
+
+export const GetDataTest = (): IApplicationAction<GetDataStatisticAction> => (dispatch, getState) => {
+
+    const state = getState();
+    const db = DbContext();
+
+    const data: IStatisticData = {
+        glucose: [],
+        yk: [],
+        xe: [],
+        ygl: [],
+        inc: [],
+        gi: [],
+        fats: [],
+        proteins: [],
+        calories: [],
+    }
+
+    const currentTime = state.StatisticTab.currentDate.clone().locale('ru');
+
+    const time: Array<ITime> = [];
+
+
+
+
+    switch (state.StatisticTab.formatDate) {
+        case FormatDate.day:
+            for (let hour = 0; hour < 24; hour++) {
+                time.push({
+                    start: currentTime.toDate().setHours(hour, 0, 0),
+                    end: currentTime.toDate().setHours(hour, 59, 59)
+                });
+            }
+            break;
+
+        case FormatDate.week:
+
+            const startWeek = currentTime.clone().startOf('isoWeek');
+
+            for (let index = 0; index < 8; index++) {
+                const date = startWeek.clone().add(index, 'day');
+                time.push({
+                    start: date.toDate().setHours(0, 0, 0, 0),
+                    end: date.toDate().setHours(23, 59, 59, 0)
+                })
+            }
+
+            break;
+
+        case FormatDate.month:
+
+            for (let index = 1; index <= currentTime.daysInMonth(); index++) {
+                const today = moment(new Date(currentTime.toDate().setDate(index)));
+                time.push({
+                    start: today.toDate().setHours(0, 0, 0),
+                    end: today.toDate().setHours(23, 59, 59)
+                })
+            }
+            break;
+
+        case FormatDate.year:
+
+            for (let index = 1; index <= 12; index++) {
+                const startMonth = moment(new Date(currentTime.get('year'), index, 1));
+                const endMonth = moment(new Date(currentTime.get('year'), index, startMonth.daysInMonth()));
+                // const today = moment(new Date(currentDate.toDate().setDate(index)));
+                time.push({
+                    start: startMonth.toDate().setHours(0, 0, 0),
+                    end: endMonth.toDate().setHours(23, 59, 59)
+                })
+            }
+
+            break;
+
+        default:
+            break;
+    }
+
+
+
+    const queryArr: Array<{ queryGlucose: string, queryAvgFood: string, queryAvgProduct: string }> = []
+
+    time.forEach((v, i) => {
+        queryArr.push({
+            queryGlucose: `select avg(${GLUCOSE_MEASUREMENT_TABLE_LEVEL}) as lev from ${GLUCOSE_MEASUREMENT_TABLE} where ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} > ${v.start} and ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} < ${v.end}`,
+            queryAvgFood: `select avg(${FOOD_TABLE_INSULIN}) as avgInc, avg(${FOOD_TABLE_CARBOHYDRATE_RATIO}) as avgRatio from ${FOOD_TABLE} where ${FOOD_TABLE_DATE_ADD} > ${v.start} and ${FOOD_TABLE_DATE_ADD} < ${v.end}`,
+            // queryAvgProduct: `select ${FOOD_TABLE_ID} from ${FOOD_TABLE} where ${FOOD_TABLE_DATE_ADD} > ${v.start} and ${FOOD_TABLE_DATE_ADD} < ${v.end}`,
+            queryAvgProduct: `select avg(p.${PRODUCTS_TABLE_XE}) as xe,avg(p.${PRODUCTS_TABLE_GI}) as gi, avg(p.${PRODUCTS_TABLE_FATS}) as f,avg(p.${PRODUCTS_TABLE_PROTEINS}) as p,avg(p.${PRODUCTS_TABLE_CARBOHYDRATES}) as car,avg(p.${PRODUCTS_TABLE_CALORIES}) as cal from ${FOOD_TABLE} f ` +
+                `join FoodRecords fr on fr.Food_Id = f.Id join Products p on p.Id = fr.Product_Id ` +
+                `where ${FOOD_TABLE_DATE_ADD} > ${v.start} and ${FOOD_TABLE_DATE_ADD} < ${v.end} order by ${FOOD_TABLE_DATE_ADD} asc`
+        })
+    })
+
+    db.transaction(tr => {
+
+        queryArr.forEach((v, i) => {
+            tr.executeSql(v.queryGlucose, [], (t, r) => {
+
+                const level = r.rows.item(0)
+                data.glucose.push((level['lev'] ?? 0) as number);
+
+            })
+
+            tr.executeSql(v.queryAvgFood, [], (t, r) => {
+
+                if (r.rows.length > 0) {
+                    const level = r.rows.item(0);
+
+                    data.inc.push((level['avgInc'] ?? 0) as number);
+                    data.yk.push((level['avgRatio'] ?? 0) as number);
+
+
+                }
+            })
+
+            tr.executeSql(v.queryAvgProduct, [], (t, r) => {
+
+                for (let row = 0; row < r.rows.length; row++) {
+                    const element = r.rows.item(row);
+
+                    data.xe.push((element['xe'] ?? 0) as number);
+                    data.gi.push((element['gi'] ?? 0) as number);
+                    data.fats.push((element['f'] ?? 0) as number);
+                    data.proteins.push((element['p'] ?? 0) as number);
+                    data.calories.push((element['cal'] ?? 0) as number);
+                    data.ygl.push((element['car'] ?? 0) as number);
+
+
+                }
+            })
+
+        })
+
+    }, error => {
+        console.log(error);
+    }, () => {
+        dispatch({ type: GET_ALL_STATISTIC_AVG, data: data });
+    })
+
+
+}
+
+
+const DayData = (currentDate: moment.Moment) => {
+
+    const db = DbContext();
+
+    const outArr = {
+        a: [] as Array<any>,
+        b: [] as Array<any>,
+        c: [] as Array<any>,
+        d: [] as Array<any>,
+        e: [] as Array<any>,
+        f: [] as Array<any>,
+    }
+
+    db.transaction(tr => {
+
+        for (let hour = 0; hour < 24; hour++) {
+            const start = currentDate.toDate().setHours(hour, 0, 0);
+            const end = currentDate.toDate().setHours(hour, 59, 59);
+
+            tr.executeSql(
+                `select avg(p.${PRODUCTS_TABLE_XE}) as xe,avg(p.${PRODUCTS_TABLE_GI}) as gi, avg(p.${PRODUCTS_TABLE_FATS}) as f,avg(p.${PRODUCTS_TABLE_PROTEINS}) as p,avg(p.${PRODUCTS_TABLE_CARBOHYDRATES}) as car,avg(p.${PRODUCTS_TABLE_CALORIES}) as cal from ${FOOD_TABLE} f ` +
+                `join FoodRecords fr on fr.Food_Id = f.Id join Products p on p.Id = fr.Product_Id ` +
+                `where ${FOOD_TABLE_DATE_ADD} > ${start} and ${FOOD_TABLE_DATE_ADD} < ${end}`, [], (t, r) => {
+
+                    if (r.rows.length > 0) {
+
+                        for (let row = 0; row < r.rows.length; row++) {
+                            const element = r.rows.item(row);
+
+                            const a = element['xe'];
+                            const b = element['gi'];
+                            const c = element['f'];
+                            const d = element['p'];
+                            const e = element['car'];
+                            const f = element['cal'];
+
+                            outArr.a.push(a);
+                            outArr.b.push(b);
+                            outArr.c.push(c);
+                            outArr.d.push(d);
+                            outArr.e.push(e);
+                            outArr.f.push(f);
+
+
+
+                        }
+
+                    }
+                    else {
+                        outArr.a.push(0);
+                        outArr.b.push(0);
+                        outArr.c.push(0);
+                        outArr.d.push(0);
+                        outArr.e.push(0);
+                        outArr.f.push(0);
+                    }
+
+                })
+        }
+
+
+    }, error => {
+        console.log(error);
+    }, () => {
+
+    })
+
+    return outArr;
+
+
+}
+
+const WeekData = (currentDate: moment.Moment) => {
+
+    const db = DbContext();
+
+    const outArr = {
+        a: [] as Array<any>,
+        b: [] as Array<any>,
+        c: [] as Array<any>,
+        d: [] as Array<any>,
+        e: [] as Array<any>,
+        f: [] as Array<any>,
+    }
+
+    db.transaction(tr => {
+
+        for (let index = 0; index < 8; index++) {
+            const date = currentDate.clone().add(index, 'day');
+            const start = date.toDate().setHours(0, 0, 0);
+            const end = date.toDate().setHours(23, 59, 59);
+
+            tr.executeSql(
+                `select avg(p.${PRODUCTS_TABLE_XE}) as xe,avg(p.${PRODUCTS_TABLE_GI}) as gi, avg(p.${PRODUCTS_TABLE_FATS}) as f,avg(p.${PRODUCTS_TABLE_PROTEINS}) as p,avg(p.${PRODUCTS_TABLE_CARBOHYDRATES}) as car,avg(p.${PRODUCTS_TABLE_CALORIES}) as cal from ${FOOD_TABLE} f ` +
+                `join FoodRecords fr on fr.Food_Id = f.Id join Products p on p.Id = fr.Product_Id ` +
+                `where ${FOOD_TABLE_DATE_ADD} > ${start} and ${FOOD_TABLE_DATE_ADD} < ${end}`, [], (t, r) => {
+
+                    if (r.rows.length > 0) {
+
+                        for (let row = 0; row < r.rows.length; row++) {
+                            const element = r.rows.item(row);
+
+                            const a = element['xe'];
+                            const b = element['gi'];
+                            const c = element['f'];
+                            const d = element['p'];
+                            const e = element['car'];
+                            const f = element['cal'];
+
+                            outArr.a.push(a);
+                            outArr.b.push(b);
+                            outArr.c.push(c);
+                            outArr.d.push(d);
+                            outArr.e.push(e);
+                            outArr.f.push(f);
+
+                        }
+
+                    }
+                    else {
+                        outArr.a.push(0);
+                        outArr.b.push(0);
+                        outArr.c.push(0);
+                        outArr.d.push(0);
+                        outArr.e.push(0);
+                        outArr.f.push(0);
+                    }
+
+                })
+        }
+
+
+    }, error => {
+        console.log(error);
+    }, () => {
+
+    })
+
+    return outArr;
+
+}
+
+const MonthData = (currentDate: moment.Moment) => {
+
+    for (let index = 1; index <= currentDate.daysInMonth(); index++) {
+        const today = moment(new Date(currentDate.toDate().setDate(index)));
+
+    }
+
+    const db = DbContext();
+
+    const outArr = {
+        a: [] as Array<any>,
+        b: [] as Array<any>,
+        c: [] as Array<any>,
+        d: [] as Array<any>,
+        e: [] as Array<any>,
+        f: [] as Array<any>,
+    }
+
+    db.transaction(tr => {
+
+        for (let index = 1; index <= currentDate.daysInMonth(); index++) {
+            const today = moment(new Date(currentDate.toDate().setDate(index)));
+            const start = today.toDate().setHours(0, 0, 0);
+            const end = today.toDate().setHours(23, 59, 59);
+
+            tr.executeSql(
+                `select avg(p.${PRODUCTS_TABLE_XE}) as xe,avg(p.${PRODUCTS_TABLE_GI}) as gi, avg(p.${PRODUCTS_TABLE_FATS}) as f,avg(p.${PRODUCTS_TABLE_PROTEINS}) as p,avg(p.${PRODUCTS_TABLE_CARBOHYDRATES}) as car,avg(p.${PRODUCTS_TABLE_CALORIES}) as cal from ${FOOD_TABLE} f ` +
+                `join FoodRecords fr on fr.Food_Id = f.Id join Products p on p.Id = fr.Product_Id ` +
+                `where ${FOOD_TABLE_DATE_ADD} > ${start} and ${FOOD_TABLE_DATE_ADD} < ${end}`, [], (t, r) => {
+
+                    if (r.rows.length > 0) {
+
+                        for (let row = 0; row < r.rows.length; row++) {
+                            const element = r.rows.item(row);
+
+                            const a = element['xe'];
+                            const b = element['gi'];
+                            const c = element['f'];
+                            const d = element['p'];
+                            const e = element['car'];
+                            const f = element['cal'];
+
+                            outArr.a.push(a);
+                            outArr.b.push(b);
+                            outArr.c.push(c);
+                            outArr.d.push(d);
+                            outArr.e.push(e);
+                            outArr.f.push(f);
+
+                        }
+
+                    }
+                    else {
+                        outArr.a.push(0);
+                        outArr.b.push(0);
+                        outArr.c.push(0);
+                        outArr.d.push(0);
+                        outArr.e.push(0);
+                        outArr.f.push(0);
+                    }
+
+                })
+        }
+
+
+    }, error => {
+        console.log(error);
+    }, () => {
+
+    })
+
+    return outArr;
+
+
+}
+
+
+
+const YearData = (currentDate: moment.Moment) => {
+
+
+    for (let index = 1; index <= currentDate.daysInMonth(); index++) {
+        const today = moment(new Date(currentDate.toDate().setDate(index)));
+
+    }
+
+    const db = DbContext();
+
+    const outArr = {
+        a: [] as Array<any>,
+        b: [] as Array<any>,
+        c: [] as Array<any>,
+        d: [] as Array<any>,
+        e: [] as Array<any>,
+        f: [] as Array<any>,
+    }
+
+    db.transaction(tr => {
+
+        for (let index = 1; index <= 12; index++) {
+            const cur = moment(new Date(currentDate.get('year'), index, 1));
+            const ads = moment(new Date(currentDate.get('year'), index, cur.daysInMonth()));
+            // const today = moment(new Date(currentDate.toDate().setDate(index)));
+            const start = cur.toDate().setHours(0, 0, 0);
+            const end = ads.toDate().setHours(23, 59, 59);
+
+            tr.executeSql(
+                `select avg(p.${PRODUCTS_TABLE_XE}) as xe,avg(p.${PRODUCTS_TABLE_GI}) as gi, avg(p.${PRODUCTS_TABLE_FATS}) as f,avg(p.${PRODUCTS_TABLE_PROTEINS}) as p,avg(p.${PRODUCTS_TABLE_CARBOHYDRATES}) as car,avg(p.${PRODUCTS_TABLE_CALORIES}) as cal from ${FOOD_TABLE} f ` +
+                `join FoodRecords fr on fr.Food_Id = f.Id join Products p on p.Id = fr.Product_Id ` +
+                `where ${FOOD_TABLE_DATE_ADD} > ${start} and ${FOOD_TABLE_DATE_ADD} < ${end} order by ${FOOD_TABLE_DATE_ADD} asc`, [], (t, r) => {
+
+                    if (r.rows.length > 0) {
+
+                        for (let row = 0; row < r.rows.length; row++) {
+                            const element = r.rows.item(row);
+
+                            const a = element['xe'];
+                            const b = element['gi'];
+                            const c = element['f'];
+                            const d = element['p'];
+                            const e = element['car'];
+                            const f = element['cal'];
+
+                            outArr.a.push(a);
+                            outArr.b.push(b);
+                            outArr.c.push(c);
+                            outArr.d.push(d);
+                            outArr.e.push(e);
+                            outArr.f.push(f);
+
+                        }
+
+                    }
+                    else {
+                        outArr.a.push(0);
+                        outArr.b.push(0);
+                        outArr.c.push(0);
+                        outArr.d.push(0);
+                        outArr.e.push(0);
+                        outArr.f.push(0);
+                    }
+
+                })
+        }
+
+
+    }, error => {
+        console.log(error);
+    }, () => {
+
+    })
+
+    return outArr;
+
+}
+
+
 export const SetDate = (val: number): IApplicationAction<StatisticTabActions> => (dispatch, getState) => {
 
 
@@ -388,8 +857,8 @@ export const SetFormat = (format: FormatDate): IApplicationAction<StatisticTabAc
             break;
     }
 
-    dispatch({type:SET_CURRENT_DATE,date:newDate, outDate});
-    dispatch({ type: SET_FORMAT_DATE, format, labels:[] });
+    dispatch({ type: SET_CURRENT_DATE, date: newDate, outDate });
+    dispatch({ type: SET_FORMAT_DATE, format, labels: [] });
 
 }
 
@@ -424,19 +893,19 @@ const LabelsWeeks = (startDays: number, endDays: number) => {
 
 }
 
-const LabelsWeek = (start:moment.Moment) => {
+const LabelsWeek = (start: moment.Moment) => {
 
     const arr: Array<string> = [start.date().toString()];
     for (let index = 0; index < 6; index++) {
-        arr.push(`${start.add(1,'days').date()}`);
+        arr.push(`${start.add(1, 'days').date()}`);
     }
     console.log(arr);
-    
+
     return arr;
 
 }
 
-const Week:Array<string> = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const Week: Array<string> = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 const Months = [
     'January',
     'February',
