@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { IDiaryRecord, IDiaryRecordNav, IRecordFoodDiary, IRecordGlucoseDiary, TypeRecord } from '../../../../Interfaces/IDiary';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+
+import {
+    IDiaryRecord, IDiaryRecordNav, IRecordFoodDiary, IRecordGlucoseDiary, TypeRecord
+} from '../../../../Interfaces/IDiary';
 import { IDictionary } from '../../../../Interfaces/IDictionary';
 import { GetValueStorage } from '../../../../StorageWork';
-import {style} from './RecordsStyle'
-
-
+import { style } from './RecordsStyle';
 
 const Records = (props:any) => {
 

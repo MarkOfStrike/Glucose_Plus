@@ -1,5 +1,5 @@
-import { IFood } from "./Food";
-import { IProduct } from "./Product";
+import { IFood } from './Food';
+import { IProduct } from './Product';
 
 export interface IFoodRecord {
     Product?: IProduct

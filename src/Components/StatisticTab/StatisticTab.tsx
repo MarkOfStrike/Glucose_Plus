@@ -1,63 +1,29 @@
-import React from 'react'
-import { Button, Dimensions, ScrollView, StatusBar, StyleProp, Text, TextStyle, TouchableOpacity, View } from 'react-native'
+import React from 'react';
 import {
-    LineChart,
-    BarChart,
-    PieChart,
-    ProgressChart,
-    ContributionGraph
-} from 'react-native-chart-kit';
-import ScrollableTabView from 'react-native-scrollable-tab-view'
-import { connect } from 'react-redux';
-import { IApplicationState } from '../../Store/StoreInterfaces';
-import { GetDataTest, SetDate, SetFormat } from '../../Store/Reducers/StatisticTab/Action';
-import moment from 'moment'
-import { FormatDate } from '../../Store/Reducers/StatisticTab/Reducer';
-import { LineChartData } from 'react-native-chart-kit/dist/line-chart/LineChart';
+    Button, ScrollView, Text, TouchableOpacity, View
+} from 'react-native';
+import {
+    LineChart} from 'react-native-chart-kit';
 import { Dataset } from 'react-native-chart-kit/dist/HelperTypes';
+import { LineChartData } from 'react-native-chart-kit/dist/line-chart/LineChart';
+import { connect } from 'react-redux';
 
-// enum FormatDate {
-//     day,week,month,year
-// }
+import { GetDataTest, SetDate, SetFormat } from '../../Store/Reducers/StatisticTab/Action';
+import { FormatDate } from '../../Store/Reducers/StatisticTab/Reducer';
+import { IApplicationState } from '../../Store/StoreInterfaces';
 
 
 const StatisticTab = (props: any) => {
 
-    // console.log(props);
-
-
-    const [currentFormatDate, setCurrentFormatDate] = React.useState(FormatDate.day);
-
-    const [currentDate, setCurrentDate] = React.useState(new Date());
-    const [outDate, setOutDate] = React.useState<string>('');
-
-    const [countDays, setCountDays] = React.useState(0);
 
     const [chartData, setChartData] = React.useState<LineChartData>({ labels: [''], datasets: [{ data: [0] }] })
-    const [el, setEl] = React.useState<JSX.Element>(<View></View>)
-
+    
 
     React.useEffect(() => {
         props.GetDataTest()
     }, [props.GetDataTest])
 
-    /** Цвета
-     * 
-     * #470736
-     * #ffd800
-     * #71bc78
-     * #2f6334
-     * #f24666
-     * #ff2e2e
-     * #273a8c
-     * #2271b3
-     * #9e2373
-     * 
-     */
-
     React.useEffect(() => {
-
-        // console.log(props.data);
 
         const DATA: Dataset = {
             data: [0],
@@ -163,15 +129,13 @@ const StatisticTab = (props: any) => {
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 15 }}>
                     <TouchableOpacity style={{ width: 50, height: 50, borderWidth: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
-                        // setCountDays(countDays - 1);
-                        EditDate(-1);
+                       EditDate(-1);
                     }}>
                         <Text>{'<'}</Text>
                     </TouchableOpacity>
-                    {/* <Text>{moment(currentDate).locale('ru').format('DD.MM.YYYY')}</Text> */}
                     <Text>{props.dateTime}</Text>
                     <TouchableOpacity style={{ width: 50, height: 50, borderWidth: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
-                        // setCountDays(countDays + 1);
+                        
                         EditDate(1);
                     }}>
                         <Text>{'>'}</Text>
@@ -180,25 +144,16 @@ const StatisticTab = (props: any) => {
                 <Text>Bezier Line Chart</Text>
                 <ScrollView>
                     <ScrollView horizontal>
-                        {/* {el} */}
                         <LineChart
                             onDataPointClick={(dot) => {
                             }}
                             data={chartData}
-                            width={1000} // from react-native
-                            // width={1000} // from react-native
+                            width={1000} 
                             height={400}
-                            // yAxisLabel="$"
-                            // yAxisSuffix="kk"
-                            yAxisInterval={1} // optional, defaults to 1
+                            
+                            yAxisInterval={1} 
                             verticalLabelRotation={90}//Поворот названий по оси x
                             chartConfig={{
-                                // scrollableDotRadius:6,
-                                // scrollableInfoSize:{
-                                //     height: 520,
-                                //     width: Dimensions.get("window").width
-                                // },
-                                // width: 2000,
                                 backgroundColor: "#e26a00",
                                 backgroundGradientFrom: "#fb8c00",
                                 backgroundGradientTo: "#ffa726",
@@ -207,7 +162,6 @@ const StatisticTab = (props: any) => {
                                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                                 style: {
                                     borderRadius: 16,
-                                    // width:2000
                                 },
                                 propsForDots: {
                                     r: "6",
@@ -216,11 +170,8 @@ const StatisticTab = (props: any) => {
                                 }
                             }}
                             bezier
-                            // withScrollableDot
-
 
                             style={{
-                                // width:2000,
                                 alignSelf: 'center',
                                 marginVertical: 8,
                                 borderRadius: 16
@@ -257,5 +208,3 @@ export default connect(
         SetFormat
     }
 )(StatisticTabContainer)
-
-// export default StatisticTab;

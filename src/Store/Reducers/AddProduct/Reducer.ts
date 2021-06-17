@@ -1,7 +1,10 @@
-import { Reducer } from "react";
-import { CLEAR_PRODUCT_LIST, CLEAR_SKIP, GET_SEARCH_PRODUCTS, SET_GROUP_SEARCH_PRODUCT, SET_SKIP_RECORD } from "../../../constants/ActionsName";
-import { IProduct } from "../../../DataBase/Models/Product";
-import { AddProductAction } from "./Action";
+import { Reducer } from 'react';
+
+import {
+    CLEAR_PRODUCT_LIST, CLEAR_SKIP, GET_SEARCH_PRODUCTS, SET_GROUP_SEARCH_PRODUCT, SET_SKIP_RECORD
+} from '../../../constants/ActionsName';
+import { IProduct } from '../../../DataBase/Models/Product';
+import { AddProductAction } from './Action';
 
 export interface IAddProductState {
     ProductsList: Array<IProduct>

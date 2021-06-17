@@ -1,7 +1,7 @@
-import { IFood } from "../DataBase/Models/Food";
-import { IGlucoseMeasurement } from "../DataBase/Models/GlucoseMeasurement";
-import { IProduct } from "../DataBase/Models/Product";
-import { IDictionary } from "./IDictionary";
+import { IFood } from '../DataBase/Models/Food';
+import { IGlucoseMeasurement } from '../DataBase/Models/GlucoseMeasurement';
+import { IProduct } from '../DataBase/Models/Product';
+import { IDictionary } from './IDictionary';
 
 export interface IDiaryState {
     Records?: IDictionary<Array<IDiaryRecord<IRecordFoodDiary | IRecordGlucoseDiary>>> | null

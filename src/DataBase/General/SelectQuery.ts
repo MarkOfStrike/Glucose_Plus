@@ -1,5 +1,6 @@
-import React, { FC } from 'react'
+import React, { FC } from 'react';
 import { ResultSetRowList } from 'react-native-sqlite-storage';
+
 import DbContext from '../DataBase';
 
 export interface ISelectQueryParams {

@@ -1,16 +1,18 @@
-import React, { FC } from 'react'
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { FC } from 'react';
+import { ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Swipeout, { SwipeoutButtonProperties } from 'react-native-swipeout';
+import TextInputMask from 'react-native-text-input-mask';
+import { connect, MapStateToProps } from 'react-redux';
+
 import { IProduct } from '../../../../../../DataBase/Models/Product';
+import { SetFood } from '../../../../../../Store/Reducers/CreateRecord/Action';
+import { ICreateFood, IRecordProduct } from '../../../../../../Store/Reducers/CreateRecord/Reducer';
+import { IApplicationState } from '../../../../../../Store/StoreInterfaces';
 import CustomButton from '../../../../../CustomElement/CustomButton';
 import Hr from '../../../../../CustomElement/Hr';
 import AddProduct from './AddProduct/AddProduct';
 import { style } from './FoodRecordStyle';
-import Swipeout, { SwipeoutButtonProperties } from 'react-native-swipeout'
-import { connect, MapStateToProps } from 'react-redux';
-import { IApplicationState } from '../../../../../../Store/StoreInterfaces';
-import { ICreateFood, IRecordProduct } from '../../../../../../Store/Reducers/CreateRecord/Reducer';
-import { SetFood } from '../../../../../../Store/Reducers/CreateRecord/Action'
-import TextInputMask from 'react-native-text-input-mask';
+
 // import {} from 'react-native-swipeable-rowexpo'
 
 

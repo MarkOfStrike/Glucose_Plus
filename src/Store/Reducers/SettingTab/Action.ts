@@ -1,19 +1,25 @@
-import { FOOD_TABLE, GLUCOSE_MEASUREMENT_TABLE, FOOD_TABLE_NAME, FOOD_TABLE_DATE_ADD, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_INSULIN, FOOD_TABLE_ID, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE_LEVEL, FOOD_RECORD_TABLE, FOOD_RECORD_TABLE_FOOD_ID, FOOD_RECORD_TABLE_PRODUCT_ID, PRODUCTS_TABLE_ID, PRODUCTS_TABLE, PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_XE, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_CALORIES, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS } from './../../../DataBase/DataBaseConst';
-import RNFS, { writeFile } from 'react-native-fs';
-import { IApplicationAction } from './../../StoreInterfaces';
-import { EXPORT_LOADING, IMPORT_LOADING, SET_NEW_MEASUREMENT, SHOW_EXPORT_MESSAGE, SHOW_IMPORT_MESSAGE } from "../../../constants/ActionsName";
-import moment from 'moment';
-import DbContext from '../../../DataBase/DataBase';
-import * as FileSystem from 'expo-file-system'
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
+import moment from 'moment';
 // import { Files } from 'react-native-android-files';
-import { CameraRoll } from 'react-native';
-import { Linking } from 'react-native';
-import * as DocumentPicker from 'expo-document-picker'
+import { CameraRoll, Linking } from 'react-native';
+import RNFS, { writeFile } from 'react-native-fs';
+
+import {
+    EXPORT_LOADING, IMPORT_LOADING, SET_NEW_MEASUREMENT, SHOW_EXPORT_MESSAGE, SHOW_IMPORT_MESSAGE
+} from '../../../constants/ActionsName';
+import DbContext from '../../../DataBase/DataBase';
+import {
+    FOOD_RECORD_TABLE, FOOD_RECORD_TABLE_FOOD_ID, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS,
+    FOOD_RECORD_TABLE_PRODUCT_ID, FOOD_TABLE, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_DATE_ADD,
+    FOOD_TABLE_ID, FOOD_TABLE_INSULIN, FOOD_TABLE_NAME, GLUCOSE_MEASUREMENT_TABLE,
+    GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE_LEVEL, PRODUCTS_TABLE,
+    PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_GI,
+    PRODUCTS_TABLE_ID, PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_XE
+} from '../../../DataBase/DataBaseConst';
+import { IApplicationAction } from '../../StoreInterfaces';
 import { IShowMessage } from './Reducer';
-
-
-
 
 interface SetMeasurementAction {
     type: typeof SET_NEW_MEASUREMENT
@@ -59,7 +65,7 @@ const getNameFile = (): string => {
     return `${momDate.format('YYYYMMDD')}_${diff}.json`;
 }
 
-export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, getState) => {
+export const ExportData = (): IApplicationAction<MessageAction> => (dispatch, getState) => {
 
     dispatch({ type: SHOW_IMPORT_MESSAGE, show: false, message: '' });
 
@@ -74,7 +80,6 @@ export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, ge
 
     db.transaction(tr => {
 
-
         tr.executeSql(`select * from ${GLUCOSE_MEASUREMENT_TABLE}`, [], (t, r) => {
 
             const arr = []
@@ -87,11 +92,7 @@ export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, ge
 
         })
 
-
-
         tr.executeSql(`select * from ${FOOD_TABLE}`, [], (nt, r) => {
-
-
 
             for (let index = 0; index < r.rows.length; index++) {
                 const food = r.rows.item(0);
@@ -154,17 +155,17 @@ export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, ge
 
                         FileSystem.StorageAccessFramework.createFileAsync(filePath, fileName, 'application/json').then(d => {
                             FileSystem.writeAsStringAsync(d, JSON.stringify(outJson), { encoding: FileSystem.EncodingType.UTF8 });
-                            const message = `Импорт данных завершен! Данные сохранены в файл ${fileName}`
+                            const message = `Экспорт данных завершен! Данные сохранены в файл ${fileName}`
                             dispatch({ type: SHOW_IMPORT_MESSAGE, show: true, message: message });
                         })
 
                     } else {
-                        dispatch({ type: SHOW_IMPORT_MESSAGE, show: true, message: 'Импорт данных не выполнен' });
+                        dispatch({ type: SHOW_IMPORT_MESSAGE, show: true, message: 'Экспорт данных не выполнен' });
                     }
 
                 })
             } else {
-                dispatch({ type: SHOW_IMPORT_MESSAGE, show: true, message: 'Импорт данных не выполнен' });
+                dispatch({ type: SHOW_IMPORT_MESSAGE, show: true, message: 'Экспорт данных не выполнен' });
             }
         });
 
@@ -175,7 +176,7 @@ export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, ge
 
 }
 
-export const ExportData = (): IApplicationAction<MessageAction> => (dispatch, getState) => {
+export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, getState) => {
 
     dispatch({ type: SHOW_EXPORT_MESSAGE, show: false, message: '' });
 
@@ -264,17 +265,17 @@ export const ExportData = (): IApplicationAction<MessageAction> => (dispatch, ge
                                 console.log(error);
 
                             }, () => {
-                                dispatch({ type: SHOW_IMPORT_MESSAGE, show: true, message: 'Экспорт данных выполнен успешно!' });
+                                dispatch({ type: SHOW_IMPORT_MESSAGE, show: true, message: 'Импорт данных выполнен успешно!' });
                             })
 
                         });
                     }
                 } else {
-                    dispatch({ type: SHOW_EXPORT_MESSAGE, show: true, message: 'Ошибка экспорта данных!' });
+                    dispatch({ type: SHOW_EXPORT_MESSAGE, show: true, message: 'Ошибка импорта данных!' });
                 }
             })
         } else {
-            dispatch({ type: SHOW_EXPORT_MESSAGE, show: true, message: 'Ошибка экспорта данных!' });
+            dispatch({ type: SHOW_EXPORT_MESSAGE, show: true, message: 'Ошибка импорта данных!' });
         }
     });
 

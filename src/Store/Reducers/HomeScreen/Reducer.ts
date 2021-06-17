@@ -1,9 +1,7 @@
-import { Reducer } from "redux"
-import { HOME_SCREEN_LOADING_DATA } from "../../../constants/ActionsName"
-import { HomeScreenActions } from "./Action"
+import { Reducer } from 'redux';
 
-
-
+import { HOME_SCREEN_LOADING_DATA } from '../../../constants/ActionsName';
+import { HomeScreenActions } from './Action';
 
 export interface IHomeScreenState {
     isLoading: boolean

@@ -1,6 +1,5 @@
 import DbContext from '../DataBase';
 
-
 export const DeleteRecord = (props:any) => {
 
     const db = DbContext();

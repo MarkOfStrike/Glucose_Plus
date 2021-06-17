@@ -1,6 +1,8 @@
-import React from 'react'
-import { View, Text } from 'react-native'
-import { style } from './ElementDiaryStyle'
+import React from 'react';
+import { Text, View } from 'react-native';
+
+import { style } from './ElementDiaryStyle';
+
 // import {} from 'react-native-shadow'
 
 const ElementDiary = () => {

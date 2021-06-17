@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
-import { Dimensions, ScrollView, StyleProp, Text, View, ViewStyle } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import Carousel from 'react-native-snap-carousel'
-import { style } from './TotalStatsStyle'
+import React, { useState } from 'react';
+import { Dimensions, ScrollView, StyleProp, Text, View, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Carousel from 'react-native-snap-carousel';
+
+import { style } from './TotalStatsStyle';
 
 interface IData {
     component: Array<JSX.Element>

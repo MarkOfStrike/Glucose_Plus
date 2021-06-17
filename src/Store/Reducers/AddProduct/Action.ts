@@ -1,10 +1,14 @@
-import { PRODUCTS_TABLE_NAME, PRODUCT_GROUP_TABLE, PRODUCT_GROUP_TABLE_NAME, PRODUCT_GROUP_TABLE_ID, PRODUCTS_TABLE_ID, PRODUCTS_TABLE_GROUP } from './../../../DataBase/DataBaseConst';
-import { IApplicationAction } from './../../StoreInterfaces';
-import { IProduct } from "../../../DataBase/Models/Product";
+import {
+    CLEAR_PRODUCT_LIST, CLEAR_SKIP, GET_SEARCH_PRODUCTS, SET_GROUP_SEARCH_PRODUCT, SET_SKIP_RECORD
+} from '../../../constants/ActionsName';
 import DbContext from '../../../DataBase/DataBase';
-import { CLEAR_PRODUCT_LIST, CLEAR_SKIP, GET_SEARCH_PRODUCTS, SET_GROUP_SEARCH_PRODUCT, SET_SKIP_RECORD } from '../../../constants/ActionsName';
+import {
+    PRODUCT_GROUP_TABLE, PRODUCT_GROUP_TABLE_ID, PRODUCT_GROUP_TABLE_NAME, PRODUCTS_TABLE_GROUP,
+    PRODUCTS_TABLE_ID, PRODUCTS_TABLE_NAME
+} from '../../../DataBase/DataBaseConst';
+import { IProduct } from '../../../DataBase/Models/Product';
+import { IApplicationAction } from '../../StoreInterfaces';
 import { Group } from './Reducer';
-
 
 export interface SetSkipRecord {
     type: typeof SET_SKIP_RECORD,

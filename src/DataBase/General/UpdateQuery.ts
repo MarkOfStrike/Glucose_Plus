@@ -1,8 +1,9 @@
-import { FoodRecordAdd } from './InsertQuery';
-import { FOOD_RECORD_TABLE, FOOD_RECORD_TABLE_FOOD_ID, FOOD_TABLE_ID, FOOD_TABLE_NAME } from './../DataBaseConst';
 import DbContext from '../DataBase';
-import { FOOD_TABLE } from '../DataBaseConst';
+import {
+    FOOD_RECORD_TABLE, FOOD_RECORD_TABLE_FOOD_ID, FOOD_TABLE, FOOD_TABLE_ID, FOOD_TABLE_NAME
+} from '../DataBaseConst';
 import { DeleteRecord } from './DeleteQuery';
+import { FoodRecordAdd } from './InsertQuery';
 
 const UpdateQuery = (query:string) => {
 

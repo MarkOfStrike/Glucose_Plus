@@ -1,13 +1,18 @@
-import { FOOD_TABLE, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_DATE_ADD, FOOD_TABLE_INSULIN, FOOD_TABLE_ID, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_XE, PRODUCTS_TABLE, FOOD_RECORD_TABLE, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_PROTEINS } from './../../../DataBase/DataBaseConst';
-import { GET_ALL_STATISTIC_AVG, LABELS_STATISTIC } from './../../../constants/ActionsName';
-import { IApplicationAction } from './../../StoreInterfaces';
-import { SET_CURRENT_DATE, SET_FORMAT_DATE } from "../../../constants/ActionsName";
-import { FormatDate, IStatisticData } from "./Reducer";
 import moment from 'moment';
+
+import {
+    GET_ALL_STATISTIC_AVG, LABELS_STATISTIC, SET_CURRENT_DATE, SET_FORMAT_DATE
+} from '../../../constants/ActionsName';
 import DbContext from '../../../DataBase/DataBase';
-import { GLUCOSE_MEASUREMENT_TABLE, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE_LEVEL } from '../../../DataBase/DataBaseConst';
-
-
+import {
+    FOOD_RECORD_TABLE, FOOD_TABLE, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_DATE_ADD,
+    FOOD_TABLE_ID, FOOD_TABLE_INSULIN, GLUCOSE_MEASUREMENT_TABLE,
+    GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE_LEVEL, PRODUCTS_TABLE,
+    PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_GI,
+    PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_XE
+} from '../../../DataBase/DataBaseConst';
+import { IApplicationAction } from '../../StoreInterfaces';
+import { FormatDate, IStatisticData } from './Reducer';
 
 const formatDay = 'DD MMMM YYYY';
 const formatMonth = 'MMMM YYYY';

@@ -1,20 +1,21 @@
-import { USER_INFO_TABLE, GLUCOSE_MEASUREMENT_TABLE, FOOD_TABLE, PRODUCTS_TABLE, PRODUCT_GROUP_TABLE, FOOD_RECORD_TABLE, PRODUCT_GROUP_TABLE_NAME, PRODUCT_GROUP_TABLE_ID, PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_XE, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_GROUP, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD } from '../../../DataBase/DataBaseConst';
+import { WebSQLDatabase } from 'expo-sqlite';
 import React from 'react';
-import { IApplicationAction } from './../../StoreInterfaces';
-import { HOME_SCREEN_LOADING_DATA } from "../../../constants/ActionsName";
+import { LogBox } from 'react-native';
+import { debug } from 'react-native-reanimated';
 
-import {WebSQLDatabase} from 'expo-sqlite';
-
+import { HOME_SCREEN_LOADING_DATA } from '../../../constants/ActionsName';
+import DbContext from '../../../DataBase/DataBase';
+import {
+    FOOD_RECORD_TABLE, FOOD_TABLE, GLUCOSE_MEASUREMENT_TABLE, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD,
+    PRODUCT_GROUP_TABLE, PRODUCT_GROUP_TABLE_ID, PRODUCT_GROUP_TABLE_NAME, PRODUCTS_TABLE,
+    PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_GI,
+    PRODUCTS_TABLE_GROUP, PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_XE,
+    USER_INFO_TABLE
+} from '../../../DataBase/DataBaseConst';
 import { IProduct } from '../../../DataBase/Models/Product';
 import { IGroup } from '../../../DataBase/Models/ProductGroup';
+import { IApplicationAction } from '../../StoreInterfaces';
 import { Group } from '../AddProduct/Reducer';
-import DbContext from '../../../DataBase/DataBase';
-import { debug } from 'react-native-reanimated';
-import { LogBox } from 'react-native';
-
-
-
-
 
 export interface HomeScreenLoadingAction {
     type: typeof HOME_SCREEN_LOADING_DATA,

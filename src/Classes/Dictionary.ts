@@ -1,4 +1,4 @@
-import { IDictionary } from "../Interfaces/IDictionary";
+import { IDictionary } from '../Interfaces/IDictionary';
 
 export class Dictionary<value> {
     private dic: IDictionary<value>;

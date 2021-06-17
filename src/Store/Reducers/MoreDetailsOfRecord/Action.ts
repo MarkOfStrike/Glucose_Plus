@@ -1,14 +1,19 @@
-import { FOOD_TABLE, GLUCOSE_MEASUREMENT_TABLE, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE_ID, GLUCOSE_MEASUREMENT_TABLE_LEVEL, FOOD_TABLE_ID, FOOD_TABLE_NAME, FOOD_TABLE_DATE_ADD, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_INSULIN, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS, FOOD_RECORD_TABLE, PRODUCTS_TABLE, FOOD_RECORD_TABLE_FOOD_ID, PRODUCTS_TABLE_ID, FOOD_RECORD_TABLE_PRODUCT_ID, PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_XE } from './../../../DataBase/DataBaseConst';
-import { IProduct } from './../../../DataBase/Models/Product';
-import { IGlucoseMeasurement } from './../../../DataBase/Models/GlucoseMeasurement';
-import { TypeRecord, IRecord } from './../../../Interfaces/IDiary';
-import { DELETE_RECORD, GET_INFO_RECORD } from "../../../constants/ActionsName";
+import { DELETE_RECORD, GET_INFO_RECORD } from '../../../constants/ActionsName';
+import DbContext from '../../../DataBase/DataBase';
+import {
+    FOOD_RECORD_TABLE, FOOD_RECORD_TABLE_FOOD_ID, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS,
+    FOOD_RECORD_TABLE_PRODUCT_ID, FOOD_TABLE, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_DATE_ADD,
+    FOOD_TABLE_ID, FOOD_TABLE_INSULIN, FOOD_TABLE_NAME, GLUCOSE_MEASUREMENT_TABLE,
+    GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE_ID,
+    GLUCOSE_MEASUREMENT_TABLE_LEVEL, PRODUCTS_TABLE, PRODUCTS_TABLE_CALORIES,
+    PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_ID,
+    PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_XE
+} from '../../../DataBase/DataBaseConst';
+import { IGlucoseMeasurement } from '../../../DataBase/Models/GlucoseMeasurement';
+import { IProduct } from '../../../DataBase/Models/Product';
+import { IRecord, TypeRecord } from '../../../Interfaces/IDiary';
 import { IApplicationAction } from '../../StoreInterfaces';
 import { IMoreDetailsOfRecordState, IMRFood, IMRGlucose } from './Reducer';
-import DbContext from '../../../DataBase/DataBase';
-
-
-
 
 interface GetInfoRecordAction {
     type: typeof GET_INFO_RECORD

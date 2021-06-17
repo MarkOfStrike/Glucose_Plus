@@ -1,4 +1,4 @@
-import { TypeRecord } from "./Interfaces/IDiary"
+import { TypeRecord } from './Interfaces/IDiary';
 
 export type RootNavigationParamList = {
     Home: undefined;

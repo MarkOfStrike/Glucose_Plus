@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import CustomButton from '../../../CustomElement/CustomButton';
-import { style } from './ButtonAddItemStyle'
 
+import CustomButton from '../../../CustomElement/CustomButton';
+import { style } from './ButtonAddItemStyle';
 
 const ButtonAddItem = (props: any) => {
     return (

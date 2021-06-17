@@ -1,11 +1,11 @@
-import { IProduct } from './../../../DataBase/Models/Product';
-import { TypeRecord } from './../../../Interfaces/IDiary';
-import { IGlucoseMeasurement } from './../../../DataBase/Models/GlucoseMeasurement';
 // import { IProduct } from "../../../DataBase/Models/Product";
 import { Reducer } from 'redux';
-import { MoreDetailsActions } from './Action';
-import { GET_INFO_RECORD } from '../../../constants/ActionsName';
 
+import { GET_INFO_RECORD } from '../../../constants/ActionsName';
+import { IGlucoseMeasurement } from '../../../DataBase/Models/GlucoseMeasurement';
+import { IProduct } from '../../../DataBase/Models/Product';
+import { TypeRecord } from '../../../Interfaces/IDiary';
+import { MoreDetailsActions } from './Action';
 
 export interface IMRFood {
     name: string

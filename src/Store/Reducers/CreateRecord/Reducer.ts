@@ -1,8 +1,11 @@
-import { Reducer } from "react";
-import { CHECK_ADD_STATE, CLEAR_CREATE_RECORD, SET_CREATE_RECORD_DATE, SET_CREATE_RECORD_FOOD, SET_CREATE_RECORD_GLUCOSE } from "../../../constants/ActionsName";
-import { IProduct } from "../../../DataBase/Models/Product";
-import { CreateRecordActions } from "./Action";
+import { Reducer } from 'react';
 
+import {
+    CHECK_ADD_STATE, CLEAR_CREATE_RECORD, SET_CREATE_RECORD_DATE, SET_CREATE_RECORD_FOOD,
+    SET_CREATE_RECORD_GLUCOSE
+} from '../../../constants/ActionsName';
+import { IProduct } from '../../../DataBase/Models/Product';
+import { CreateRecordActions } from './Action';
 
 export interface ICreateRecordState {
     Glucose: string

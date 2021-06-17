@@ -1,14 +1,23 @@
-import { IGlucoseMeasurement } from './../../../DataBase/Models/GlucoseMeasurement';
-import { FOOD_TABLE, FOOD_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, FOOD_TABLE_ID, FOOD_RECORD_TABLE_PRODUCT_ID, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS, FOOD_RECORD_TABLE_FOOD_ID, PRODUCTS_TABLE, PRODUCTS_TABLE_ID, GLUCOSE_MEASUREMENT_TABLE_LEVEL, PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_XE, FOOD_TABLE_INSULIN, FOOD_TABLE_CARBOHYDRATE_RATIO } from './../../../DataBase/DataBaseConst';
-import { FOOD_RECORD_TABLE } from '../../../DataBase/DataBaseConst';
-import { IApplicationAction } from '../../StoreInterfaces';
-import { GET_ALL_RECORDS_PRODUCT, GET_STATISTIC } from "../../../constants/ActionsName";
-import { IDataProduct, IDiaryRecord, IRecord, IRecordFoodDiary, IRecordGlucoseDiary, IStatistic, TypeRecord } from "../../../Interfaces/IDiary";
+import { GET_ALL_RECORDS_PRODUCT, GET_STATISTIC } from '../../../constants/ActionsName';
 import DbContext from '../../../DataBase/DataBase';
-import { IDictionary } from '../../../Interfaces/IDictionary';
+import {
+    FOOD_RECORD_TABLE, FOOD_RECORD_TABLE_FOOD_ID, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS,
+    FOOD_RECORD_TABLE_PRODUCT_ID, FOOD_TABLE, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_DATE_ADD,
+    FOOD_TABLE_ID, FOOD_TABLE_INSULIN, GLUCOSE_MEASUREMENT_TABLE,
+    GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE_LEVEL, PRODUCTS_TABLE,
+    PRODUCTS_TABLE_CALORIES, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_GI,
+    PRODUCTS_TABLE_ID, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_XE
+} from '../../../DataBase/DataBaseConst';
 import { IFood } from '../../../DataBase/Models/Food';
-import { IProduct } from '../../../DataBase/Models/Product';
 import { IFoodRecord } from '../../../DataBase/Models/FoodRecord';
+import { IGlucoseMeasurement } from '../../../DataBase/Models/GlucoseMeasurement';
+import { IProduct } from '../../../DataBase/Models/Product';
+import {
+    IDataProduct, IDiaryRecord, IRecord, IRecordFoodDiary, IRecordGlucoseDiary, IStatistic,
+    TypeRecord
+} from '../../../Interfaces/IDiary';
+import { IDictionary } from '../../../Interfaces/IDictionary';
+import { IApplicationAction } from '../../StoreInterfaces';
 
 export interface GetAllRecord {
     type: typeof GET_ALL_RECORDS_PRODUCT

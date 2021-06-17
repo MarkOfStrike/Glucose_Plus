@@ -1,7 +1,7 @@
-import React, { FC } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
-import { style } from './ItemDiaryStyle'
+import React, { FC } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
+import { style } from './ItemDiaryStyle';
 
 const ItemDiary:FC<any> = (props) => {
     return (

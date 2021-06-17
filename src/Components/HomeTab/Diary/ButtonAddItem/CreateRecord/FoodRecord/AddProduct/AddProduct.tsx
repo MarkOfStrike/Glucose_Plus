@@ -1,16 +1,22 @@
-import React, { FC } from 'react'
-import { View, Text, TextInput, Pressable, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native'
-import { IProduct } from '../../../../../../../DataBase/Models/Product';
-import Modal from 'react-native-modal'
-import CustomButton from '../../../../../../CustomElement/CustomButton';
-import { Picker } from '@react-native-picker/picker'
-import Hr from '../../../../../../CustomElement/Hr';
+import React, { FC } from 'react';
+import {
+    Image, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View
+} from 'react-native';
+import Modal from 'react-native-modal';
 import { connect } from 'react-redux';
-import { IApplicationState } from '../../../../../../../Store/StoreInterfaces';
-import {GetSearchProduct, ClearState,SetGroupProductSearch,ClearSkip, IncrementSkip} from '../../../../../../../Store/Reducers/AddProduct/Action'
 // import ReactDOM from 'react-dom'
 import { compose } from 'redux';
+
+import { Picker } from '@react-native-picker/picker';
+
+import { IProduct } from '../../../../../../../DataBase/Models/Product';
+import {
+    ClearSkip, ClearState, GetSearchProduct, IncrementSkip, SetGroupProductSearch
+} from '../../../../../../../Store/Reducers/AddProduct/Action';
 import { Group } from '../../../../../../../Store/Reducers/AddProduct/Reducer';
+import { IApplicationState } from '../../../../../../../Store/StoreInterfaces';
+import CustomButton from '../../../../../../CustomElement/CustomButton';
+import Hr from '../../../../../../CustomElement/Hr';
 
 interface IAddProduct {
     isOpen: boolean

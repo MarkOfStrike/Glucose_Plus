@@ -1,37 +1,23 @@
+import React from 'react';
+import { Text, View } from 'react-native';
+import { connect } from 'react-redux';
+import { compose } from 'redux';
+
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import React from 'react'
-import { connect } from 'react-redux';
+
 import HomeTab from './Components/HomeTab/HomeTab';
 import SettingTab from './Components/SettingTab/SettingTab';
 import StatisticTab from './Components/StatisticTab/StatisticTab';
-import { Group } from './Store/Reducers/AddProduct/Reducer';
+import { LoadSampleData } from './Store/Reducers/HomeScreen/Action';
 import { IApplicationState } from './Store/StoreInterfaces';
 import TabBarIcon from './TabBarIcon';
 import { RootNavigationParamList } from './TabBarTypes';
-import { LoadSampleData } from './Store/Reducers/HomeScreen/Action'
-import { View, Text } from 'react-native';
-import { compose } from 'redux';
-import MediaLibrary from 'expo-media-library';
-import Permissions, { usePermissions } from 'expo-permissions';
-// import FileSystem from 'expo-file-system'
-
 
 
 const RootNavigation = createBottomTabNavigator<RootNavigationParamList>();
 
 const NavigationApp = (props: any) => {
-
-    // console.log(FileSystem);
-
-
-    // try {
-
-    //     console.log(Permissions,MediaLibrary);
-
-    // } catch (error) {
-
-    // }
 
     return (
         <NavigationContainer >

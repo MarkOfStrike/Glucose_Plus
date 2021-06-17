@@ -1,8 +1,10 @@
-import { Reducer } from "react";
-import { SET_NEW_MEASUREMENT, SHOW_EXPORT_MESSAGE, SHOW_IMPORT_MESSAGE } from "../../../constants/ActionsName";
-import { GetValueStorage, SetValueStorage } from "../../../StorageWork";
-import { SettingsAction } from "./Action";
+import { Reducer } from 'react';
 
+import {
+    SET_NEW_MEASUREMENT, SHOW_EXPORT_MESSAGE, SHOW_IMPORT_MESSAGE
+} from '../../../constants/ActionsName';
+import { GetValueStorage, SetValueStorage } from '../../../StorageWork';
+import { SettingsAction } from './Action';
 
 export interface ISettingState {
     measurement: string,

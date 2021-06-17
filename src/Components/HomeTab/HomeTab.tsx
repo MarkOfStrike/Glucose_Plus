@@ -1,14 +1,15 @@
-import { createStackNavigator } from '@react-navigation/stack';
-import React from 'react'
-import { Image, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react';
+import { View } from 'react-native';
 import { connect } from 'react-redux';
+
+import { createStackNavigator } from '@react-navigation/stack';
+
+import { TypeRecord } from '../../Interfaces/IDiary';
+import { SaveRecord } from '../../Store/Reducers/CreateRecord/Action';
 import { IApplicationState } from '../../Store/StoreInterfaces';
+import { HomeNavigationParamsList } from '../../TabBarTypes';
 import CreateRecord from './Diary/ButtonAddItem/CreateRecord/CreateRecord';
 import Diary from './Diary/Diary';
-import { SaveRecord } from '../../Store/Reducers/CreateRecord/Action'
-import CustomButton from '../CustomElement/CustomButton';
-import { HomeNavigationParamsList } from '../../TabBarTypes';
-import { TypeRecord } from '../../Interfaces/IDiary';
 import MoreDetailsOfRecord from './MoreDetailsOfRecord/MoreDetailsOfRecord';
 
 const HomePageStack = createStackNavigator<HomeNavigationParamsList>();
@@ -52,13 +53,11 @@ const EmptyComponent = () => {
     return (<View></View>)
 }
 
-//Для того чтобы пробрасывать конект с пропсами
 const HomeTabContainer = (props: any) => {
 
     return (<HomeTab {...props} />)
 }
 
-//export default HomeTabContainer;
 
 const mapStateToProps = (state: IApplicationState) => ({
     newRecord: state.CreateRecord.Record

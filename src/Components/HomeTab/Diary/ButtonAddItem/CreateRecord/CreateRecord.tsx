@@ -1,16 +1,19 @@
-import React from 'react'
-import { Text, View, TextInput, ScrollView, TouchableOpacity, Image } from 'react-native'
+import React from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { connect } from 'react-redux';
+
+import { IDictionary } from '../../../../../Interfaces/IDictionary';
+import {
+    ClearRecord, SaveRecord, SetDate, SetFood, SetGlucose
+} from '../../../../../Store/Reducers/CreateRecord/Action';
+import { GetRecords, GetStatistic } from '../../../../../Store/Reducers/Diary/Action';
+import { IApplicationState } from '../../../../../Store/StoreInterfaces';
 import CustomButton from '../../../../CustomElement/CustomButton';
 import Hr from '../../../../CustomElement/Hr';
 import style from './CreateRecordStyle';
 import FoodRecord from './FoodRecord/FoodRecord';
 import GlucoseRecord from './GlucoseRecord/GlucoseRecord';
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { IDictionary } from '../../../../../Interfaces/IDictionary';
-import { IApplicationState } from '../../../../../Store/StoreInterfaces';
-import { SetDate, SetFood, SetGlucose, ClearRecord, SaveRecord } from '../../../../../Store/Reducers/CreateRecord/Action'
-import {GetRecords, GetStatistic} from '../../../../../Store/Reducers/Diary/Action'
-import { connect } from 'react-redux';
 
 const CreateRecord = (props: any) => {
 
@@ -148,7 +151,6 @@ const CreateRecordContainer = (props: any) => {
     return (<CreateRecord {...props} />)
 }
 
-// export default CreateRecord;
 
 const mapStateToProps = (state: IApplicationState) => ({
     record: {

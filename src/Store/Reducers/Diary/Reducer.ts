@@ -1,9 +1,9 @@
-import { Reducer } from "react";
-import { Dictionary } from "../../../Classes/Dictionary";
-import { GET_ALL_RECORDS_PRODUCT, GET_STATISTIC } from "../../../constants/ActionsName";
-import { IDiaryRecord, IDiaryState } from "../../../Interfaces/IDiary";
-import { DiaryPageType } from "./Action";
+import { Reducer } from 'react';
 
+import { Dictionary } from '../../../Classes/Dictionary';
+import { GET_ALL_RECORDS_PRODUCT, GET_STATISTIC } from '../../../constants/ActionsName';
+import { IDiaryRecord, IDiaryState } from '../../../Interfaces/IDiary';
+import { DiaryPageType } from './Action';
 
 const initState: IDiaryState = {
     Records: null,
@@ -14,12 +14,10 @@ const initState: IDiaryState = {
             Max: 0
         },
         Product: {
-            Gi: 0,
+            CarbohydrateRatio: 0,
+            InsLevel: 0,
             Xe: 0,
-            Fats: 0,
-            Proteins: 0,
             Carbohydrates: 0,
-            Calories: 0
         }
     }
 }

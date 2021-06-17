@@ -1,9 +1,10 @@
-import React from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import React from 'react';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
-import { style } from './GlucoseRecordStyle'
-import {SetGlucose} from '../../../../../../Store/Reducers/CreateRecord/Action'
+
+import { SetGlucose } from '../../../../../../Store/Reducers/CreateRecord/Action';
 import { IApplicationState } from '../../../../../../Store/StoreInterfaces';
+import { style } from './GlucoseRecordStyle';
 
 const GlucoseRecord = (props:any) => {
 

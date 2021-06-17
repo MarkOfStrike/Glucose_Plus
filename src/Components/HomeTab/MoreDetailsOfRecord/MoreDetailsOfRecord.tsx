@@ -1,13 +1,14 @@
-import React from "react"
-import { View, Button, Text, ScrollView } from "react-native"
-import { connect } from "react-redux"
-import { IProduct } from "../../../DataBase/Models/Product"
-import { IApplicationState } from "../../../Store/StoreInterfaces"
-import { GetInfo, DeleteRecord } from '../../../Store/Reducers/MoreDetailsOfRecord/Action'
+import moment from 'moment';
+import React from 'react';
+import { Button, ScrollView, Text, View } from 'react-native';
+import { connect } from 'react-redux';
+
+import { IProduct } from '../../../DataBase/Models/Product';
+import { TypeRecord } from '../../../Interfaces/IDiary';
 import { GetRecords, GetStatistic } from '../../../Store/Reducers/Diary/Action';
-import Hr from "../../CustomElement/Hr"
-import { TypeRecord } from "../../../Interfaces/IDiary"
-import moment from "moment"
+import { DeleteRecord, GetInfo } from '../../../Store/Reducers/MoreDetailsOfRecord/Action';
+import { IApplicationState } from '../../../Store/StoreInterfaces';
+import Hr from '../../CustomElement/Hr';
 
 const MoreDetailsOfRecord = (props: any) => {
 
@@ -129,7 +130,7 @@ const MoreDetailsOfRecordContainer = (props: any) => {
 
     const deleteRecord = () => {
         const params = props.route.params;
-        props.DeleteRecord(params.id, params.type)//Достать initParams
+        props.DeleteRecord(params.id, params.type)
         props.GetStatistic()
         props.GetRecords()
         props.navigation.goBack();

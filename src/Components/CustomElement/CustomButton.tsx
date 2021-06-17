@@ -1,6 +1,6 @@
-import React, { FC } from 'react'
-import { View, Text, StyleProp, ViewStyle } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+import React, { FC } from 'react';
+import { StyleProp, Text, View, ViewStyle } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface ICustomButtonProps {
     onPress: () => void

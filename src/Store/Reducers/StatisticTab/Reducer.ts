@@ -1,9 +1,10 @@
-import moment from "moment";
-import { Reducer } from "redux";
-import { GET_ALL_STATISTIC_AVG, LABELS_STATISTIC, SET_CURRENT_DATE, SET_FORMAT_DATE } from "../../../constants/ActionsName";
-import { LabelsHours, StatisticTabActions } from "./Action";
+import moment from 'moment';
+import { Reducer } from 'redux';
 
-
+import {
+    GET_ALL_STATISTIC_AVG, LABELS_STATISTIC, SET_CURRENT_DATE, SET_FORMAT_DATE
+} from '../../../constants/ActionsName';
+import { LabelsHours, StatisticTabActions } from './Action';
 
 export enum FormatDate {
     day, week, month, year

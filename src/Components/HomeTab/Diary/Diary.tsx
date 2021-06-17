@@ -1,9 +1,9 @@
 import React from 'react';
 import { AppState, AppStateStatus, ScrollView, Text, View } from 'react-native';
-import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
-import { compose } from 'redux';
-import { GetAllRecord, GetRecords, GetStatistic } from '../../../Store/Reducers/Diary/Action';
-import { IApplicationAction, IApplicationState } from '../../../Store/StoreInterfaces';
+import { connect } from 'react-redux';
+
+import { GetRecords, GetStatistic } from '../../../Store/Reducers/Diary/Action';
+import { IApplicationState } from '../../../Store/StoreInterfaces';
 import Hr from '../../CustomElement/Hr';
 import ButtonAddItem from './ButtonAddItem/ButtonAddItem';
 import { style } from './DiaryStyle';
@@ -31,8 +31,6 @@ const Diary = (props: any) => {
             AppState.removeEventListener("change", _handleAppStateChange);
         };
     }, []);
-
-    
 
     React.useEffect(() => {
 
@@ -82,33 +80,6 @@ const mapStateToProps = (state: IApplicationState) => ({
     Records: state.Diary.Records,
     Statistic: state.Diary.Statistic
 })
-
-// interface IMapStateToAction {
-//     GetRecords: () => IApplicationAction<GetAllRecord>
-// }
-
-// interface ITestProps {
-//     test:number
-// }
-
-// interface IOwnTest {
-//     parent: number
-// }
-
-// const asds: MapStateToProps<ITestProps, IOwnTest, IApplicationState> = (state, own) => ({
-//     test: own.parent
-// })
-
-
-
-// const sasd: MapDispatchToProps<IMapStateToAction, IOwnTest> = () => ({
-//     GetRecords
-// })
-
-// export default connect(
-//     mapStateToProps,
-//     mapStateToAction
-// )(Diary);
 
 export default connect(
     mapStateToProps,

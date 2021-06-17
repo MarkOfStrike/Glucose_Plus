@@ -1,15 +1,10 @@
-import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, View, ToastAndroid, BackHandler } from 'react-native'
-import { GetValueStorage, SetValueStorage } from '../../StorageWork'
-import Modal from 'react-native-modal'
-// import RNFS from 'react-native-fs'
-import { IApplicationState } from '../../Store/StoreInterfaces'
-import { SetMeasurement, ImportData, ExportData } from '../../Store/Reducers/SettingTab/Action'
-import { connect } from 'react-redux'
-import { Input } from '@ui-kitten/components'
-import { useBackButton } from '@react-navigation/native'
+import React from 'react';
+import { StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from 'react-native';
+import Modal from 'react-native-modal';
+import { connect } from 'react-redux';
 
-
+import { ExportData, ImportData, SetMeasurement } from '../../Store/Reducers/SettingTab/Action';
+import { IApplicationState } from '../../Store/StoreInterfaces';
 
 const SettingTab = (props: any) => {
 
@@ -36,12 +31,6 @@ const SettingTab = (props: any) => {
 
     }, [props.exportToast.show])
 
-    // const handleButtonPress = (text:string) => {
-    //     setMessageToast(text);
-    //     setVisibleToast(true);
-    // };
-
-
     React.useEffect(() => {
 
         props.SetMeasurement(measuring)
@@ -61,17 +50,11 @@ const SettingTab = (props: any) => {
             </TouchableOpacity>
             <TouchableOpacity style={style.import_export} onPress={() => {
                 props.ImportData()
-                // Promise.all([props.ImportData(), ]).then(() => {
-                //     handleButtonPress('Импорт данных выполнен успешно')
-                // });
-                // props.ImportData();
-                // handleButtonPress('Импорт данных выполнен успешно');
             }}>
                 <Text>{props.importLoad ? 'Загрузка...' : 'Импорт данных'}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={style.import_export} onPress={() => {
                 props.ExportData();
-                // handleButtonPress('Экспорт данных выполнен успешно');
             }}>
                 <Text>Экспорт данных</Text>
             </TouchableOpacity>
@@ -132,7 +115,6 @@ const style = StyleSheet.create({
     },
     sysSet: {
         borderWidth: 1,
-        // marginTop: 5,
         margin: 5,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -141,7 +123,6 @@ const style = StyleSheet.create({
     },
     import_export: {
         borderWidth: 1,
-        // marginTop: 5,
         margin: 5,
         height: '10%',
         flexDirection: 'row',
@@ -170,5 +151,3 @@ export default connect(
         ExportData
     }
 )(SettingTabContainer)
-
-// export default SettingTab;

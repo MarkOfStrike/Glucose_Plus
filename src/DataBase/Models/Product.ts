@@ -1,4 +1,4 @@
-import { IGroup } from "./ProductGroup";
+import { IGroup } from './ProductGroup';
 
 export interface IProduct {
     Id?: number
