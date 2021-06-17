@@ -13,9 +13,6 @@ import { useBackButton } from '@react-navigation/native'
 
 const SettingTab = (props: any) => {
 
-    // console.log(props.importLoad, props.exportLoad);
-    // console.log(props);
-
 
     const [measuring, setMeasuring] = React.useState<string>(props.measurement)
     const [isOpen, setIsOpen] = React.useState<boolean>(false);

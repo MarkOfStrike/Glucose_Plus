@@ -56,7 +56,7 @@ const RecordBlock = (props:any) => {
         <View style={{marginBottom:10, marginLeft:2}}>
             <Text style={{fontSize:13, color:'grey'}}>{props.date}</Text>
             <View>
-                {props.records.map((v:any, i:number) => {
+                {props.records && props.records.map((v:any, i:number) => {
 
                     if(v.Type as TypeRecord === TypeRecord.Glucose){
                         return ( <ItemGlucose key={i} {...v} nav={props.Nav} /> )

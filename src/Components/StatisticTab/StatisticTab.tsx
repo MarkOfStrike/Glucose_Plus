@@ -133,18 +133,14 @@ const StatisticTab = (props: any) => {
 
         props.SetFormat(format);
         EditDate(0);
-        // console.log(props.dateTime);
-
     }
 
     const EditDate = (val: number) => {
-        // console.log(val);
-
+     
         props.SetDate(val)
         props.GetDataTest();
     }
 
-    // console.log(chartData);
 
 
     return (

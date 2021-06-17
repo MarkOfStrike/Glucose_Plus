@@ -1,4 +1,4 @@
-import { FOOD_TABLE, GLUCOSE_MEASUREMENT_TABLE, FOOD_TABLE_NAME, FOOD_TABLE_DATE_ADD, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_INSULIN, FOOD_TABLE_ID, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE_LEVEL, FOOD_RECORD_TABLE, FOOD_RECORD_TABLE_FOOD_ID, FOOD_RECORD_TABLE_PRODUCT_ID, PRODUCTS_TABLE_ID, PRODUCTS_TABLE, PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_XE, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_CALORIES } from './../../../DataBase/DataBaseConst';
+import { FOOD_TABLE, GLUCOSE_MEASUREMENT_TABLE, FOOD_TABLE_NAME, FOOD_TABLE_DATE_ADD, FOOD_TABLE_CARBOHYDRATE_RATIO, FOOD_TABLE_INSULIN, FOOD_TABLE_ID, GLUCOSE_MEASUREMENT_TABLE_DATE_ADD, GLUCOSE_MEASUREMENT_TABLE_LEVEL, FOOD_RECORD_TABLE, FOOD_RECORD_TABLE_FOOD_ID, FOOD_RECORD_TABLE_PRODUCT_ID, PRODUCTS_TABLE_ID, PRODUCTS_TABLE, PRODUCTS_TABLE_NAME, PRODUCTS_TABLE_GI, PRODUCTS_TABLE_XE, PRODUCTS_TABLE_FATS, PRODUCTS_TABLE_PROTEINS, PRODUCTS_TABLE_CARBOHYDRATES, PRODUCTS_TABLE_CALORIES, FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS } from './../../../DataBase/DataBaseConst';
 import RNFS, { writeFile } from 'react-native-fs';
 import { IApplicationAction } from './../../StoreInterfaces';
 import { EXPORT_LOADING, IMPORT_LOADING, SET_NEW_MEASUREMENT, SHOW_EXPORT_MESSAGE, SHOW_IMPORT_MESSAGE } from "../../../constants/ActionsName";
@@ -59,41 +59,11 @@ const getNameFile = (): string => {
     return `${momDate.format('YYYYMMDD')}_${diff}.json`;
 }
 
-async function ensureDirExists() {
-
-    const dirInfo = await FileSystem.getInfoAsync(`content://com.android.externalstorage.documents/tree/primary%3A/TEST_FOLDER` ?? 'file:///data');
-    if (!dirInfo.exists) {
-        console.log("Gif directory doesn't exist, creating...");
-        await FileSystem.makeDirectoryAsync(`content://com.android.externalstorage.documents/tree/primary%3A/TEST_FOLDER` ?? 'file:///data', { intermediates: true });
-    }
-}
-
-
-
 export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, getState) => {
-
-    // ensureDirExists()
 
     dispatch({ type: SHOW_IMPORT_MESSAGE, show: false, message: '' });
 
     const db = DbContext();
-
-    // console.log(TEST);
-
-    // console.log(RNFS);
-
-
-    // const fileName2 = `${RNFS.DocumentDirectoryPath}/${getNameFile()}`
-
-
-    const fileName = `${FileSystem.documentDirectory}/${getNameFile()}`
-
-    // const info = FileSystem.
-
-
-
-    // console.log(fileName);
-
 
     const outJson = {
         glucose: '',
@@ -134,7 +104,7 @@ export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, ge
                     products: [] as Array<any>
                 }
 
-                nt.executeSql(`select p.Name as NameProduct, p.GI, p.XE, p.Fats, p.Proteins, p.Carbohydrates, p.Calories, pg.Name as NameGroup from FoodRecords fr join Products p on fr.Product_Id = p.Id join ProductGroups pg on pg.Id = p.ProductGroup_id where fr.Food_Id = ${food[FOOD_TABLE_ID]}`, [], (t, result) => {
+                nt.executeSql(`select p.Name as NameProduct, p.GI, p.XE, p.Fats, p.Proteins, p.Carbohydrates, p.Calories, pg.Name as NameGroup, fr.${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS} as ${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS} from FoodRecords fr join Products p on fr.Product_Id = p.Id join ProductGroups pg on pg.Id = p.ProductGroup_id where fr.Food_Id = ${food[FOOD_TABLE_ID]}`, [], (t, result) => {
 
                     for (let index = 0; index < result.rows.length; index++) {
                         const product = result.rows.item(index);
@@ -147,7 +117,8 @@ export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, ge
                             proteins: product['Proteins'],
                             carbohydrates: product['Carbohydrates'],
                             calories: product['Calories'],
-                            group: product['NameGroup']
+                            group: product['NameGroup'],
+                            weight: product[FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS]
                         }
 
                         foodObj.products.push(productObj);
@@ -170,11 +141,8 @@ export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, ge
             outJson.food = JSON.stringify(foodArr);
         }
 
-        //Импорт данных
         MediaLibrary.requestPermissionsAsync().then(d => {
-            // console.log(d);
-
-
+      
             if (d && d.status === "granted") {
 
                 FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync().then(d => {
@@ -213,93 +181,104 @@ export const ExportData = (): IApplicationAction<MessageAction> => (dispatch, ge
 
     const db = DbContext();
 
-    db.transaction(tr => {
 
-        MediaLibrary.requestPermissionsAsync().then(d => {
+    MediaLibrary.requestPermissionsAsync().then(d => {
 
-            if (d && d.status === "granted") {
-                DocumentPicker.getDocumentAsync().then(ur => {
+        if (d && d.status === "granted") {
+            DocumentPicker.getDocumentAsync().then(ur => {
 
-                    if (ur.type === 'success') {
+                if (ur.type === 'success') {
 
-                        if (ur.name.split('.').pop() === 'json') {
-                            FileSystem.readAsStringAsync(ur.uri, { encoding: FileSystem.EncodingType.UTF8 }).then(result => {
+                    if (ur.name.split('.').pop() === 'json') {
+                        FileSystem.readAsStringAsync(ur.uri, { encoding: FileSystem.EncodingType.UTF8 }).then(result => {
 
-                                const exportObj = JSON.parse(result);
+                            const exportObj = JSON.parse(result);
 
-                                if (exportObj.glucose !== '') {
+                            db.transaction(tr => {
+
+                                if (exportObj.glucose) {
 
                                     const gluMas = JSON.parse(exportObj.glucose);
 
-                                    gluMas.map((v: any, i: number) => {
+                                    gluMas.forEach((v: any, i: number) => {
 
-                                        tr.executeSql(`INSERT INTO ${GLUCOSE_MEASUREMENT_TABLE} (${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD}, ${GLUCOSE_MEASUREMENT_TABLE_LEVEL}) SELECT ${v.DateAdd}, ${v.Level} WHERE NOT EXISTS (SELECT 1 FROM ${GLUCOSE_MEASUREMENT_TABLE} WHERE ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} = ${v.DateAdd} and ${GLUCOSE_MEASUREMENT_TABLE_LEVEL} = ${v.Level})`)
+                                        const qr = `INSERT INTO ${GLUCOSE_MEASUREMENT_TABLE} (${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD}, ${GLUCOSE_MEASUREMENT_TABLE_LEVEL}) SELECT ${v.DateAdd}, ${v.Level} WHERE NOT EXISTS (SELECT 1 FROM ${GLUCOSE_MEASUREMENT_TABLE} WHERE ${GLUCOSE_MEASUREMENT_TABLE_DATE_ADD} = ${v.DateAdd} and ${GLUCOSE_MEASUREMENT_TABLE_LEVEL} = ${v.Level})`;
+
+                                        tr.executeSql(qr)
 
                                     })
 
                                 }
 
-                                if (exportObj.food !== '') {
+                                if (exportObj.food) {
 
-                                    const f = JSON.parse(exportObj.food);
+                                    const f_mas = JSON.parse(exportObj.food);
 
-                                    tr.executeSql(`select ${FOOD_TABLE_ID} from ${FOOD_TABLE} where ${FOOD_TABLE_NAME} = \'${f.name}\' ans ${FOOD_TABLE_DATE_ADD} = ${f.date} and ${FOOD_TABLE_INSULIN} = ${f.insulin} and ${FOOD_TABLE_CARBOHYDRATE_RATIO} = ${f.ratio}`, [], (t, r) => {
+                                    f_mas.forEach((f:any, i:number) => {
 
-                                        if (r.rows.length === 0) {
+                                        tr.executeSql(`select ${FOOD_TABLE_ID} from ${FOOD_TABLE} where ${FOOD_TABLE_NAME} = \'${f.name}\' and ${FOOD_TABLE_DATE_ADD} = ${f.date} and ${FOOD_TABLE_INSULIN} = ${f.insulin} and ${FOOD_TABLE_CARBOHYDRATE_RATIO} = ${f.ratio}`, [], (t, r) => {
 
-                                            const tmp = `INSERT INTO ${FOOD_TABLE} (${FOOD_TABLE_NAME}, ${FOOD_TABLE_DATE_ADD}, ${FOOD_TABLE_INSULIN}, ${FOOD_TABLE_CARBOHYDRATE_RATIO}) `
-                                            const sel = `SELECT \'${f.name}\', ${f.date}, ${f.insulin}, ${f.ratio} WHERE NOT EXISTS `
+                                            if (r.rows.length === 0) {
 
-                                            const checkSelect = `(select 1 from ${FOOD_TABLE} where ${FOOD_TABLE_NAME} = \'${f.name}\' ans ${FOOD_TABLE_DATE_ADD} = ${f.date} and ${FOOD_TABLE_INSULIN} = ${f.insulin} and ${FOOD_TABLE_CARBOHYDRATE_RATIO} = ${f.ratio})`
+                                                const tmp = `INSERT INTO ${FOOD_TABLE} (${FOOD_TABLE_NAME}, ${FOOD_TABLE_DATE_ADD}, ${FOOD_TABLE_INSULIN}, ${FOOD_TABLE_CARBOHYDRATE_RATIO}) `
+                                                const sel = `SELECT \'${f.name}\', ${f.date}, ${f.insulin}, ${f.ratio} WHERE NOT EXISTS `
 
-                                            const query = tmp + sel + checkSelect;
+                                                const checkSelect = `(select 1 from ${FOOD_TABLE} where ${FOOD_TABLE_NAME} = \'${f.name}\' and ${FOOD_TABLE_DATE_ADD} = ${f.date} and ${FOOD_TABLE_INSULIN} = ${f.insulin} and ${FOOD_TABLE_CARBOHYDRATE_RATIO} = ${f.ratio})`
 
-                                            t.executeSql(query, [], (nt, res) => {
+                                                const query = tmp + sel + checkSelect;
 
-                                                const foodId = res.insertId;
+                                                t.executeSql(query, [], (nt, res) => {
 
-                                                f.products.map((v: any, i: number) => {
+                                                    const foodId = res.insertId;
 
-                                                    const selectProduct = `(select ${PRODUCTS_TABLE_ID} from ${PRODUCTS_TABLE} where ` +
-                                                        `${PRODUCTS_TABLE_NAME} = \'${v.nameProd}\' ` +
-                                                        `and ${PRODUCTS_TABLE_GI} = ${v.gi} ` +
-                                                        `and ${PRODUCTS_TABLE_XE} = ${v.xe} ` +
-                                                        `and ${PRODUCTS_TABLE_FATS} = ${v.fats} ` +
-                                                        `and ${PRODUCTS_TABLE_PROTEINS} = ${v.proteins} ` +
-                                                        `and ${PRODUCTS_TABLE_CARBOHYDRATES} = ${v.carbohydrates} ` +
-                                                        `and ${PRODUCTS_TABLE_CALORIES} = ${v.calories})`
+                                                    f.products.map((v: any, i: number) => {
 
-                                                    const qw = `insert into ${FOOD_RECORD_TABLE} (${FOOD_RECORD_TABLE_FOOD_ID}, ${FOOD_RECORD_TABLE_PRODUCT_ID}) values (${foodId}, ${selectProduct})`
+                                                        const selectProduct = `(select ${PRODUCTS_TABLE_ID} from ${PRODUCTS_TABLE} where ` +
+                                                            `${PRODUCTS_TABLE_NAME} = \'${v.nameProd}\' ` +
+                                                            `and ${PRODUCTS_TABLE_GI} = ${v.gi} ` +
+                                                            `and ${PRODUCTS_TABLE_XE} = ${v.xe} ` +
+                                                            `and ${PRODUCTS_TABLE_FATS} = ${v.fats} ` +
+                                                            `and ${PRODUCTS_TABLE_PROTEINS} = ${v.proteins} ` +
+                                                            `and ${PRODUCTS_TABLE_CARBOHYDRATES} = ${v.carbohydrates} ` +
+                                                            `and ${PRODUCTS_TABLE_CALORIES} = ${v.calories})`
 
-                                                    nt.executeSql(qw);
+                                                        const qw = `insert into ${FOOD_RECORD_TABLE} (${FOOD_RECORD_TABLE_FOOD_ID}, ${FOOD_RECORD_TABLE_PRODUCT_ID}, ${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS}) values (${foodId}, ${selectProduct}, ${v.weight})`
+
+                                                        nt.executeSql(qw);
+
+                                                    })
 
                                                 })
 
-                                            })
+                                            }
 
-                                        }
-
-                                    })
-
+                                        })
+                                        
+                                    });
+                                    
                                 }
 
+
+
+                            }, error => {
+                                console.log(error);
+
+                            }, () => {
                                 dispatch({ type: SHOW_IMPORT_MESSAGE, show: true, message: 'Экспорт данных выполнен успешно!' });
+                            })
 
-                            });
-                        }
-                    } else {
-                        dispatch({ type: SHOW_EXPORT_MESSAGE, show: true, message: 'Ошибка экспорта данных!' });
+                        });
                     }
-                })
-            } else {
-                dispatch({ type: SHOW_EXPORT_MESSAGE, show: true, message: 'Ошибка экспорта данных!' });
-            }
-        });
+                } else {
+                    dispatch({ type: SHOW_EXPORT_MESSAGE, show: true, message: 'Ошибка экспорта данных!' });
+                }
+            })
+        } else {
+            dispatch({ type: SHOW_EXPORT_MESSAGE, show: true, message: 'Ошибка экспорта данных!' });
+        }
+    });
 
 
 
-    }, error => console.log(error), () => {
-        // dispatch({type:SHOW_EXPORT_MESSAGE, show:true, message:'Экспорт данных выполнен успешно!'});
-    })
 }
 

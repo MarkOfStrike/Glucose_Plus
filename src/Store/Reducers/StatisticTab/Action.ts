@@ -899,8 +899,6 @@ const LabelsWeek = (start: moment.Moment) => {
     for (let index = 0; index < 6; index++) {
         arr.push(`${start.add(1, 'days').date()}`);
     }
-    console.log(arr);
-
     return arr;
 
 }
