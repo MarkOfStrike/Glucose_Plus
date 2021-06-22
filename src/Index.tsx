@@ -45,7 +45,8 @@ const NavigationApp = (props: any) => {
                     component={SettingTab}
                     options={{
                         tabBarLabel: "Настройки",
-                        tabBarIcon: ({ color }) => <TabBarIcon name="settings-outline" color={color} />
+                        tabBarIcon: ({ color }) => <TabBarIcon name="settings-outline" color={color} />,
+                        unmountOnBlur:true
                     }} />
             </RootNavigation.Navigator>
         </NavigationContainer>

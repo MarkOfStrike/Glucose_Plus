@@ -3,7 +3,8 @@ import {
     Button, ScrollView, Text, TouchableOpacity, View
 } from 'react-native';
 import {
-    LineChart} from 'react-native-chart-kit';
+    LineChart
+} from 'react-native-chart-kit';
 import { Dataset } from 'react-native-chart-kit/dist/HelperTypes';
 import { LineChartData } from 'react-native-chart-kit/dist/line-chart/LineChart';
 import { connect } from 'react-redux';
@@ -15,16 +16,10 @@ import { IApplicationState } from '../../Store/StoreInterfaces';
 
 const StatisticTab = (props: any) => {
 
-
     const [chartData, setChartData] = React.useState<LineChartData>({ labels: [''], datasets: [{ data: [0] }] })
-    
 
     React.useEffect(() => {
-        props.GetDataTest()
-    }, [props.GetDataTest])
-
-    React.useEffect(() => {
-
+        
         const DATA: Dataset = {
             data: [0],
             color: (c = 0) => `rgba(0,0,0,${0})`, strokeWidth: 0, withDots: false
@@ -102,7 +97,7 @@ const StatisticTab = (props: any) => {
     }
 
     const EditDate = (val: number) => {
-     
+
         props.SetDate(val)
         props.GetDataTest();
     }
@@ -129,29 +124,29 @@ const StatisticTab = (props: any) => {
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 15 }}>
                     <TouchableOpacity style={{ width: 50, height: 50, borderWidth: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
-                       EditDate(-1);
+                        EditDate(-1);
                     }}>
                         <Text>{'<'}</Text>
                     </TouchableOpacity>
                     <Text>{props.dateTime}</Text>
                     <TouchableOpacity style={{ width: 50, height: 50, borderWidth: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
-                        
+
                         EditDate(1);
                     }}>
                         <Text>{'>'}</Text>
                     </TouchableOpacity>
                 </View>
                 <Text>Bezier Line Chart</Text>
-                <ScrollView>
+                <View>
                     <ScrollView horizontal>
                         <LineChart
                             onDataPointClick={(dot) => {
                             }}
                             data={chartData}
-                            width={1000} 
+                            width={1000}
                             height={400}
-                            
-                            yAxisInterval={1} 
+
+                            yAxisInterval={1}
                             verticalLabelRotation={90}//Поворот названий по оси x
                             chartConfig={{
                                 backgroundColor: "#e26a00",
@@ -178,7 +173,7 @@ const StatisticTab = (props: any) => {
                             }}
                         />
                     </ScrollView>
-                </ScrollView>
+                </View>
             </View>
 
         </View>
@@ -186,6 +181,11 @@ const StatisticTab = (props: any) => {
 }
 
 const StatisticTabContainer = (props: any) => {
+
+    React.useEffect(() => {
+        props.GetDataTest()
+    }, [props.GetDataTest])
+
     return (
         <StatisticTab {...props} />
     )

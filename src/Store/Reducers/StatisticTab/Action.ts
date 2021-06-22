@@ -1,4 +1,5 @@
 import moment from 'moment';
+import 'moment/locale/ru'
 
 import {
     GET_ALL_STATISTIC_AVG, LABELS_STATISTIC, SET_CURRENT_DATE, SET_FORMAT_DATE
