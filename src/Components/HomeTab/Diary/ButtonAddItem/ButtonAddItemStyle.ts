@@ -4,11 +4,15 @@ import { StyleSheet } from 'react-native';
 export const style = StyleSheet.create({
 
     container: {
-        // flex: 1,
+        marginTop: 10,
+        marginBottom: 10,
+        padding:0,
+        alignContent: 'center',
+        justifyContent: 'center',
     },
     buttonAdd: {
         alignSelf:'center',
-        backgroundColor: 'red', 
+        backgroundColor: '#9dd7c5', 
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 20,

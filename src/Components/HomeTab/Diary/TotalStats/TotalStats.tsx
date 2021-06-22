@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Dimensions, ScrollView, StyleProp, Text, View, ViewStyle } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Carousel from 'react-native-snap-carousel';
-
+import LevelGlucose from './LevelGlucose/LevelGlucose';
+import OtherStats from './OtherStats/OtherStats';
 import { style } from './TotalStatsStyle';
 
 interface IData {
@@ -18,12 +18,7 @@ const TotalStats = (props: any) => {
 
     const renderItem = (item: any) => {
         return (
-            <View style={{
-                backgroundColor: 'floralwhite',
-                borderRadius: 15,
-                padding: 15,
-                margin: 20,
-            }}>
+            <View style={[style.render_container, style.carusel_align]}>
                 {item.item}
             </View>
         )
@@ -47,11 +42,11 @@ const TotalStats = (props: any) => {
                     autoplayInterval={5000}
                     autoplay={true}
                     loop={true}
-                    renderItem={renderItem} />
+                    renderItem={renderItem}/>
 
                 :
 
-                <View style={style.container}>
+                <View style={[style.container, style.render_container]}>
                     {components.map((item, i) => {
                         return item;
                     })}
@@ -62,73 +57,7 @@ const TotalStats = (props: any) => {
     )
 }
 
-//  const TestCarousel = () => {
 
-//     const width = Dimensions.get('window').width;
 
-//      return(
-//         <View style={{ flexDirection:'row', justifyContent: 'center', alignItems: 'center', alignContent:'center', alignSelf: 'center'}}>
-//         <Carousel 
-//     layout={'default'}
-//     sliderWidth={width}
-//     itemWidth={width}
-//     data={[<LevelGlucose key={0}/>, <OtherStats key={1}/>]} 
-//     autoplayDelay={5000}
-//     autoplayInterval={5000}
-//     autoplay={true}
-//     loop={true}
-
-//     renderItem={(item:any) => {return(
-//         <View style={{
-//             backgroundColor:'floralwhite',
-//             borderRadius: 15,
-//             // height: 250,
-//             padding: 15,
-//             margin: 20,
-//             // marginLeft: 30,
-//             // marginRight: 30, 
-//         }}>
-//           {item.item}
-//         </View>
-//     )}}/>
-//         </View>
-//      )
-//  }
-
-const statsStyle: StyleProp<ViewStyle> = {
-    borderStyle: 'solid',
-    borderWidth: 2,
-    borderColor: 'black',
-    margin: 2,
-    alignItems: 'flex-start',
-
-}
-
-const ConvertString = (value: number): string => value > 0 ? value.toFixed(2) : '---';
-
-const LevelGlucose = (props: any) => {
-
-    return (
-        <View style={statsStyle}>
-            <Text>Уровень глюкозы:</Text>
-            <Text>Средний: {ConvertString(props.Avg)}</Text>
-            <Text>Мин: {ConvertString(props.Min)}</Text>
-            <Text>Макс: {ConvertString(props.Max)}</Text>
-        </View>
-    )
-}
-
-const OtherStats = (props: any) => {
-
-    return (
-        <View style={statsStyle}>
-            <Text>Средние показатели:</Text>
-            <Text>Инс: {ConvertString(props.InsLevel)}</Text>
-            <Text>ХЕ: {ConvertString(props.Xe)}</Text>
-            <Text>Угл: {ConvertString(props.Carbohydrates)}</Text>
-            <Text>УК: {ConvertString(props.CarbohydrateRatio)}</Text>
-        </View>
-    )
-}
 
 export default TotalStats;

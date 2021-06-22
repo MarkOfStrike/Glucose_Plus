@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Button, ScrollView, Text, TouchableOpacity, View
+    Button, ScrollView, Text, TouchableOpacity, View, Image
 } from 'react-native';
 import {
     LineChart
@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { GetDataTest, SetDate, SetFormat } from '../../Store/Reducers/StatisticTab/Action';
 import { FormatDate } from '../../Store/Reducers/StatisticTab/Reducer';
 import { IApplicationState } from '../../Store/StoreInterfaces';
+import CustomButton from '../CustomElement/CustomButton';
 
 
 const StatisticTab = (props: any) => {
@@ -19,7 +20,7 @@ const StatisticTab = (props: any) => {
     const [chartData, setChartData] = React.useState<LineChartData>({ labels: [''], datasets: [{ data: [0] }] })
 
     React.useEffect(() => {
-        
+
         const DATA: Dataset = {
             data: [0],
             color: (c = 0) => `rgba(0,0,0,${0})`, strokeWidth: 0, withDots: false
@@ -80,6 +81,7 @@ const StatisticTab = (props: any) => {
             legend: ['Г', 'Инс.', 'Хе', 'Угл.', 'Угл.К.']
 
 
+
         }
 
         setChartData(newData);
@@ -107,36 +109,25 @@ const StatisticTab = (props: any) => {
     return (
         <View>
 
-            <View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 15 }}>
-                    <Button title={'Day'} onPress={() => {
-                        EditFormatDate(FormatDate.day);
-                    }} />
-                    <Button title={'Week'} onPress={() => {
-                        EditFormatDate(FormatDate.week);
-                    }} />
-                    <Button title={'Month'} onPress={() => {
-                        EditFormatDate(FormatDate.month);
-                    }} />
-                    <Button title={'Year'} onPress={() => {
-                        EditFormatDate(FormatDate.year);
-                    }} />
-                </View>
+            <View style={{ backgroundColor: '#fff' }}>
+
+                <ButtonFormat EditFormatDate={EditFormatDate} />
                 <View style={{ flexDirection: 'row', justifyContent: 'center', padding: 15 }}>
-                    <TouchableOpacity style={{ width: 50, height: 50, borderWidth: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
+                    <TouchableOpacity activeOpacity={0.7} style={{ alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
                         EditDate(-1);
                     }}>
-                        <Text>{'<'}</Text>
+                        {/* <Text>{'<'}</Text> */}
+                        <Image source={require('../../../assets/images/left_button.png')} style={{ width: 30, height: 30 }} />
                     </TouchableOpacity>
-                    <Text>{props.dateTime}</Text>
-                    <TouchableOpacity style={{ width: 50, height: 50, borderWidth: 1, alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
+                    <Text style={{ marginHorizontal: 10, textAlignVertical: 'center' }}>{props.dateTime}</Text>
+                    <TouchableOpacity activeOpacity={0.7} style={{ alignItems: 'center', alignContent: 'center', justifyContent: 'center' }} onPress={(e) => {
 
                         EditDate(1);
                     }}>
-                        <Text>{'>'}</Text>
+                        {/* <Text>{'>'}</Text> */}
+                        <Image source={require('../../../assets/images/right_button.png')} style={{ width: 30, height: 30 }} />
                     </TouchableOpacity>
                 </View>
-                <Text>Bezier Line Chart</Text>
                 <View>
                     <ScrollView horizontal>
                         <LineChart
@@ -145,16 +136,15 @@ const StatisticTab = (props: any) => {
                             data={chartData}
                             width={1000}
                             height={400}
-
                             yAxisInterval={1}
                             verticalLabelRotation={90}//Поворот названий по оси x
                             chartConfig={{
-                                backgroundColor: "#e26a00",
-                                backgroundGradientFrom: "#fb8c00",
-                                backgroundGradientTo: "#ffa726",
+                                backgroundColor: "#fff",
+                                backgroundGradientFrom: "#fff",
+                                backgroundGradientTo: "#fff",
                                 decimalPlaces: 2, // optional, defaults to 2dp
-                                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
                                 style: {
                                     borderRadius: 16,
                                 },
@@ -165,7 +155,6 @@ const StatisticTab = (props: any) => {
                                 }
                             }}
                             bezier
-
                             style={{
                                 alignSelf: 'center',
                                 marginVertical: 8,
@@ -179,6 +168,28 @@ const StatisticTab = (props: any) => {
         </View>
     )
 }
+
+const ButtonFormat = (props: any) => {
+
+    return (
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 15, }}>
+            <CustomButton title={'День'} onPress={() => {
+                props.EditFormatDate(FormatDate.day);
+            }} style={{ padding: 5, backgroundColor: '#e5f0f0', borderColor: 'grey', borderTopWidth: 1, borderBottomWidth: 1, borderLeftWidth: 1, borderTopLeftRadius: 20, borderBottomLeftRadius: 20 }} />
+            <CustomButton title={'Неделя'} onPress={() => {
+                props.EditFormatDate(FormatDate.week);
+            }} style={{ padding: 5, backgroundColor: '#e5f0f0', borderColor: 'grey', borderTopWidth: 1, borderBottomWidth: 1 }} />
+            <CustomButton title={'Месяц'} onPress={() => {
+                props.EditFormatDate(FormatDate.month);
+            }} style={{ padding: 5, backgroundColor: '#e5f0f0', borderColor: 'grey', borderTopWidth: 1, borderBottomWidth: 1 }} />
+            <CustomButton title={'Год'} onPress={() => {
+                props.EditFormatDate(FormatDate.year);
+            }} style={{ padding: 5, backgroundColor: '#e5f0f0', borderColor: 'grey', borderTopWidth: 1, borderBottomWidth: 1, borderRightWidth: 1, borderTopRightRadius: 20, borderBottomRightRadius: 20 }} />
+        </View>
+    )
+
+}
+
 
 const StatisticTabContainer = (props: any) => {
 

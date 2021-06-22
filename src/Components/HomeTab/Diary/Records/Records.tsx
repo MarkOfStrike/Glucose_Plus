@@ -6,6 +6,8 @@ import {
 } from '../../../../Interfaces/IDiary';
 import { IDictionary } from '../../../../Interfaces/IDictionary';
 import { GetValueStorage } from '../../../../StorageWork';
+// import LinearGradient from 'react-native-linear-gradient';
+// import 'react-native-linear-gradient/BVLinearGradient';
 import { style } from './RecordsStyle';
 
 const Records = (props:any) => {
@@ -75,32 +77,32 @@ const RecordBlock = (props:any) => {
 const ItemFood = (props:IDiaryRecordNav<IRecordFoodDiary>) => {
 
     return(
-        <TouchableOpacity activeOpacity={0.7} onPress={() => {
-            props.nav(props.ObjectRecord.Id, props.Type);
-        }}>
-        <View style={{ flexDirection: 'row', borderWidth: 1, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0}}>
-            <View style={{flex:1, alignItems:'center', justifyContent:'center',}}>
-                <Image source={require('../../../../../assets/images/eat.png')} style={{width:40, height:40,}}/>
-            </View>
-            <View style={{flex:5}}>
-                <View style={{flexDirection: 'row', justifyContent:'space-between'}}>
-                    <View style={{flex:3, justifyContent:'center', marginLeft:5}}>
-                        <Text style={{fontSize:20, flexWrap:'wrap', color:'green'}}>{props.ObjectRecord.Name}</Text>
-                        <View style={{ justifyContent: 'space-between', alignContent: 'space-between', flexDirection: 'row', flexWrap:'wrap' }}>
-                            <InfoText title={'Инс:'+props.ObjectRecord.data.InsLevel} />
-                            <InfoText title={'Хе:'+props.ObjectRecord.data.Xe} />
-                            <InfoText title={'Угл:'+props.ObjectRecord.data.Carbohydrates} />
-                            <InfoText title={'УК:'+props.ObjectRecord.data.CarbohydrateRatio} />
+            <TouchableOpacity activeOpacity={0.7} onPress={() => {
+                props.nav(props.ObjectRecord.Id, props.Type);
+            }}>
+                <View style={{ flexDirection: 'row', borderColor:'#73c86a', borderWidth: 1, borderTopWidth: 0, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, justifyContent: 'flex-start', padding: 2, margin: 2, marginLeft: 0 }}>
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
+                        <Image source={require('../../../../../assets/images/eat.png')} style={{ width: 40, height: 40, }} />
+                    </View>
+                    <View style={{ flex: 5 }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <View style={{ flex: 3, justifyContent: 'center', marginLeft: 5 }}>
+                                <Text style={{ fontSize: 20, flexWrap: 'wrap', color: 'green' }}>{props.ObjectRecord.Name}</Text>
+                                <View style={{ justifyContent: 'space-between', alignContent: 'space-between', flexDirection: 'row', flexWrap: 'wrap' }}>
+                                    <InfoText title={'Инс:' + props.ObjectRecord.data.InsLevel} />
+                                    <InfoText title={'Хе:' + props.ObjectRecord.data.Xe} />
+                                    <InfoText title={'Угл:' + props.ObjectRecord.data.Carbohydrates} />
+                                    <InfoText title={'УК:' + props.ObjectRecord.data.CarbohydrateRatio} />
+                                </View>
+                            </View>
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'flex-end', marginRight: 5 }}>
+                                <Text>{props.ObjectRecord.data.weight} г.</Text>
+                                <InfoText title={new Date(props.Date).toLocaleTimeString()} />
+                            </View>
                         </View>
                     </View>
-                    <View style={{flex:1, justifyContent:'center', alignItems:'flex-end', marginRight:5}}>
-                        <Text>{props.ObjectRecord.data.weight} г.</Text>
-                        <InfoText title={new Date(props.Date).toLocaleTimeString()}/>
-                    </View>
                 </View>
-            </View>
-        </View>
-        </TouchableOpacity>
+            </TouchableOpacity>
     )
 }
 
@@ -127,13 +129,13 @@ const ItemGlucose = (props:IDiaryRecordNav<IRecordGlucoseDiary>) => {
         <TouchableOpacity activeOpacity={0.7} onPress={() => {
             props.nav(props.ObjectRecord.Id, props.Type);
         }}>
-        <View style={{ flexDirection: 'row', borderWidth: 1, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0}}>
+        <View style={{ flexDirection: 'row', borderWidth: 1,borderTopWidth:0, borderColor: '##d0a4a6', borderBottomRightRadius:20, borderBottomLeftRadius:20, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0,}}>
             <View style={{flex:1, alignItems:'center', justifyContent:'center',}}>
                 <Image source={require('../../../../../assets/images/blood.png')} style={{width:40, height:40,}}/>
             </View>
             <View style={{flex:5, flexDirection:'row',}}>
                 <View style={{marginLeft:5}}>
-                    <Text style={{fontSize:16, color:'red'}}>Сахар в крови</Text>
+                    <Text style={{fontSize:20, color:'red'}}>Сахар в крови</Text>
                 </View>
                 <View style={{flex:1, justifyContent:'flex-start', alignItems:'flex-end', marginRight:5}}>
                         <Text>{measuring == 'mmol/l' ? (props.ObjectRecord.Level / 18).toFixed(2) : props.ObjectRecord.Level} {measuring}</Text>

@@ -5,9 +5,9 @@ export const style = StyleSheet.create({
 
     container:{
         //flex: 3,
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         justifyContent: 'center',
-        borderWidth: 3,
+        // borderWidth: 3,
         borderColor: 'black',
         height: '100%'
         // marginBottom: '25%',
@@ -20,6 +20,15 @@ export const style = StyleSheet.create({
         borderRadius: 20,
         height: 40,
         width: '60%',
+    },
+    infoBlock_block: {
+
+    },
+    infoBlock_carusel: {
+
+    },
+    record: {
+
     }
 
 })

@@ -88,7 +88,10 @@ const CreateRecord = (props: any) => {
                     <Text style={style.timeContainer_info_name}>Время</Text>
                     <Text style={style.timeContainer_info_time}>{props.record.date ?? ''}</Text>
                 </View>
-                <CustomButton title="" onPress={() => { setDateView(true) }} style={style.timeContainer_btn} />
+                <TouchableOpacity activeOpacity={0.7} onPress={() => { setDateView(true) }} style={style.timeContainer_btn}>
+                    <Image source={require('../../../../../../assets/images/pencil.png')} style={{width:20,height:20, alignSelf:'center', justifyContent:'center', alignItems:'center'}}/>
+                </TouchableOpacity>
+                {/* <CustomButton title="" onPress={() => { setDateView(true) }} style={style.timeContainer_btn} /> */}
             </View>
             <Hr />
             <View style={style.btnContainer}>

@@ -55,15 +55,19 @@ const Diary = (props: any) => {
     return (
         <View style={style.container}>
 
-            <TotalStats {...props.Statistic} />
+            <View style={{
+                backgroundColor: '#e9dddc'
+            }}>
+                <TotalStats {...props.Statistic} />
 
-            <Hr />
+                {/* <Hr /> */}
 
-            <ButtonAddItem
-                Click={() => {
-                    props.navigation.navigate("AddRecord", {});
-                }}
-            />
+                <ButtonAddItem
+                    Click={() => {
+                        props.navigation.navigate("AddRecord", {});
+                    }}
+                />
+            </View>
 
             <Hr />
 
