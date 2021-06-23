@@ -1,3 +1,5 @@
+import moment from 'moment';
+import 'moment/locale/ru'
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -18,6 +20,8 @@ import GlucoseRecord from './GlucoseRecord/GlucoseRecord';
 const CreateRecord = (props: any) => {
 
     const [dateView, setDateView] = React.useState<boolean>(false);
+    const [keys, setKeys] = React.useState<Array<boolean>>([]);
+    const [keysName, setKeysName] = React.useState<Array<string>>([])
 
     const [view, setView] = React.useState(<View></View>)
     const [nameView, setNameView] = React.useState<string>('Глюкоза')
@@ -27,14 +31,20 @@ const CreateRecord = (props: any) => {
         "Пища": <FoodRecord />
     }
 
-    const keys: Array<string> = []
-
-    for (let key in el) {
-        keys.push(key)
-    }
+    
 
     React.useEffect(() => {
         props.navigation.dangerouslyGetParent()?.setOptions({ tabBarVisible: false })
+
+        const keysArr: Array<string> = []
+
+        for (let key in el) {
+            keysArr.push(key)
+        }
+
+        setKeys([...keysArr.map((v,i) => {return i === 0})])
+        setKeysName([...keysArr]);
+
         return (() => {
             props.navigation.dangerouslyGetParent()?.setOptions({ tabBarVisible: true });
             props.ClearRecord();
@@ -52,6 +62,7 @@ const CreateRecord = (props: any) => {
     }, [props.existRecord])
 
     React.useEffect(() => {
+        
         setView(el[nameView])
     }, [nameView])
 
@@ -86,23 +97,23 @@ const CreateRecord = (props: any) => {
             <View style={style.timeContainer}>
                 <View style={style.timeContainer_info_container}>
                     <Text style={style.timeContainer_info_name}>Время</Text>
-                    <Text style={style.timeContainer_info_time}>{props.record.date ?? ''}</Text>
+                    <Text style={style.timeContainer_info_time}>{props.record.date ? moment(new Date(props.record.date)).locale('ru').format('DD MMMM YYYY hh:mm:ss'):''}</Text>
                 </View>
                 <TouchableOpacity activeOpacity={0.7} onPress={() => { setDateView(true) }} style={style.timeContainer_btn}>
-                    <Image source={require('../../../../../../assets/images/pencil.png')} style={{width:20,height:20, alignSelf:'center', justifyContent:'center', alignItems:'center'}}/>
+                    <Image source={require('../../../../../../assets/images/calendar.png')} style={{width:20,height:20, alignSelf:'center', justifyContent:'center', alignItems:'center'}}/>
                 </TouchableOpacity>
                 {/* <CustomButton title="" onPress={() => { setDateView(true) }} style={style.timeContainer_btn} /> */}
             </View>
             <Hr />
             <View style={style.btnContainer}>
-                {keys.map((name, i) => {
+                {keysName.map((name, i) => {
                     return (
-                        <BtnRecord key={i} Click={() => setNameView(name)} text={name} />
+                        <BtnRecord key={i} Click={() => setNameView(name)}  text={name} />
                     )
                 })}
             </View>
             <Hr />
-            <View style={{ borderWidth: 2, borderColor: '#7d9e9a', flex: 1 }}>
+            <View style={{ flex: 1 }}>
                 {view}
             </View>
         </View>
@@ -125,7 +136,7 @@ const SaveBtn = (props: any) => {
                     <View style={{ position: 'absolute', width: 15, height: 15, zIndex: 2, borderRadius: 20, backgroundColor: 'red', justifyContent: 'center', alignContent: 'center', alignItems: 'center', alignSelf: 'flex-end' }}>
                         <Text style={{ color: 'white', fontSize: 10 }}>{props.count}</Text>
                     </View>
-                    <Image source={require('../../../../../../assets/images/save.png')} resizeMethod={'scale'} style={{ width: '100%', height: '100%' }} />
+                    <Image source={require('../../../../../../assets/images/save2.png')} resizeMethod={'scale'} style={{ width: '100%', height: '100%' }} />
                 </View>
             </TouchableOpacity>
         )

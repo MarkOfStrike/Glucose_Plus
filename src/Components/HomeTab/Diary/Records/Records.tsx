@@ -1,3 +1,5 @@
+import moment from 'moment';
+import 'moment/locale/ru'
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 
@@ -57,7 +59,7 @@ const Records = (props:any) => {
 const RecordBlock = (props:any) => {
     return(
         <View style={{marginBottom:10, marginLeft:2}}>
-            <Text style={{fontSize:13, color:'grey'}}>{props.date}</Text>
+            <Text style={{fontSize:13, color:'grey'}}>{moment(new Date(props.date)).locale('ru').format('DD MMMM YYYYг.')}</Text>
             <View>
                 {props.records && props.records.map((v:any, i:number) => {
 
@@ -80,7 +82,7 @@ const ItemFood = (props:IDiaryRecordNav<IRecordFoodDiary>) => {
             <TouchableOpacity activeOpacity={0.7} onPress={() => {
                 props.nav(props.ObjectRecord.Id, props.Type);
             }}>
-                <View style={{ flexDirection: 'row', borderColor:'#73c86a', borderWidth: 1, borderTopWidth: 0, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, justifyContent: 'flex-start', padding: 2, margin: 2, marginLeft: 0 }}>
+                <View style={{ flexDirection: 'row', borderColor:'#73c86a', borderWidth: 1, borderTopWidth: 0, borderBottomRightRadius: 20, borderBottomLeftRadius: 20, justifyContent: 'flex-start', padding: 2, margin: 2, marginLeft: 0,  }}>
                     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', }}>
                         <Image source={require('../../../../../assets/images/eat.png')} style={{ width: 40, height: 40, }} />
                     </View>
@@ -129,7 +131,7 @@ const ItemGlucose = (props:IDiaryRecordNav<IRecordGlucoseDiary>) => {
         <TouchableOpacity activeOpacity={0.7} onPress={() => {
             props.nav(props.ObjectRecord.Id, props.Type);
         }}>
-        <View style={{ flexDirection: 'row', borderWidth: 1,borderTopWidth:0, borderColor: '##d0a4a6', borderBottomRightRadius:20, borderBottomLeftRadius:20, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0,}}>
+        <View style={{ flexDirection: 'row', borderWidth: 1,borderTopWidth:0, borderColor: '#d0a4a6', borderBottomRightRadius:20, borderBottomLeftRadius:20, justifyContent:'flex-start', padding:2, margin:2, marginLeft:0,}}>
             <View style={{flex:1, alignItems:'center', justifyContent:'center',}}>
                 <Image source={require('../../../../../assets/images/blood.png')} style={{width:40, height:40,}}/>
             </View>

@@ -45,18 +45,18 @@ const SettingTab = (props: any) => {
             <TouchableOpacity style={style.sysSet} onPress={() => {
                 setIsOpen(true);
             }}>
-                <Text>Система измерения</Text>
-                <Text>{measuring}</Text>
+                <Text style={{fontSize:16}}>Система измерения</Text>
+                <Text style={{color:'green'}}>{measuring}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={style.import_export} onPress={() => {
                 props.ImportData()
             }}>
-                <Text>{props.importLoad ? 'Загрузка...' : 'Импорт данных'}</Text>
+                <Text style={{fontSize:16}}>{props.importLoad ? 'Загрузка...' : 'Импорт данных'}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={style.import_export} onPress={() => {
                 props.ExportData();
             }}>
-                <Text>Экспорт данных</Text>
+                <Text style={{fontSize:16}}>Экспорт данных</Text>
             </TouchableOpacity>
         </View>
     )
@@ -64,7 +64,7 @@ const SettingTab = (props: any) => {
 
 const SelectMeasuring = (props: any) => {
 
-    const mg = 'mg/dl';
+    const mg = 'mg/dL';
     const mmol = 'mmol/l';
 
 
@@ -109,13 +109,15 @@ const PushToast = ({ visible, message }: IToastProps) => {
 
 const style = StyleSheet.create({
     container: {
-        marginTop: 5,
-        borderWidth: 1,
+        // marginTop: 5,
+        // borderWidth: 1,
         height: '100%',
     },
     sysSet: {
         borderWidth: 1,
-        margin: 5,
+        margin: 4,
+        borderRadius: 10,
+        paddingHorizontal:5,
         flexDirection: 'row',
         justifyContent: 'space-between',
         height: '10%',
@@ -123,7 +125,9 @@ const style = StyleSheet.create({
     },
     import_export: {
         borderWidth: 1,
-        margin: 5,
+        borderRadius: 10,
+        paddingHorizontal: 5,
+        margin: 4,
         height: '10%',
         flexDirection: 'row',
         alignItems: 'center',

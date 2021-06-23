@@ -125,7 +125,7 @@ export const GetRecords = (): IApplicationAction<GetAllRecord> => (dispatch, get
 
                                 const elementProduct = result.rows.item(0);
 
-                                const int = (value: any) => parseInt(value);
+                                const int = (value: any) => parseFloat(value);
 
                                 // console.log('AAAAA',elementProduct)
 
@@ -266,20 +266,24 @@ export const GetStatistic = (): IApplicationAction<GetStatistic> => (dispatch, g
 
         tr.executeSql(`select ${FOOD_TABLE_ID} from ${FOOD_TABLE}`, [], (nt, r) => {
 
-            count += r.rows.length
+            count = r.rows.length
 
             for (let index = 0; index < r.rows.length; index++) {
                 const element = r.rows.item(index);
 
                 nt.executeSql(`select pr.${PRODUCTS_TABLE_XE} as Xe, pr.${PRODUCTS_TABLE_CARBOHYDRATES} as Carb, fr.${FOOD_RECORD_TABLE_NUMBERS_OF_GRAMS} as Weight from ${FOOD_RECORD_TABLE} fr join ${PRODUCTS_TABLE} pr on pr.${PRODUCTS_TABLE_ID} = fr.${FOOD_RECORD_TABLE_PRODUCT_ID} where ${FOOD_RECORD_TABLE_FOOD_ID} = ${element.Id}`, [], (t, res) => {
 
+                    const tmpCount = res.rows.length;
+                    let avgXe = 0;
+
                     for (let index = 0; index < res.rows.length; index++) {
                         const prod = res.rows.item(index);
 
-                        xe += (prod['Xe'] as number) * (prod['Weight'] as number) / 100;
+                        xe += (parseFloat(prod['Xe']) as number) * ((prod['Weight'] as number) / 100);
                         carb += (prod['Carb'] as number) * (prod['Weight'] as number) / 100;
 
                     }
+
 
                 })
             }

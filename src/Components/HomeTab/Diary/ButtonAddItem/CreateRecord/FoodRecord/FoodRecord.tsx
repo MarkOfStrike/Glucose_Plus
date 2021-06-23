@@ -122,6 +122,8 @@ interface IListProductProps {
     setWeight: (weight: string, index: number) => void
 }
 
+
+
 const ListProduct: FC<IListProductProps> = (props) => {
 
     // console.log(props);
@@ -143,13 +145,13 @@ const ListProduct: FC<IListProductProps> = (props) => {
     }, [textValue]);
 
     return (
-        <Swipeout right={[deleteBtn]} autoClose={true} close={true} onOpen={() => { }} onClose={() => { }}>
-            <View style={{ marginTop: 5, borderWidth: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
-                <View style={{ borderWidth: 1, borderColor: 'yellow', width: '75%' }}>
+        <Swipeout right={[deleteBtn]} style={{backgroundColor: 'rgba(0,0,0,0)'}} autoClose={true} close={true} onOpen={() => { }} onClose={() => { }}>
+            <View style={{ marginTop: 5,  flexDirection: 'row', justifyContent: 'space-between', borderBottomLeftRadius: 20, borderBottomRightRadius:20, borderWidth:1, borderTopWidth:0, borderColor:'#578B9E' }}>
+                <View style={style.infoProduct}>
                     {/* <Text>{}</Text> */}
                     <ProductView {...props.productInfo.product} />
                 </View>
-                <View style={{ borderWidth: 1, borderColor: 'red', width: '25%', paddingRight: 5, paddingLeft: 5, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View style={style.inputProduct}>
                     <Text>Вес:</Text>
                     <TextInput
                         placeholder={'----'}
@@ -168,15 +170,15 @@ const ListProduct: FC<IListProductProps> = (props) => {
 
 const ProductView = (product: IProduct) => {
     return (
-        <View style={{ borderWidth: 1, padding: 5 }}>
-            <Text style={{ fontSize: 16 }}>{product.Name}</Text>
+        <View style={{  padding: 5 }}>
+            <Text style={{ fontSize: 18, color:'#549C5A' }}>{product.Name}</Text>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 3 }}>
-                <Text style={{ fontSize: 11 }}>Калл:{product.Calories}</Text>
-                <Text style={{ fontSize: 11 }}>ГИ:{product.Gi}</Text>
-                <Text style={{ fontSize: 11 }}>ХЕ:{product.Xe}</Text>
-                <Text style={{ fontSize: 11 }}>Б:{product.Proteins}</Text>
-                <Text style={{ fontSize: 11 }}>Ж:{product.Fats}</Text>
-                <Text style={{ fontSize: 11 }}>У:{product.Carbohydrates}</Text>
+                <Text style={{ fontSize: 11, color:'grey' }}>Калл:{product.Calories}</Text>
+                <Text style={{ fontSize: 11, color:'grey'}}>ГИ:{product.Gi}</Text>
+                <Text style={{ fontSize: 11, color:'grey' }}>ХЕ:{product.Xe}</Text>
+                <Text style={{ fontSize: 11, color:'grey' }}>Б:{product.Proteins}</Text>
+                <Text style={{ fontSize: 11, color:'grey' }}>Ж:{product.Fats}</Text>
+                <Text style={{ fontSize: 11, color:'grey' }}>У:{product.Carbohydrates}</Text>
             </View>
         </View>
     )

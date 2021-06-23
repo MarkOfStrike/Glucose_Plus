@@ -95,7 +95,7 @@ export const ExportData = (): IApplicationAction<MessageAction> => (dispatch, ge
         tr.executeSql(`select * from ${FOOD_TABLE}`, [], (nt, r) => {
 
             for (let index = 0; index < r.rows.length; index++) {
-                const food = r.rows.item(0);
+                const food = r.rows.item(index);
 
                 const foodObj = {
                     name: food[FOOD_TABLE_NAME],
@@ -194,6 +194,9 @@ export const ImportData = (): IApplicationAction<MessageAction> => (dispatch, ge
                         FileSystem.readAsStringAsync(ur.uri, { encoding: FileSystem.EncodingType.UTF8 }).then(result => {
 
                             const exportObj = JSON.parse(result);
+
+                            console.log(exportObj);
+                            
 
                             db.transaction(tr => {
 

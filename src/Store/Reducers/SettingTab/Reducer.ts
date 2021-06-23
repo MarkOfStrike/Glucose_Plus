@@ -29,8 +29,8 @@ const GetMeasurement = () => {
     let res = ''
     GetValueStorage('value_measuring').then(data => {
         if (!data) {
-            SetValueStorage('value_measuring', 'mg/ml')
-            res = 'mg/ml'
+            SetValueStorage('value_measuring', 'mg/dL')
+            res = 'mg/dL'
         } else {
             res = data as string
         }
@@ -43,7 +43,7 @@ const GetMeasurement = () => {
 }
 
 const initState: ISettingState = {
-    measurement: 'mg/ml',
+    measurement: 'mg/dL',
     loading: {
         export: false,
         import: false

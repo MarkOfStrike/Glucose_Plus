@@ -4,7 +4,7 @@ const style = StyleSheet.create({
     container: {
         // flex:1,
         height: '100%',
-        borderWidth: 5,
+        // borderWidth: 5,
     },
     btnContainer: {
         alignSelf:"center",
@@ -16,7 +16,7 @@ const style = StyleSheet.create({
     },
     btnView:{
         alignSelf:'center',
-        backgroundColor: '#2f674a', 
+        backgroundColor: '#AFDAFC', 
         alignItems: 'center',
         flexDirection:'column',
         justifyContent: 'center',
@@ -28,7 +28,9 @@ const style = StyleSheet.create({
         
     },
     timeContainer: {
-        backgroundColor: 'red', 
+        backgroundColor: '#ABEAF7',
+        borderWidth:1,
+        borderColor:'grey', 
         borderRadius: 50, 
         margin: 10, 
         height: 40, 
@@ -40,8 +42,8 @@ const style = StyleSheet.create({
         flexDirection: 'row', 
         alignSelf: 'center', 
         justifyContent: 'space-between', 
-        borderColor: 'black', 
-        borderWidth: 2, 
+        // borderColor: 'black', 
+        // borderWidth: 2, 
         height: '100%'
     },
     timeContainer_info_name: {
@@ -52,21 +54,23 @@ const style = StyleSheet.create({
         textAlign: 'right', 
         textAlignVertical: 'center', 
         fontSize: 12, 
-        borderColor: 'yellow', 
-        borderWidth: 2, 
+        // borderColor: 'yellow', 
+        // borderWidth: 2, 
         flexWrap: 'wrap',
         width: "60%",
         paddingRight: 5
     },
     timeContainer_btn: {
-        width: 33, 
-        height: 33, 
+        width: 30, 
+        height: 30, 
         borderRadius: 50, 
-        backgroundColor: 'grey', 
+        backgroundColor: '#DFDDD7', 
         alignSelf: 'flex-end', 
         margin: 4, 
-        borderWidth: 2, 
-        borderColor: 'black'
+        borderWidth: 1, 
+        borderColor: 'black',
+        alignItems:'center',
+        justifyContent:'center'
     }
     
 })

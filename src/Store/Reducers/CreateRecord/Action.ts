@@ -107,7 +107,7 @@ export const SaveRecord = (): IApplicationAction<ClearAction> => (dispatch, getS
 
         state.Food?.products.map((pr, i) => { sumXe += pr.product.Xe as number / 100 * (parseFloat(parseFloat(pr.weight).toFixed(2))); })
 
-        const yk = parseFloat(state.Food?.insulinLevel as string) / sumXe;
+        const yk = sumXe > 0 ? parseFloat(state.Food?.insulinLevel as string) / sumXe : sumXe;
 
         if (state.Food && state.Food.name !== '' && state.Food.products.length > 0) {
             tr.executeSql(`insert into ${FOOD_TABLE} (${FOOD_TABLE_NAME}, ${FOOD_TABLE_DATE_ADD}, ${FOOD_TABLE_INSULIN}, ${FOOD_TABLE_CARBOHYDRATE_RATIO}) values (\'${state.Food?.name}\',\'${Date.parse(date)}\', ${state.Food.insulinLevel}, ${yk.toFixed(2)})`, [], (nt, r) => {

@@ -77,7 +77,7 @@ const AddProduct = (props:any) => {
                 elevation: 5,
                 padding: 10
             }}>
-                <View style={{ borderWidth: 1, width: '100%', height: 35, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', alignContent: 'center', alignSelf: 'center', borderRadius: 20, }}>
+                <View style={{ width: '100%', height: 35, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', alignContent: 'center', alignSelf: 'center', borderRadius: 20, }}>
                     <Text style={{ marginLeft: 5, alignSelf: 'center', fontSize: 13 }}>{'Добавление ингридиента...'}</Text>
                     <Pressable
                         style={{ borderRadius: 20, backgroundColor: '#d0e3f7', alignSelf: 'flex-end', width: '12%', height: '100%', alignItems: 'center', justifyContent: 'center' }}
@@ -86,6 +86,7 @@ const AddProduct = (props:any) => {
                         <Image source={require('../../../../../../../../assets/images/otherIcon/cancelBtn.png')} style={{ width: 33, height: 33 }} />
                     </Pressable>
                 </View>
+                <View style={{ width:'100%', marginTop:5, borderBottomColor: "rgba(128,128,128, 0.2)", borderBottomWidth: 1,}}/>
                 <View style={{ width: '100%', height: '83%' }}>
 
                     <View style={{ flexDirection: 'row', marginTop: 20, borderRadius: 10, borderWidth: 1, paddingRight: 5, paddingLeft: 5, justifyContent: 'space-between' }}>
@@ -101,7 +102,7 @@ const AddProduct = (props:any) => {
                             props.ClearSkip();
                             props.GetSearchProduct(props.Ids, searchText)
 
-                        }} style={{ color: 'red', width: '80%' }}>
+                        }} style={{ color: 'gray', width: '80%' }}>
                             {Object.values(Group).map((v, i) => { return v.toString() }).map((str, i) => {
                                 
                                 return (
@@ -114,6 +115,9 @@ const AddProduct = (props:any) => {
                             <Picker.Item label={"Овощи"} value={Group.Vegetables} />  */}
                         </Picker>
                     </View>
+                    
+                    <View style={{ width:'100%', marginTop:5, borderBottomColor: "rgba(128,128,128, 0.2)", borderBottomWidth: 1,}}/>
+
                     <View style={{ height: '75%', marginTop: 10 }}>
                         <ScrollView onScroll={(event) => {
 
@@ -134,11 +138,11 @@ const AddProduct = (props:any) => {
                         </ScrollView>
                     </View>
                 </View>
-                <View style={{ width: '100%', borderWidth: 0.5, borderColor: '#dcdcdc' }} />
+                
                 <View style={{ width: '100%', height: '10%', justifyContent: 'center', alignItems: 'center' }}>
                     <TouchableOpacity
                         activeOpacity={0.7}
-                        style={{ borderRadius: 15, backgroundColor: '#ff033e', alignContent: 'center', width: '70%', height: '60%', alignItems: 'center', justifyContent: 'center' }}
+                        style={{ borderRadius: 15, backgroundColor: '#C4C4C4', alignContent: 'center', width: '70%', height: '60%', alignItems: 'center', justifyContent: 'center' }}
                         onPress={() => props.Close()}
                     >
                         <Text>Отмена</Text>
@@ -154,15 +158,15 @@ const ProductView = (props:any) => {
         <TouchableOpacity activeOpacity={0.5} onPress={() => {
             props.addFunc(props.product)
         }}>
-            <View style={{ borderWidth: 1, padding: 5, marginBottom: 10 }}>
-                <Text style={{ fontSize: 14 }}>{props.product.Name}</Text>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <Text style={{ fontSize: 10 }}>Калл:{props.product.Calories}</Text>
-                    <Text style={{ fontSize: 10 }}>ГИ:{props.product.Gi}</Text>
-                    <Text style={{ fontSize: 10 }}>ХЕ:{props.product.Xe}</Text>
-                    <Text style={{ fontSize: 10 }}>Б:{props.product.Proteins}</Text>
-                    <Text style={{ fontSize: 10 }}>Ж:{props.product.Fats}</Text>
-                    <Text style={{ fontSize: 10 }}>У:{props.product.Carbohydrates}</Text>
+            <View style={{ borderWidth: 1, padding: 5, paddingHorizontal: 7, marginBottom: 5, borderBottomLeftRadius:20, borderBottomRightRadius: 20, borderTopWidth:0 }}>
+                <Text style={{ fontSize: 14, color: '#E62D3F', paddingLeft: 3 }}>{props.product.Name}</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 3 }}>
+                    <Text style={{ fontSize: 10, color:'grey' }}>Калл:{props.product.Calories}</Text>
+                    <Text style={{ fontSize: 10, color:'grey' }}>ГИ:{props.product.Gi}</Text>
+                    <Text style={{ fontSize: 10, color:'grey' }}>ХЕ:{props.product.Xe}</Text>
+                    <Text style={{ fontSize: 10, color:'grey'}}>Б:{props.product.Proteins}</Text>
+                    <Text style={{ fontSize: 10, color:'grey' }}>Ж:{props.product.Fats}</Text>
+                    <Text style={{ fontSize: 10, color:'grey' }}>У:{props.product.Carbohydrates}</Text>
                 </View>
             </View>
         </TouchableOpacity>
